@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7ae80ac8a4e647889b553f6e7ce98e74" Name="Diagram1">
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.ChiTietDatHang" Width="1.5" PointX="5.25" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.DatHang" Width="1.5" PointX="3" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.DongHo" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.DongHoThuocTinh" Width="1.5" PointX="5.25" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.KhachHang" Width="1.5" PointX="0.75" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.LoaiDongHo" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.NoiSanXuat" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.NhanVien" Width="1.5" PointX="0.75" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.ThuocTinh" Width="1.5" PointX="3" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.ThuongHieu" Width="1.5" PointX="0.75" PointY="7.25" IsExpanded="true" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK__ChiTietDa__MaDon__6D0D32F4" ManuallyRouted="false" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK__ChiTietDa__MaDon__6E01572D" ManuallyRouted="false" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK__DatHang__MaKhach__68487DD7" ManuallyRouted="false" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK__DatHang__MaNhanV__693CA210" ManuallyRouted="false" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK__DatHang__MaNhanV__6A30C649" ManuallyRouted="false" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK__DongHo__MaLoai__5EBF139D" ManuallyRouted="false" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK__DongHo__MaNoiSan__5DCAEF64" ManuallyRouted="false" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK__DongHo__MaThuong__5CD6CB2B" ManuallyRouted="false" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK__DongHoThu__MaDon__628FA481" ManuallyRouted="false" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK__DongHoThu__MaThu__6383C8BA" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

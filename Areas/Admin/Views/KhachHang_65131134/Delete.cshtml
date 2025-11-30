@@ -1,0 +1,19 @@
+﻿@model Project_65131134.Models.KhachHang
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<h3>Bạn có chắc chắn muốn xóa?</h3>
+<div> 
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <div class="btn-success">@Html.ActionLink("Quay lại", "Index")</div>
+    </div>
+    }
+</div>

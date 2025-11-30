@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Project_65131134.Models.NhanVien>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "MaKhachHang", rowsPerPage: 5);
+}
+
+
+<style>
+    a:hover {
+        text-decoration: none;
+    }
+
+
+    /* Thêm kiểu này để đảm bảo các nút chức năng nằm trên cùng một hàng */
+    .action-links a {
+        display: inline-block; /* Quan trọng: làm cho các liên kết nằm cùng hàng */
+        margin-right: 5px; /* Thêm khoảng cách nhỏ giữa các biểu tượng */
+    }
+</style>
+
+<h2 class="text-center">Danh sách nhân viên</h2>
+
+<div class="btn btn-success mb-3">
+    @Html.ActionLink("Thêm nhân viên mới", "Create", null, new { @style = "color: white;" })
+</div>
+
+<div id="gridContent">
+    @ViewBag.TB
+    @grid.GetHtml(
+        tableStyle: "table table-bordered table-hover",
+        footerStyle: "grid-footer",
+        fillEmptyRows: true,
+        mode: WebGridPagerModes.Numeric,
+        alternatingRowStyle: "alternatingRowStyle",
+         columns: new[]  // colums in grid
+         {
+    grid.Column("MaNhanVien","Mã nhân viên"), //the model fields to display
+    grid.Column("TenDangNhap","Tên đăng nhập"),
+    grid.Column("MatKhau","Mật khẩu"),
+    grid.Column("HoTen","Họ tên" ),
+    grid.Column("Email","Email"),
+    grid.Column("SoDienThoai","Số điện thoại"),
+    grid.Column("DiaChi","Địa chỉ"),
+    grid.Column("Vai trò", format: @<text>
+    @{
+            var roleText = "Không xác định";
+            if (item.VaiTro != null)
+            {
+                var vaiTroValue = item.VaiTro.ToString();
+                int vaiTroInt;
+                if (int.TryParse(vaiTroValue, out vaiTroInt))
+                {
+                    roleText = vaiTroInt == 0 ? "Quản lý"
+                        : vaiTroInt == 1 ? "Nhân viên bán hàng"
+                        : vaiTroInt == 2 ? "Nhân viên giao hàng"
+                        : "Không xác định";
+                }
+            }
+    }
+    @roleText
+    </text>),
+grid.Column("Ngày vào làm", format: @<text>
+        @(item.NgayVaoLam.ToString("dd/MM/yyyy"))
+</text>),
+          grid.Column("Chức năng", format: @<text>
+    <span class="action-links">
+        <a href="@Url.Action("Edit",
+                                                        new { id = item.MaNhanVien})" title="Cập nhật dữ liệu"><img src="/images/edit.png" width="20" height="20" /></a>
+        <a href="@Url.Action("Delete",
+       new { id = item.MaNhanVien})"
+           class="delete-btn"
+           onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên có Mã Nhân Viên là @item.MaNhanVien?');">
+            <abbr title="Xóa dữ liệu">
+                <img src="/images/delete.png" width="20" height="20" />
+            </abbr>
+        </a>
+    </span>
+        </text>),
+}
+)
+</div>

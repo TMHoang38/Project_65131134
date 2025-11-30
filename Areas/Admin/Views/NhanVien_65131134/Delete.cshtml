@@ -1,0 +1,99 @@
+﻿@model Project_65131134.Models.NhanVien
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>NhanVien</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TenDangNhap)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TenDangNhap)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MatKhau)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MatKhau)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HoTen)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HoTen)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SoDienThoai)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SoDienThoai)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DiaChi)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DiaChi)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VaiTro)
+        </dt>
+
+        <dd>
+            @{
+                var vaiTroText = "Không xác định";
+                var vaiTroValueStr = Model.VaiTro == null ? null : Model.VaiTro.ToString();
+                if (!string.IsNullOrEmpty(vaiTroValueStr) && int.TryParse(vaiTroValueStr, out var vaiTroValue))
+                {
+                    vaiTroText = vaiTroValue == 0 ? "Quản lý"
+                        : vaiTroValue == 1 ? "Nhân viên bán hàng"
+                        : vaiTroValue == 2 ? "Nhân viên giao hàng"
+                        : "Không xác định";
+                }
+            }
+            @vaiTroText
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NgayVaoLam)
+        </dt>
+
+        <dd>
+            @(Model.NgayVaoLam.HasValue ? Model.NgayVaoLam.Value.ToString("dd/MM/yyyy") : "")
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
