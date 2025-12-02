@@ -8,6 +8,21 @@
 
 
 <style>
+    .grid-footer {
+        color: #000;
+        font: 17px Calibri;
+        text-align: center;
+        font-weight: bold;
+    }
+
+        .grid-footer a {
+            background-color: #ffffff;
+            color: blue;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            padding: 1px 10px 2px 10px;
+        }
+
+
     a:hover {
         text-decoration: none;
     }
@@ -65,18 +80,20 @@ grid.Column("Ngày vào làm", format: @<text>
         @(item.NgayVaoLam.ToString("dd/MM/yyyy"))
 </text>),
           grid.Column("Chức năng", format: @<text>
-    <span class="action-links">
-        <a href="@Url.Action("Edit",
+              <div class="d-flex justify-content-sm-around">
+                  <span class="action-links">
+                      <a href="@Url.Action("Edit",
                                                         new { id = item.MaNhanVien})" title="Cập nhật dữ liệu"><img src="/images/edit.png" width="20" height="20" /></a>
-        <a href="@Url.Action("Delete",
-       new { id = item.MaNhanVien})"
-           class="delete-btn"
-           onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên có Mã Nhân Viên là @item.MaNhanVien?');">
-            <abbr title="Xóa dữ liệu">
-                <img src="/images/delete.png" width="20" height="20" />
-            </abbr>
-        </a>
-    </span>
+                      <a href="@Url.Action("Delete",
+   new { id = item.MaNhanVien})"
+                         class="delete-btn"
+                         onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên có Mã Nhân Viên là @item.MaNhanVien?');">
+                          <abbr title="Xóa dữ liệu">
+                              <img src="/images/delete.png" width="20" height="20" />
+                          </abbr>
+                      </a>
+                  </span>
+              </div>
         </text>),
 }
 )

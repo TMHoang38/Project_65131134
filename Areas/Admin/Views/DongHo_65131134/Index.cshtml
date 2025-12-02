@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Project_65131134.Models.DongHo>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "MaKhachHang", rowsPerPage: 5);
+}
+<style>
+    .grid-footer {
+        color: #000;
+        font: 17px Calibri;
+        text-align: center;
+        font-weight: bold;
+    }
+
+        .grid-footer a {
+            background-color: #ffffff;
+            color: blue;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            padding: 1px 10px 2px 10px;
+        }
+
+
+    .action-icon {
+        margin: 0 4px;
+        display: inline-block;
+    }
+
+    a:hover {
+        text-decoration: none;
+    }
+</style>
+<h2 class="text-center">Danh sách đồng hồ</h2>
+
+<div class="btn btn-success mb-3">
+    @Html.ActionLink("Thêm đồng hồ mới", "Create", null, new { @style = "color: white;" })
+</div>
+<div id="gridContent">
+    @ViewBag.TB
+    @grid.GetHtml(
+        tableStyle: "table table-bordered table-hover",
+        footerStyle: "grid-footer",
+        fillEmptyRows: true,
+        mode: WebGridPagerModes.Numeric,
+        alternatingRowStyle: "alternatingRowStyle",
+          columns: new[]  // colums in grid
+         {
+    grid.Column("MaDongHo","Mã đồng hồ"), //the model fields to display
+    grid.Column("Giá bán",
+    format: item => string.Format(
+        new System.Globalization.CultureInfo("vi-VN"), // Chỉ định Culture là tiếng Việt
+        "{0:N0}", // Định dạng số, không có số thập phân
+        item.GiaBan
+    )
+),
+    grid.Column("SoLuongTon","Số lượng tồn"),
+    grid.Column("HinhAnh","Hình ảnh"  ),
+    grid.Column("KichThuoc","Kích thước"),
+    grid.Column("MauSac","Màu sắc"),
+    grid.Column("BaoHanh","Bảo hành"),
+    grid.Column("LoaiDongHo.TenLoai","Tên loại"),
+    grid.Column("NoiSanXuat.TenNoiSanXuat","Nơi sản xuất"),
+    grid.Column("ThuongHieu.TenThuongHieu","Thương hiệu"),
+//grid.Column(format: (item) => Html.ActionLink("Cập nhật", "Edit", "SINHVIEN0720_65131134",new { id = item.MaSV },"SINHVIEN0720_65131134Controller")),
+//grid.Column(format: (item) => Html.ActionLink("Xem chi tiết", "Details","SINHVIEN0720_65131134", new { id = item.MaSV },"SINHVIEN0720_65131134Controller")),
+//grid.Column(format: (item) => Html.ActionLink("Xóa", "Delete","SINHVIEN0720_65131134", new { id = item.MaSV },"SINHVIEN0720_65131134Controller")),
+                            grid.Column("Chức năng", format: @<text>
+                                <div class="d-flex justify-content-sm-around">
+                                    <a href="@Url.Action("Edit",
+                                                     new { id = item.MaDongHo})" class="edit-btn"><abbr title="Cập nhật dữ liệu"><img src="/images/edit.png" width="20" height="20" /></abbr></a>
+                                    <a href="@Url.Action("Delete",
+    new { id = item.MaDongHo})"
+                                       class="delete-btn"
+                                       onclick="return confirm('Bạn có chắc chắn muốn xóa đồng hồ có Mã Đồng Hồ là @item.MaDongHo?');">
+                                        <abbr title="Xóa dữ liệu">
+                                            <img src="/images/delete.png" width="20" height="20" />
+                                        </abbr>
+                                    </a>
+                                </div>
+                            </text>),
+}
+)
+</div>
+
