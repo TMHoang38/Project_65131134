@@ -35,6 +35,8 @@ namespace Project_65131134.Models
         public string MauSac { get; set; }
         public Nullable<int> BaoHanh { get; set; }
         public Nullable<System.DateTime> NgayTao { get; set; }
+        public string MaChatLieuDay { get; set; }
+        public string MaChatLieuVo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChiTietDatHang> ChiTietDatHang { get; set; }
@@ -43,5 +45,7 @@ namespace Project_65131134.Models
         public virtual ThuongHieu ThuongHieu { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DongHoThuocTinh> DongHoThuocTinh { get; set; }
+        public virtual ChatLieuDay ChatLieuDay { get; set; }
+        public virtual ChatLieuVo ChatLieuVo { get; set; }
     }
 }

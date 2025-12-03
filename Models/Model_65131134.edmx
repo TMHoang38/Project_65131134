@@ -4,7 +4,23 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="CuaHangDongHo_65131134Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="CuaHangDongHo_65131134Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ChatLieuDay">
+          <Key>
+            <PropertyRef Name="MaChatLieuDay" />
+          </Key>
+          <Property Name="MaChatLieuDay" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="TenChatLieu" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MoTa" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="ChatLieuVo">
+          <Key>
+            <PropertyRef Name="MaChatLieuVo" />
+          </Key>
+          <Property Name="MaChatLieuVo" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="TenChatLieu" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MoTa" Type="nvarchar" MaxLength="500" />
+        </EntityType>
         <EntityType Name="ChiTietDatHang">
           <Key>
             <PropertyRef Name="MaChiTiet" />
@@ -49,6 +65,8 @@
           <Property Name="MauSac" Type="nvarchar" MaxLength="50" />
           <Property Name="BaoHanh" Type="int" />
           <Property Name="NgayTao" Type="datetime" />
+          <Property Name="MaChatLieuDay" Type="nvarchar" MaxLength="10" />
+          <Property Name="MaChatLieuVo" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="DongHoThuocTinh">
           <Key>
@@ -242,7 +260,33 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DongHo_ChatLieuDay">
+          <End Role="ChatLieuDay" Type="Self.ChatLieuDay" Multiplicity="0..1" />
+          <End Role="DongHo" Type="Self.DongHo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatLieuDay">
+              <PropertyRef Name="MaChatLieuDay" />
+            </Principal>
+            <Dependent Role="DongHo">
+              <PropertyRef Name="MaChatLieuDay" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DongHo_ChatLieuVo">
+          <End Role="ChatLieuVo" Type="Self.ChatLieuVo" Multiplicity="0..1" />
+          <End Role="DongHo" Type="Self.DongHo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatLieuVo">
+              <PropertyRef Name="MaChatLieuVo" />
+            </Principal>
+            <Dependent Role="DongHo">
+              <PropertyRef Name="MaChatLieuVo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="CuaHangDongHo_65131134ModelStoreContainer">
+          <EntitySet Name="ChatLieuDay" EntityType="Self.ChatLieuDay" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ChatLieuVo" EntityType="Self.ChatLieuVo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChiTietDatHang" EntityType="Self.ChiTietDatHang" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DatHang" EntityType="Self.DatHang" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DongHo" EntityType="Self.DongHo" Schema="dbo" store:Type="Tables" />
@@ -293,9 +337,16 @@
             <End Role="ThuocTinh" EntitySet="ThuocTinh" />
             <End Role="DongHoThuocTinh" EntitySet="DongHoThuocTinh" />
           </AssociationSet>
+          <AssociationSet Name="FK_DongHo_ChatLieuDay" Association="Self.FK_DongHo_ChatLieuDay">
+            <End Role="ChatLieuDay" EntitySet="ChatLieuDay" />
+            <End Role="DongHo" EntitySet="DongHo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DongHo_ChatLieuVo" Association="Self.FK_DongHo_ChatLieuVo">
+            <End Role="ChatLieuVo" EntitySet="ChatLieuVo" />
+            <End Role="DongHo" EntitySet="DongHo" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CuaHangDongHo_65131134Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -354,6 +405,10 @@
           <NavigationProperty Name="NoiSanXuat" Relationship="Self.FK__DongHo__MaNoiSan__5DCAEF64" FromRole="DongHo" ToRole="NoiSanXuat" />
           <NavigationProperty Name="ThuongHieu" Relationship="Self.FK__DongHo__MaThuong__5CD6CB2B" FromRole="DongHo" ToRole="ThuongHieu" />
           <NavigationProperty Name="DongHoThuocTinh" Relationship="Self.FK__DongHoThu__MaDon__628FA481" FromRole="DongHo" ToRole="DongHoThuocTinh" />
+          <Property Name="MaChatLieuDay" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="MaChatLieuVo" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ChatLieuDay" Relationship="CuaHangDongHo_65131134Model.FK_DongHo_ChatLieuDay" FromRole="DongHo" ToRole="ChatLieuDay" />
+          <NavigationProperty Name="ChatLieuVo" Relationship="CuaHangDongHo_65131134Model.FK_DongHo_ChatLieuVo" FromRole="DongHo" ToRole="ChatLieuVo" />
         </EntityType>
         <EntityType Name="DongHoThuocTinh">
           <Key>
@@ -607,7 +662,59 @@
             <End Role="ThuocTinh" EntitySet="ThuocTinh" />
             <End Role="DongHoThuocTinh" EntitySet="DongHoThuocTinh" />
           </AssociationSet>
+          <EntitySet Name="ChatLieuDay" EntityType="CuaHangDongHo_65131134Model.ChatLieuDay" />
+          <EntitySet Name="ChatLieuVo" EntityType="CuaHangDongHo_65131134Model.ChatLieuVo" />
+          <AssociationSet Name="FK_DongHo_ChatLieuDay" Association="CuaHangDongHo_65131134Model.FK_DongHo_ChatLieuDay">
+            <End Role="ChatLieuDay" EntitySet="ChatLieuDay" />
+            <End Role="DongHo" EntitySet="DongHo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DongHo_ChatLieuVo" Association="CuaHangDongHo_65131134Model.FK_DongHo_ChatLieuVo">
+            <End Role="ChatLieuVo" EntitySet="ChatLieuVo" />
+            <End Role="DongHo" EntitySet="DongHo" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="ChatLieuDay">
+          <Key>
+            <PropertyRef Name="MaChatLieuDay" />
+          </Key>
+          <Property Name="MaChatLieuDay" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TenChatLieu" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MoTa" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DongHo" Relationship="CuaHangDongHo_65131134Model.FK_DongHo_ChatLieuDay" FromRole="ChatLieuDay" ToRole="DongHo" />
+        </EntityType>
+        <EntityType Name="ChatLieuVo">
+          <Key>
+            <PropertyRef Name="MaChatLieuVo" />
+          </Key>
+          <Property Name="MaChatLieuVo" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TenChatLieu" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MoTa" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DongHo" Relationship="CuaHangDongHo_65131134Model.FK_DongHo_ChatLieuVo" FromRole="ChatLieuVo" ToRole="DongHo" />
+        </EntityType>
+        <Association Name="FK_DongHo_ChatLieuDay">
+          <End Type="CuaHangDongHo_65131134Model.ChatLieuDay" Role="ChatLieuDay" Multiplicity="0..1" />
+          <End Type="CuaHangDongHo_65131134Model.DongHo" Role="DongHo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatLieuDay">
+              <PropertyRef Name="MaChatLieuDay" />
+            </Principal>
+            <Dependent Role="DongHo">
+              <PropertyRef Name="MaChatLieuDay" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DongHo_ChatLieuVo">
+          <End Type="CuaHangDongHo_65131134Model.ChatLieuVo" Role="ChatLieuVo" Multiplicity="0..1" />
+          <End Type="CuaHangDongHo_65131134Model.DongHo" Role="DongHo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChatLieuVo">
+              <PropertyRef Name="MaChatLieuVo" />
+            </Principal>
+            <Dependent Role="DongHo">
+              <PropertyRef Name="MaChatLieuVo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -645,6 +752,8 @@
           <EntitySetMapping Name="DongHo">
             <EntityTypeMapping TypeName="CuaHangDongHo_65131134Model.DongHo">
               <MappingFragment StoreEntitySet="DongHo">
+                <ScalarProperty Name="MaChatLieuVo" ColumnName="MaChatLieuVo" />
+                <ScalarProperty Name="MaChatLieuDay" ColumnName="MaChatLieuDay" />
                 <ScalarProperty Name="MaDongHo" ColumnName="MaDongHo" />
                 <ScalarProperty Name="TenDongHo" ColumnName="TenDongHo" />
                 <ScalarProperty Name="MaThuongHieu" ColumnName="MaThuongHieu" />
@@ -737,6 +846,24 @@
                 <ScalarProperty Name="MaThuongHieu" ColumnName="MaThuongHieu" />
                 <ScalarProperty Name="TenThuongHieu" ColumnName="TenThuongHieu" />
                 <ScalarProperty Name="MoTa" ColumnName="MoTa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChatLieuDay">
+            <EntityTypeMapping TypeName="CuaHangDongHo_65131134Model.ChatLieuDay">
+              <MappingFragment StoreEntitySet="ChatLieuDay">
+                <ScalarProperty Name="MoTa" ColumnName="MoTa" />
+                <ScalarProperty Name="TenChatLieu" ColumnName="TenChatLieu" />
+                <ScalarProperty Name="MaChatLieuDay" ColumnName="MaChatLieuDay" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChatLieuVo">
+            <EntityTypeMapping TypeName="CuaHangDongHo_65131134Model.ChatLieuVo">
+              <MappingFragment StoreEntitySet="ChatLieuVo">
+                <ScalarProperty Name="MoTa" ColumnName="MoTa" />
+                <ScalarProperty Name="TenChatLieu" ColumnName="TenChatLieu" />
+                <ScalarProperty Name="MaChatLieuVo" ColumnName="MaChatLieuVo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

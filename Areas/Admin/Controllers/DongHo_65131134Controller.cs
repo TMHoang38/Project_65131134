@@ -14,7 +14,7 @@ namespace Project_65131134.Areas.Admin
     {
         private CuaHangDongHo_65131134Entities db = new CuaHangDongHo_65131134Entities();
 
-         string LayMaDH()
+        string LayMaDH()
         {
             var maMax = db.DongHo
                 .Select(n => n.MaDongHo)
@@ -38,7 +38,13 @@ namespace Project_65131134.Areas.Admin
         // GET: Admin/DongHo_65131134
         public ActionResult Index()
         {
-            var dongHo = db.DongHo.Include(d => d.LoaiDongHo).Include(d => d.NoiSanXuat).Include(d => d.ThuongHieu);
+            // CẬP NHẬT: Include thêm ChatLieuDay và ChatLieuVo
+            var dongHo = db.DongHo
+                .Include(d => d.LoaiDongHo)
+                .Include(d => d.NoiSanXuat)
+                .Include(d => d.ThuongHieu)
+                .Include(d => d.ChatLieuDay)
+                .Include(d => d.ChatLieuVo);
             return View(dongHo.ToList());
         }
 
@@ -68,37 +74,53 @@ namespace Project_65131134.Areas.Admin
             ViewBag.MaLoai = new SelectList(db.LoaiDongHo, "MaLoai", "TenLoai");
             ViewBag.MaNoiSanXuat = new SelectList(db.NoiSanXuat, "MaNoiSanXuat", "TenNoiSanXuat");
             ViewBag.MaThuongHieu = new SelectList(db.ThuongHieu, "MaThuongHieu", "TenThuongHieu");
+
+            // CẬP NHẬT: Thêm ViewBag cho Dropdown Chất liệu
+            ViewBag.MaChatLieuDay = new SelectList(db.ChatLieuDay, "MaChatLieuDay", "TenChatLieu");
+            ViewBag.MaChatLieuVo = new SelectList(db.ChatLieuVo, "MaChatLieuVo", "TenChatLieu");
+
             return View(model);
         }
 
         // POST: Admin/DongHo_65131134/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MaDongHo,TenDongHo,MaThuongHieu,MaNoiSanXuat,MaLoai,MoTa,GiaBan,GiaNhap,SoLuongTon,HinhAnh,KichThuoc,MauSac,BaoHanh,NgayTao")] DongHo dongHo)
+        // CẬP NHẬT: Thêm MaChatLieuDay, MaChatLieuVo vào Bind
+        public ActionResult Create([Bind(Include = "MaDongHo,TenDongHo,MaThuongHieu,MaNoiSanXuat,MaLoai,MoTa,GiaBan,GiaNhap,SoLuongTon,HinhAnh,KichThuoc,MauSac,BaoHanh,NgayTao,MaChatLieuDay,MaChatLieuVo")] DongHo dongHo)
         {
             var AnhDH = Request.Files["Avatar"];
-            //Lấy thông tin từ input type=file có tên Avatar
-            string postedFileName = System.IO.Path.GetFileName(AnhDH.FileName);
-            //Lưu hình đại diện về Server
-            var path = Server.MapPath("/Images/" + postedFileName);
-            AnhDH.SaveAs(path);
+
+            // Xử lý upload ảnh (nếu có ảnh mới upload)
+            if (AnhDH != null && AnhDH.ContentLength > 0)
+            {
+                string postedFileName = System.IO.Path.GetFileName(AnhDH.FileName);
+                var path = Server.MapPath("/Images/" + postedFileName);
+                AnhDH.SaveAs(path);
+                dongHo.HinhAnh = postedFileName;
+            }
+
             if (ModelState.IsValid)
             {
-                dongHo.MaDongHo = LayMaDH();
-                dongHo.HinhAnh = postedFileName;
+                dongHo.MaDongHo = LayMaDH(); // Đảm bảo mã luôn mới nhất khi lưu
                 db.DongHo.Add(dongHo);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
+            // Nếu model lỗi, load lại Dropdown
             if (string.IsNullOrEmpty(dongHo.MaDongHo))
             {
                 dongHo.MaDongHo = LayMaDH();
             }
+
             ViewBag.MaLoai = new SelectList(db.LoaiDongHo, "MaLoai", "TenLoai", dongHo.MaLoai);
             ViewBag.MaNoiSanXuat = new SelectList(db.NoiSanXuat, "MaNoiSanXuat", "TenNoiSanXuat", dongHo.MaNoiSanXuat);
             ViewBag.MaThuongHieu = new SelectList(db.ThuongHieu, "MaThuongHieu", "TenThuongHieu", dongHo.MaThuongHieu);
+
+            // CẬP NHẬT: Load lại ViewBag cho Dropdown Chất liệu khi có lỗi
+            ViewBag.MaChatLieuDay = new SelectList(db.ChatLieuDay, "MaChatLieuDay", "TenChatLieu", dongHo.MaChatLieuDay);
+            ViewBag.MaChatLieuVo = new SelectList(db.ChatLieuVo, "MaChatLieuVo", "TenChatLieu", dongHo.MaChatLieuVo);
+
             return View(dongHo);
         }
 
@@ -114,28 +136,49 @@ namespace Project_65131134.Areas.Admin
             {
                 return HttpNotFound();
             }
+
             ViewBag.MaLoai = new SelectList(db.LoaiDongHo, "MaLoai", "TenLoai", dongHo.MaLoai);
             ViewBag.MaNoiSanXuat = new SelectList(db.NoiSanXuat, "MaNoiSanXuat", "TenNoiSanXuat", dongHo.MaNoiSanXuat);
             ViewBag.MaThuongHieu = new SelectList(db.ThuongHieu, "MaThuongHieu", "TenThuongHieu", dongHo.MaThuongHieu);
+
+            // CẬP NHẬT: ViewBag cho Edit
+            ViewBag.MaChatLieuDay = new SelectList(db.ChatLieuDay, "MaChatLieuDay", "TenChatLieu", dongHo.MaChatLieuDay);
+            ViewBag.MaChatLieuVo = new SelectList(db.ChatLieuVo, "MaChatLieuVo", "TenChatLieu", dongHo.MaChatLieuVo);
+
             return View(dongHo);
         }
 
         // POST: Admin/DongHo_65131134/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "MaDongHo,TenDongHo,MaThuongHieu,MaNoiSanXuat,MaLoai,MoTa,GiaBan,GiaNhap,SoLuongTon,HinhAnh,KichThuoc,MauSac,BaoHanh,NgayTao")] DongHo dongHo)
+        // CẬP NHẬT: Thêm MaChatLieuDay, MaChatLieuVo vào Bind
+        public ActionResult Edit([Bind(Include = "MaDongHo,TenDongHo,MaThuongHieu,MaNoiSanXuat,MaLoai,MoTa,GiaBan,GiaNhap,SoLuongTon,HinhAnh,KichThuoc,MauSac,BaoHanh,NgayTao,MaChatLieuDay,MaChatLieuVo")] DongHo dongHo)
         {
+            var AnhDH = Request.Files["Avatar"];
+            if (AnhDH != null && AnhDH.ContentLength > 0)
+            {
+                string postedFileName = System.IO.Path.GetFileName(AnhDH.FileName);
+                var path = Server.MapPath("/Images/" + postedFileName);
+                AnhDH.SaveAs(path);
+                dongHo.HinhAnh = postedFileName;
+            }
+
+
             if (ModelState.IsValid)
             {
                 db.Entry(dongHo).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
             ViewBag.MaLoai = new SelectList(db.LoaiDongHo, "MaLoai", "TenLoai", dongHo.MaLoai);
             ViewBag.MaNoiSanXuat = new SelectList(db.NoiSanXuat, "MaNoiSanXuat", "TenNoiSanXuat", dongHo.MaNoiSanXuat);
             ViewBag.MaThuongHieu = new SelectList(db.ThuongHieu, "MaThuongHieu", "TenThuongHieu", dongHo.MaThuongHieu);
+
+            // CẬP NHẬT: Load lại ViewBag Edit khi lỗi
+            ViewBag.MaChatLieuDay = new SelectList(db.ChatLieuDay, "MaChatLieuDay", "TenChatLieu", dongHo.MaChatLieuDay);
+            ViewBag.MaChatLieuVo = new SelectList(db.ChatLieuVo, "MaChatLieuVo", "TenChatLieu", dongHo.MaChatLieuVo);
+
             return View(dongHo);
         }
 

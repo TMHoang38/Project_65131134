@@ -137,6 +137,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ChatLieuDay.cs">
+      <DependentUpon>Model_65131134.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ChatLieuVo.cs">
+      <DependentUpon>Model_65131134.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChiTietDatHang.cs">
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>

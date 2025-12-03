@@ -35,5 +35,7 @@ namespace Project_65131134.Models
         public virtual DbSet<NhanVien> NhanVien { get; set; }
         public virtual DbSet<ThuocTinh> ThuocTinh { get; set; }
         public virtual DbSet<ThuongHieu> ThuongHieu { get; set; }
+        public virtual DbSet<ChatLieuDay> ChatLieuDay { get; set; }
+        public virtual DbSet<ChatLieuVo> ChatLieuVo { get; set; }
     }
 }
