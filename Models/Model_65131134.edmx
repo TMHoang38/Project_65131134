@@ -44,7 +44,7 @@
           <Property Name="NgayGiaoHang" Type="datetime" />
           <Property Name="DiaChiGiaoHang" Type="nvarchar" MaxLength="200" />
           <Property Name="TongTien" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="TrangThaiDonHang" Type="nvarchar" MaxLength="50" />
+          <Property Name="TrangThaiDonHang" Type="int" />
           <Property Name="GhiChu" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="DongHo">
@@ -375,7 +375,7 @@
           <Property Name="NgayGiaoHang" Type="DateTime" Precision="3" />
           <Property Name="DiaChiGiaoHang" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="TongTien" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="TrangThaiDonHang" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TrangThaiDonHang" Type="String" />
           <Property Name="GhiChu" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ChiTietDatHang" Relationship="Self.FK__ChiTietDa__MaDon__6D0D32F4" FromRole="DatHang" ToRole="ChiTietDatHang" />
           <NavigationProperty Name="KhachHang" Relationship="Self.FK__DatHang__MaKhach__68487DD7" FromRole="DatHang" ToRole="KhachHang" />
