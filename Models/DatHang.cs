@@ -28,7 +28,7 @@ namespace Project_65131134.Models
         public Nullable<System.DateTime> NgayGiaoHang { get; set; }
         public string DiaChiGiaoHang { get; set; }
         public decimal TongTien { get; set; }
-        public string TrangThaiDonHang { get; set; }
+        public Nullable<int> TrangThaiDonHang { get; set; }
         public string GhiChu { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

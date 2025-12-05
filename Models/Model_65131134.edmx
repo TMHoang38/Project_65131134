@@ -375,7 +375,7 @@
           <Property Name="NgayGiaoHang" Type="DateTime" Precision="3" />
           <Property Name="DiaChiGiaoHang" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="TongTien" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="TrangThaiDonHang" Type="String" />
+          <Property Name="TrangThaiDonHang" Type="Int32" />
           <Property Name="GhiChu" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ChiTietDatHang" Relationship="Self.FK__ChiTietDa__MaDon__6D0D32F4" FromRole="DatHang" ToRole="ChiTietDatHang" />
           <NavigationProperty Name="KhachHang" Relationship="Self.FK__DatHang__MaKhach__68487DD7" FromRole="DatHang" ToRole="KhachHang" />
@@ -736,6 +736,7 @@
           <EntitySetMapping Name="DatHang">
             <EntityTypeMapping TypeName="CuaHangDongHo_65131134Model.DatHang">
               <MappingFragment StoreEntitySet="DatHang">
+                <ScalarProperty Name="TrangThaiDonHang" ColumnName="TrangThaiDonHang" />
                 <ScalarProperty Name="MaDonHang" ColumnName="MaDonHang" />
                 <ScalarProperty Name="MaKhachHang" ColumnName="MaKhachHang" />
                 <ScalarProperty Name="MaNhanVienDuyet" ColumnName="MaNhanVienDuyet" />
@@ -744,7 +745,6 @@
                 <ScalarProperty Name="NgayGiaoHang" ColumnName="NgayGiaoHang" />
                 <ScalarProperty Name="DiaChiGiaoHang" ColumnName="DiaChiGiaoHang" />
                 <ScalarProperty Name="TongTien" ColumnName="TongTien" />
-                <ScalarProperty Name="TrangThaiDonHang" ColumnName="TrangThaiDonHang" />
                 <ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
               </MappingFragment>
             </EntityTypeMapping>
