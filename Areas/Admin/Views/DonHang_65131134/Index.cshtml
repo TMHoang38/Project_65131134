@@ -65,7 +65,7 @@
 <div class="my-3">
     @{
         var trangThaiHienTai = ViewBag.TrangThaiHienTai as int?;
-        // Khai báo tên Controller và Area để dùng chung cho ngắn gọn (hoặc điền trực tiếp vào từng dòng)
+        // Khai báo tên Controller và Area để dùng chung cho ngắn gọn
         string controllerName = "DonHang_65131134";
         string areaName = "Admin";
     }
@@ -124,7 +124,7 @@
                         {
                             case 0: badgeClass = "bg-warning text-dark"; statusText = "Chờ xác nhận"; break;
                             case 1: badgeClass = "bg-info text-white"; statusText = "Chuẩn bị hàng"; break;
-                            case 2: badgeClass = "bg-primary"; statusText = "Chờ giao"; break; // Ít dùng
+                            case 2: badgeClass = "bg-primary"; statusText = "Chờ giao"; break;
                             case 3: badgeClass = "bg-primary"; statusText = "Đang giao"; break;
                             case 4: badgeClass = "bg-success"; statusText = "Thành công"; break;
                             case 5: badgeClass = "bg-danger"; statusText = "Đã hủy"; break;
@@ -132,42 +132,42 @@
                     }
                     <span class="badge @badgeClass">@statusText</span>
             </text>),
-     grid.Column("Chức năng", style: "text-center", format: @<text>
-            <div class="action-links">
-                @{
-                    var currentStatus = item.TrangThaiDonHang ?? 0;
-                    // Chỉ cho phép update nếu chưa thành công (4) và chưa hủy (5)
-                    var canUpdate = currentStatus < 4 && currentStatus != 5 && currentStatus != 2;
-                    // Cho phép hủy nếu chưa hủy (5) và chưa thành công (4) và chưa đang giao (3) - tùy nghiệp vụ
-                    var canCancel = currentStatus != 5 && currentStatus != 4;
-                }
+grid.Column("Chức năng", style: "text-center", format: @<text>
+    <div class="action-links">
+        @{
+            var currentStatus = item.TrangThaiDonHang ?? 0;
+            // Chỉ cho phép update nếu chưa thành công (4) và chưa hủy (5)
+            var canUpdate = currentStatus < 4 && currentStatus != 5 && currentStatus != 2;
+            // Cho phép hủy nếu chưa hủy (5) và chưa thành công (4)
+            var canCancel = currentStatus != 5 && currentStatus != 4;
+        }
 
-                @if (canUpdate)
-                {
-                   <a href="#" class="update-status-btn"
-                      data-order-id="@item.MaDonHang"
-                      data-current-status="@(item.TrangThaiDonHang ?? 0)"
-                      data-bs-toggle="modal"
-                      data-bs-target="#confirmUpdateModal"
-                      title="Chuyển trạng thái">
-                       <img src="@Url.Content("~/Images/check.png")" width="24" height="24" alt="Duyệt" />
-                   </a>
-                }
+        @if (canUpdate)
+        {
+            <a href="#" class="update-status-btn"
+               data-order-id="@item.MaDonHang"
+               data-current-status="@(item.TrangThaiDonHang ?? 0)"
+               data-bs-toggle="modal"
+               data-bs-target="#confirmUpdateModal"
+               title="Chuyển trạng thái">
+                <img src="@Url.Content("~/Images/check.png")" width="24" height="24" alt="Duyệt" />
+            </a>
+        }
 
-                <a href="@Url.Action("Details", new { id = item.MaDonHang })" title="Xem chi tiết">
-                    <img src="@Url.Content("~/Images/visibility.png")" width="24" height="24" alt="Xem" />
-                </a>
+        <a href="@Url.Action("Details", new { id = item.MaDonHang })" title="Xem chi tiết">
+            <img src="@Url.Content("~/Images/visibility.png")" width="24" height="24" alt="Xem" />
+        </a>
 
-                @if (canCancel)
-                {
-                    <a href="#" class="cancel-order-btn" data-order-id="@item.MaDonHang"
-                       data-bs-toggle="modal" data-bs-target="#confirmCancelModal"
-                       title="Hủy đơn hàng">
-                        <img src="@Url.Content("~/Images/delete.png")" width="24" height="24" alt="Hủy" />
-                    </a>
-                }
-            </div>
-    </text>)
+        @if (canCancel)
+        {
+            <a href="#" class="cancel-order-btn" data-order-id="@item.MaDonHang"
+               data-bs-toggle="modal" data-bs-target="#confirmCancelModal"
+               title="Hủy đơn hàng">
+                <img src="@Url.Content("~/Images/delete.png")" width="24" height="24" alt="Hủy" />
+            </a>
+        }
+    </div>
+</text>)
 )
 )
 </div>
@@ -214,7 +214,7 @@
 </div>
 
 @section scripts {
-<script>
+    <script>
     var currentOrderId = null;
     var currentStatusVal = 0; // Mặc định là 0
 
@@ -225,18 +225,14 @@
             return;
         }
 
-        // 1. KHI BẤM NÚT TRÊN BẢNG (Chỉ lấy dữ liệu)
+        // --- 1. XỬ LÝ NÚT UPDATE TRẠNG THÁI ---
         $(document).on('click', '.update-status-btn', function (e) {
             e.preventDefault();
-            // Lấy ID
             currentOrderId = $(this).data('order-id');
-
-            // QUAN TRỌNG: Dùng parseInt để ép về kiểu số nguyên, tránh lỗi so sánh chuỗi
             currentStatusVal = parseInt($(this).data('current-status'));
 
             console.log("Đã chọn đơn: " + currentOrderId + " - Trạng thái cũ: " + currentStatusVal);
 
-            // Đổi câu thông báo modal
             var message = "Bạn có chắc chắn muốn cập nhật trạng thái?";
             if (currentStatusVal === 0) message = "Xác nhận <b>DUYỆT ĐƠN</b> này?<br>(Chuyển sang: Chuẩn bị hàng)";
             else if (currentStatusVal === 1) message = "Đã <b>CHUẨN BỊ XONG</b> đơn này?<br>(Chuyển sang: Đang giao)";
@@ -245,7 +241,7 @@
             $('#modalUpdateMessage').html(message);
         });
 
-        // 2. KHI BẤM NÚT ĐỒNG Ý
+        // Xử lý khi bấm nút ĐỒNG Ý UPDATE
         $('#confirmUpdateBtn').off('click').on('click', function () {
             if (!currentOrderId) {
                 alert("Lỗi: Không tìm thấy mã đơn hàng!");
@@ -258,53 +254,29 @@
                 data: { id: currentOrderId },
                 success: function (response) {
                     if (response.success) {
-                        // Tắt modal Bootstrap 5 - Sử dụng nhiều cách để đảm bảo modal đóng
+                        // Đóng modal update
                         var modalElement = document.getElementById('confirmUpdateModal');
-                        if (modalElement) {
-                            // Cách 1: Sử dụng Bootstrap 5 API
-                            if (typeof bootstrap !== 'undefined') {
-                                var bsModal = bootstrap.Modal.getInstance(modalElement);
-                                if (!bsModal) {
-                                    bsModal = new bootstrap.Modal(modalElement);
-                                }
-                                bsModal.hide();
-                            } 
-                            // Cách 2: Sử dụng jQuery modal (Bootstrap 4)
-                            else if (typeof $.fn.modal !== 'undefined') {
-                                $(modalElement).modal('hide');
-                            }
-                            // Cách 3: Trigger sự kiện đóng modal
-                            var closeEvent = new Event('hide.bs.modal', { bubbles: true });
-                            modalElement.dispatchEvent(closeEvent);
-                            // Cách 4: Click vào nút đóng
-                            var closeBtn = modalElement.querySelector('[data-bs-dismiss="modal"]');
-                            if (closeBtn) {
-                                closeBtn.click();
-                            }
+                         if (typeof jQuery !== 'undefined' && typeof jQuery.fn.modal !== 'undefined') {
+                            $(modalElement).modal('hide');
+                        } else if (typeof bootstrap !== 'undefined') {
+                            var bsModal = bootstrap.Modal.getInstance(modalElement);
+                            if (bsModal) bsModal.hide();
                         }
 
-                        // Đợi một chút để modal đóng hoàn toàn trước khi redirect
-                        setTimeout(function() {
-                            // --- LOGIC CHUYỂN TRANG (REDIRECT) ---
-                            var targetStatus = -1;
+                        // Tính toán trạng thái tiếp theo để chuyển tab
+                        var nextStatus = -1;
+                        if (currentStatusVal === 0) nextStatus = 1;
+                        else if (currentStatusVal === 1) nextStatus = 3;
+                        else if (currentStatusVal === 3) nextStatus = 4;
 
-                            // Tính toán đích đến
-                            if (currentStatusVal === 0) targetStatus = 1;      // Đang chờ (0) -> Qua Chuẩn bị (1)
-                            else if (currentStatusVal === 1) targetStatus = 3; // Đang chuẩn bị (1) -> Qua Đang giao (3)
-                            else if (currentStatusVal === 3) targetStatus = 4; // Đang giao (3) -> Qua Hoàn thành (4)
-
-                            // Thực hiện chuyển hướng
-                            if (targetStatus !== -1) {
-                                // Tạo đường dẫn mới: /Admin/DonHang...?trangThai=X
-                                var newUrl = '@Url.Action("Index", "DonHang_65131134", new { Area = "Admin" })' + '?trangThai=' + targetStatus;
-                                window.location.href = newUrl;
-                            } else {
-                                // Nếu không nằm trong quy trình trên thì reload tại chỗ
-                                location.reload();
-                            }
-                        }, 0); // Đợi 300ms để modal đóng hoàn toàn
+                        if (nextStatus !== -1) {
+                            var baseUrl = '@Url.Action("Index", "DonHang_65131134", new { Area = "Admin" })';
+                            window.location.href = baseUrl + '?trangThai=' + nextStatus;
+                        } else {
+                            location.reload();
+                        }
                     } else {
-                        alert(response.message || 'Lỗi từ server');
+                        alert(response.message || 'Lỗi xử lý từ server');
                     }
                 },
                 error: function (xhr) {
@@ -313,58 +285,49 @@
             });
         });
 
-        // --- CODE HỦY ĐƠN ---
+        // --- 2. XỬ LÝ NÚT HỦY ĐƠN (Đã sửa) ---
+
+        // Lưu ID khi bấm nút thùng rác
         $(document).on('click', '.cancel-order-btn', function (e) {
             e.preventDefault();
             currentOrderId = $(this).data('order-id');
         });
 
+        // Khi bấm "Xác nhận Hủy" trong Modal
         $('#confirmCancelBtn').off('click').on('click', function () {
-            if (currentOrderId) {
-                $.ajax({
-                    url: '@Url.Action("CancelOrder", "DonHang_65131134", new { Area = "Admin" })',
-                    type: 'POST',
-                    data: { id: currentOrderId },
-                    success: function (res) {
-                        if (res.success) {
-                            // Tắt modal Bootstrap 5 - Sử dụng nhiều cách để đảm bảo modal đóng
-                            var modalElement = document.getElementById('confirmCancelModal');
-                            if (modalElement) {
-                                // Cách 1: Sử dụng Bootstrap 5 API
-                                if (typeof bootstrap !== 'undefined') {
-                                    var bsModal = bootstrap.Modal.getInstance(modalElement);
-                                    if (!bsModal) {
-                                        bsModal = new bootstrap.Modal(modalElement);
-                                    }
-                                    bsModal.hide();
-                                } 
-                                // Cách 2: Sử dụng jQuery modal (Bootstrap 4)
-                                else if (typeof $.fn.modal !== 'undefined') {
-                                    $(modalElement).modal('hide');
-                                }
-                                // Cách 3: Trigger sự kiện đóng modal
-                                var closeEvent = new Event('hide.bs.modal', { bubbles: true });
-                                modalElement.dispatchEvent(closeEvent);
-                                // Cách 4: Click vào nút đóng
-                                var closeBtn = modalElement.querySelector('[data-bs-dismiss="modal"]');
-                                if (closeBtn) {
-                                    closeBtn.click();
-                                }
-                            }
-                            // Đợi một chút để modal đóng hoàn toàn trước khi reload
-                            setTimeout(function() {
-                                location.reload();
-                            }, 300);
-                        } else {
-                            alert(res.message);
-                        }
-                    },
-                    error: function (xhr) {
-                        alert('Lỗi kết nối: ' + xhr.statusText);
-                    }
-                });
+            if (!currentOrderId) {
+                alert("Lỗi: Không tìm thấy mã đơn hàng!");
+                return;
             }
+
+            $.ajax({
+                url: '@Url.Action("CancelOrder", "DonHang_65131134", new { Area = "Admin" })',
+                type: 'POST',
+                data: { id: currentOrderId },
+                success: function (res) {
+                    if (res.success) {
+                        // --- SỬA ĐỔI QUAN TRỌNG TẠI ĐÂY ---
+                        // Không cần code đóng modal phức tạp vì chúng ta sẽ chuyển trang ngay lập tức.
+
+                        // 1. Tạo đường dẫn đến Action Index
+                        var baseUrl = '@Url.Action("Index", "DonHang_65131134", new { Area = "Admin" })';
+
+                        // 2. Thêm tham số trangThai=5 để mở tab "Đã hủy"
+                        var redirectUrl = baseUrl + '?trangThai=5';
+
+                        // 3. Thực hiện chuyển trang (Reload toàn bộ)
+                        window.location.href = redirectUrl;
+
+                    } else {
+                        alert(res.message || "Lỗi khi hủy đơn hàng");
+                    }
+                },
+                error: function (xhr) {
+                    alert('Lỗi kết nối: ' + xhr.statusText);
+                }
+            });
         });
+
     });
-</script>
+    </script>
 }
