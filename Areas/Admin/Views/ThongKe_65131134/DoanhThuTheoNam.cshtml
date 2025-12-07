@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Thống kê doanh thu theo năm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h2 class="m-0 font-weight-bold text-primary">Thống kê doanh thu theo năm</h2>
+    </div>
+    <div class="card-body">
+        <div class="row" style="margin-bottom: 20px;">
+            <div class="col-md-6 d-flex align-items-center">
+                <label for="yearSelect" class="mr-2">Chọn năm:</label>
+                <form id="yearForm" action="@Url.Action("DoanhThuTheoNam", "ThongKe_65131134")" method="get" class="d-inline-block">
+                    <select name="year" id="yearSelect" class="form-control" style="width: 150px;">
+                        @for (int y = DateTime.Now.Year; y >= DateTime.Now.Year - 1; y--)
+                        {
+                            <option value="@y" @(y == ViewBag.Nam ? "selected" : "")>@y</option>
+                        }   
+                    </select>
+                </form>
+            </div>
+            <div class="col-md-6 text-right">
+                <h4>Tổng doanh thu năm @ViewBag.Nam: <span style="color: #28a745;">@String.Format("{0:N0}", ViewBag.TongDoanhThu) đ</span></h4>
+            </div>
+        </div>
+
+        <div style="height: 400px; width: 100%;">
+            <canvas id="chartProduct"></canvas>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
+
+    <script>
+        var ctx = document.getElementById("chartProduct");
+
+        // Lấy dữ liệu từ ViewBag
+        var labels = @Html.Raw(Json.Encode(ViewBag.TenThang));
+        var data = @Html.Raw(Json.Encode(ViewBag.DoanhThuThang));
+
+        // Kiểm tra nếu tất cả dữ liệu là 0, thiết lập một giá trị max ảo để trục Y hiển thị
+        var maxDataValue = Math.max(...data);
+
+        var barChartData = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Doanh thu (VNĐ)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    data: data
+                }
+            ]
+        };
+
+        var myChart = new Chart(ctx, {
+            type: "bar",
+            data: barChartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        // Điều chỉnh max nếu tất cả giá trị là 0 để tránh biểu đồ phẳng
+                        max: (maxDataValue === 0) ? (ViewBag.TongDoanhThu > 0 ? ViewBag.TongDoanhThu : 1) : undefined, 
+                        ticks: {
+                            callback: function(value) {
+                                // Sử dụng Intl.NumberFormat để định dạng tiền tệ Việt Nam (1.000.000 đ)
+                                return new Intl.NumberFormat('vi-VN').format(value) + ' đ';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Doanh thu: ' + new Intl.NumberFormat('vi-VN').format(context.parsed.y) + ' đ';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Xử lý khi thay đổi năm (Submit form)
+        document.getElementById('yearSelect').addEventListener('change', function() {
+            document.getElementById('yearForm').submit();
+        });
+    </script>
+}

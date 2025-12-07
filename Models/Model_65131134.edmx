@@ -284,6 +284,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="Sp_ThongKeDoanhThuTheoNam" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Year" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="CuaHangDongHo_65131134ModelStoreContainer">
           <EntitySet Name="ChatLieuDay" EntityType="Self.ChatLieuDay" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChatLieuVo" EntityType="Self.ChatLieuVo" Schema="dbo" store:Type="Tables" />
@@ -672,6 +675,9 @@
             <End Role="ChatLieuVo" EntitySet="ChatLieuVo" />
             <End Role="DongHo" EntitySet="DongHo" />
           </AssociationSet>
+          <FunctionImport Name="Sp_ThongKeDoanhThuTheoNam" ReturnType="Collection(CuaHangDongHo_65131134Model.Sp_ThongKeDoanhThuTheoNam_Result)">
+            <Parameter Name="Year" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="ChatLieuDay">
           <Key>
@@ -715,6 +721,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="Sp_ThongKeDoanhThuTheoNam_Result">
+          <Property Type="Int32" Name="Nam" Nullable="true" />
+          <Property Type="String" Name="TenDongHo" Nullable="false" MaxLength="200" />
+          <Property Type="Int32" Name="TongSoLuongBan" Nullable="true" />
+          <Property Type="Decimal" Name="TongDoanhThu" Nullable="true" Precision="38" Scale="2" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -867,6 +879,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_ThongKeDoanhThuTheoNam" FunctionName="CuaHangDongHo_65131134Model.Store.Sp_ThongKeDoanhThuTheoNam">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CuaHangDongHo_65131134Model.Sp_ThongKeDoanhThuTheoNam_Result">
+                <ScalarProperty Name="Nam" ColumnName="Nam" />
+                <ScalarProperty Name="TenDongHo" ColumnName="TenDongHo" />
+                <ScalarProperty Name="TongSoLuongBan" ColumnName="TongSoLuongBan" />
+                <ScalarProperty Name="TongDoanhThu" ColumnName="TongDoanhThu" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -881,7 +903,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

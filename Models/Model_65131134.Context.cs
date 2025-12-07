@@ -12,6 +12,8 @@ namespace Project_65131134.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class CuaHangDongHo_65131134Entities : DbContext
     {
@@ -37,5 +39,14 @@ namespace Project_65131134.Models
         public virtual DbSet<ThuongHieu> ThuongHieu { get; set; }
         public virtual DbSet<ChatLieuDay> ChatLieuDay { get; set; }
         public virtual DbSet<ChatLieuVo> ChatLieuVo { get; set; }
+    
+        public virtual ObjectResult<Sp_ThongKeDoanhThuTheoNam_Result> Sp_ThongKeDoanhThuTheoNam(Nullable<int> year)
+        {
+            var yearParameter = year.HasValue ?
+                new ObjectParameter("Year", year) :
+                new ObjectParameter("Year", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_ThongKeDoanhThuTheoNam_Result>("Sp_ThongKeDoanhThuTheoNam", yearParameter);
+        }
     }
 }

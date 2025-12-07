@@ -134,6 +134,7 @@
     <Compile Include="Areas\Admin\Controllers\KhachHang_65131134Controller.cs" />
     <Compile Include="Areas\Admin\Controllers\NhanVien_65131134Controller.cs" />
     <Compile Include="Areas\Admin\Controllers\DongHo_65131134Controller.cs" />
+    <Compile Include="Areas\Admin\Controllers\ThongKe_65131134Controller.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -181,6 +182,9 @@
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\NoiSanXuat.cs">
+      <DependentUpon>Model_65131134.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_ThongKeDoanhThuTheoNam_Result.cs">
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ThuocTinh.cs">
@@ -2088,6 +2092,7 @@
     <Content Include="Areas\Admin\Views\DonHang_65131134\Details.cshtml" />
     <Content Include="Areas\Admin\Views\DonHang_65131134\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\DonHang_65131134\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\ThongKe_65131134\DoanhThuTheoNam.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

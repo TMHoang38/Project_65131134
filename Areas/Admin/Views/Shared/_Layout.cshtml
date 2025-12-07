@@ -97,12 +97,20 @@
                     <span>Đơn hàng</span>
                 </a>
             </li>
-
+            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Thống kê</span>
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                   aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Chức năng</span>
                 </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("DoanhThuTheoNam","ThongKe_65131134", new { area = "Admin" })">Thống kê doanh thu</a>
+                        <a class="collapse-item" href="cards.html">Sản phẩm bán chạy nhất</a>
+                        <a class="collapse-item" href="cards.html">Doanh thu trong ngày</a>
+                    </div>
+                </div>
             </li>
 
 
