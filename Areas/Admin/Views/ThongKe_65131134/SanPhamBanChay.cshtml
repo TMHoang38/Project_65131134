@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.Title = "Top sản phẩm bán chạy";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var sanPhamBanChay = ViewBag.SanPhamBanChay as List<Project_65131134.Models.sp_LayTopSanPhamBanChay_Result>;
+    var labels = ViewBag.Labels as string[];
+    var data = ViewBag.Data as int[];
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h2 class="m-0 font-weight-bold text-primary">Top sản phẩm bán chạy</h2>
+    </div>
+    <div class="card-body">
+        <div style="height: 400px; width: 100%; margin-bottom: 30px;">
+            <canvas id="chartSanPhamBanChay"></canvas>
+        </div>
+
+        <div class="mt-4">
+            <h4 class="mb-3">Chi tiết</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Mã SP</th>
+                            <th>Tên SP</th>
+                            <th>Số lượng đã bán</th>
+                            <th>Doanh thu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (sanPhamBanChay != null && sanPhamBanChay.Count > 0)
+                        {
+                            foreach (var item in sanPhamBanChay)
+                            {
+                                <tr>
+                                    <td>@item.MaDongHo</td>
+                                    <td>@item.TenDongHo</td>
+                                    <td>@(item.TongSoLuongDaBan ?? 0)</td>
+                                    <td>@String.Format("{0:N0}", item.TongDoanhThu ?? 0) ₫</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center">Không có dữ liệu</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0"></script>
+
+    <script>
+        var ctx = document.getElementById("chartSanPhamBanChay");
+
+        // Lấy dữ liệu từ ViewBag
+        var labels = @Html.Raw(Json.Encode(labels ?? new string[0]));
+        var data = @Html.Raw(Json.Encode(data ?? new int[0]));
+
+        // 1. Tính toán giá trị lớn nhất trong dữ liệu để tạo khoảng trống cho trục Y
+        var maxDataValue = data.length > 0 ? Math.max(...data) : 0;
+        // Nếu max là 2 thì trục Y sẽ lên tới 3, nếu max là 10 thì lên 11...
+        var yAxisMax = maxDataValue + 1;
+
+        // Nếu muốn trục Y luôn hiển thị ít nhất là 5 dòng dù dữ liệu thấp, có thể dùng:
+        // var yAxisMax = maxDataValue < 5 ? 5 : maxDataValue + 1;
+
+        var barChartData = {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Số lượng đã bán',
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    data: data
+                }
+            ]
+        };
+
+        var myChart = new Chart(ctx, {
+            type: "bar",
+            data: barChartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        // 2. Thiết lập giới hạn trục Y
+                        suggestedMax: yAxisMax,
+                        ticks: {
+                            // 3. Ép buộc hiển thị số nguyên
+                            stepSize: 1,    // Bước nhảy là 1 đơn vị
+                            precision: 0,   // Không lấy số thập phân
+                            callback: function(value) {
+                                if (Number.isInteger(value)) {
+                                    return value;
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Số lượng đã bán'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Mã SP'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Số lượng đã bán: ' + context.parsed.y;
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Top sản phẩm bán chạy'
+                    }
+                }
+            }
+        });
+    </script>
+}

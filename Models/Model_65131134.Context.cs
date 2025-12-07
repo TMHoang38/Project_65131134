@@ -48,5 +48,22 @@ namespace Project_65131134.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_ThongKeDoanhThuTheoNam_Result>("Sp_ThongKeDoanhThuTheoNam", yearParameter);
         }
+    
+        public virtual ObjectResult<sp_LayTopSanPhamBanChay_Result> sp_LayTopSanPhamBanChay(Nullable<int> topN, Nullable<System.DateTime> tuNgay, Nullable<System.DateTime> denNgay)
+        {
+            var topNParameter = topN.HasValue ?
+                new ObjectParameter("TopN", topN) :
+                new ObjectParameter("TopN", typeof(int));
+    
+            var tuNgayParameter = tuNgay.HasValue ?
+                new ObjectParameter("TuNgay", tuNgay) :
+                new ObjectParameter("TuNgay", typeof(System.DateTime));
+    
+            var denNgayParameter = denNgay.HasValue ?
+                new ObjectParameter("DenNgay", denNgay) :
+                new ObjectParameter("DenNgay", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_LayTopSanPhamBanChay_Result>("sp_LayTopSanPhamBanChay", topNParameter, tuNgayParameter, denNgayParameter);
+        }
     }
 }

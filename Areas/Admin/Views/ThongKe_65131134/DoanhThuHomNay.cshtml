@@ -1,0 +1,103 @@
+﻿@model List<Project_65131134.Models.DatHang>
+
+@{
+    ViewBag.Title = "Doanh thu hôm nay";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h2 class="m-0 font-weight-bold text-primary">Doanh thu hôm nay (@String.Format("{0:N0}", ViewBag.TongDoanhThu) ₫)</h2>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Mã HĐ</th>
+                        <th>Ngày tạo</th>
+                        <th>Tên Khách Hàng</th>
+                        <th>Địa chỉ nhận hàng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.MaDonHang</td>
+                                <td>@(item.NgayDatHang.HasValue ? item.NgayDatHang.Value.ToString("dd/MM/yyyy HH:mm") : "")</td>
+                                <td>@(item.KhachHang != null ? item.KhachHang.HoTen : "")</td>
+                                <td>@item.DiaChiGiaoHang</td>
+                                <td>
+                                    <a href="@Url.Action("Details", "DonHang_65131134", new { id = item.MaDonHang })" class="btn btn-primary btn-sm">
+                                        Xem chi tiết
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">Không có đơn hàng nào trong ngày hôm nay</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (ViewBag.TotalPages > 1)
+        {
+            <div class="d-flex justify-content-end mt-3">
+                <nav>
+                    <ul class="pagination">
+                        @if (ViewBag.CurrentPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("DoanhThuHomNay", new { page = ViewBag.CurrentPage - 1 })">&lt;</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">&lt;</span>
+                            </li>
+                        }
+
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            if (i == ViewBag.CurrentPage)
+                            {
+                                <li class="page-item active">
+                                    <span class="page-link">@i</span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("DoanhThuHomNay", new { page = i })">@i</a>
+                                </li>
+                            }
+                        }
+
+                        @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("DoanhThuHomNay", new { page = ViewBag.CurrentPage + 1 })">&gt;</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">&gt;</span>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        }
+    </div>
+</div>

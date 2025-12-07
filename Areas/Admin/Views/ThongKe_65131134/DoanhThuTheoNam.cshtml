@@ -16,7 +16,7 @@
                         @for (int y = DateTime.Now.Year; y >= DateTime.Now.Year - 1; y--)
                         {
                             <option value="@y" @(y == ViewBag.Nam ? "selected" : "")>@y</option>
-                        }   
+                        }
                     </select>
                 </form>
             </div>
@@ -37,12 +37,20 @@
     <script>
         var ctx = document.getElementById("chartProduct");
 
-        // Lấy dữ liệu từ ViewBag
+        // 1. Lấy dữ liệu an toàn từ Server và chuyển thành biến JavaScript
         var labels = @Html.Raw(Json.Encode(ViewBag.TenThang));
         var data = @Html.Raw(Json.Encode(ViewBag.DoanhThuThang));
+        var totalRevenue = @Html.Raw(Json.Encode(ViewBag.TongDoanhThu));
 
-        // Kiểm tra nếu tất cả dữ liệu là 0, thiết lập một giá trị max ảo để trục Y hiển thị
+        // Kiểm tra dữ liệu lớn nhất trong mảng
         var maxDataValue = Math.max(...data);
+
+        // Logic tính Max trục Y:
+        // Nếu tất cả là 0 -> Thì lấy Tổng doanh thu làm mốc (nếu tổng > 0), ngược lại lấy 1.000.000 để biểu đồ không bị bẹp
+        var yAxisMax = undefined;
+        if (maxDataValue === 0) {
+            yAxisMax = (totalRevenue > 0) ? totalRevenue : 1000000;
+        }
 
         var barChartData = {
             labels: labels,
@@ -66,11 +74,10 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-                        // Điều chỉnh max nếu tất cả giá trị là 0 để tránh biểu đồ phẳng
-                        max: (maxDataValue === 0) ? (ViewBag.TongDoanhThu > 0 ? ViewBag.TongDoanhThu : 1) : undefined, 
+                        // Sử dụng biến đã tính toán an toàn ở trên
+                        max: yAxisMax,
                         ticks: {
                             callback: function(value) {
-                                // Sử dụng Intl.NumberFormat để định dạng tiền tệ Việt Nam (1.000.000 đ)
                                 return new Intl.NumberFormat('vi-VN').format(value) + ' đ';
                             }
                         }
@@ -92,7 +99,7 @@
             }
         });
 
-        // Xử lý khi thay đổi năm (Submit form)
+        // Xử lý khi thay đổi năm
         document.getElementById('yearSelect').addEventListener('change', function() {
             document.getElementById('yearForm').submit();
         });

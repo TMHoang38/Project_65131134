@@ -184,6 +184,9 @@
     <Compile Include="Models\NoiSanXuat.cs">
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_LayTopSanPhamBanChay_Result.cs">
+      <DependentUpon>Model_65131134.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Sp_ThongKeDoanhThuTheoNam_Result.cs">
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>
@@ -2093,6 +2096,8 @@
     <Content Include="Areas\Admin\Views\DonHang_65131134\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\DonHang_65131134\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ThongKe_65131134\DoanhThuTheoNam.cshtml" />
+    <Content Include="Areas\Admin\Views\ThongKe_65131134\DoanhThuHomNay.cshtml" />
+    <Content Include="Areas\Admin\Views\ThongKe_65131134\SanPhamBanChay.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

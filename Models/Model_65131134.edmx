@@ -284,6 +284,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="sp_LayTopSanPhamBanChay" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TopN" Type="int" Mode="In" />
+          <Parameter Name="TuNgay" Type="datetime" Mode="In" />
+          <Parameter Name="DenNgay" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="Sp_ThongKeDoanhThuTheoNam" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Year" Type="int" Mode="In" />
         </Function>
@@ -676,7 +681,12 @@
             <End Role="DongHo" EntitySet="DongHo" />
           </AssociationSet>
           <FunctionImport Name="Sp_ThongKeDoanhThuTheoNam" ReturnType="Collection(CuaHangDongHo_65131134Model.Sp_ThongKeDoanhThuTheoNam_Result)">
-            <Parameter Name="Year" Mode="In" Type="Int32" />
+          <Parameter Name="Year" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_LayTopSanPhamBanChay" ReturnType="Collection(CuaHangDongHo_65131134Model.sp_LayTopSanPhamBanChay_Result)">
+            <Parameter Name="TopN" Mode="In" Type="Int32" />
+            <Parameter Name="TuNgay" Mode="In" Type="DateTime" />
+            <Parameter Name="DenNgay" Mode="In" Type="DateTime" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="ChatLieuDay">
@@ -725,6 +735,15 @@
           <Property Type="Int32" Name="Nam" Nullable="true" />
           <Property Type="String" Name="TenDongHo" Nullable="false" MaxLength="200" />
           <Property Type="Int32" Name="TongSoLuongBan" Nullable="true" />
+          <Property Type="Decimal" Name="TongDoanhThu" Nullable="true" Precision="38" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="sp_LayTopSanPhamBanChay_Result">
+          <Property Type="String" Name="MaDongHo" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="TenDongHo" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="HinhAnh" Nullable="true" MaxLength="500" />
+          <Property Type="Decimal" Name="GiaBan" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="String" Name="TenThuongHieu" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="TongSoLuongDaBan" Nullable="true" />
           <Property Type="Decimal" Name="TongDoanhThu" Nullable="true" Precision="38" Scale="2" />
         </ComplexType>
       </Schema>
@@ -885,6 +904,19 @@
                 <ScalarProperty Name="Nam" ColumnName="Nam" />
                 <ScalarProperty Name="TenDongHo" ColumnName="TenDongHo" />
                 <ScalarProperty Name="TongSoLuongBan" ColumnName="TongSoLuongBan" />
+                <ScalarProperty Name="TongDoanhThu" ColumnName="TongDoanhThu" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_LayTopSanPhamBanChay" FunctionName="CuaHangDongHo_65131134Model.Store.sp_LayTopSanPhamBanChay">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CuaHangDongHo_65131134Model.sp_LayTopSanPhamBanChay_Result">
+                <ScalarProperty Name="MaDongHo" ColumnName="MaDongHo" />
+                <ScalarProperty Name="TenDongHo" ColumnName="TenDongHo" />
+                <ScalarProperty Name="HinhAnh" ColumnName="HinhAnh" />
+                <ScalarProperty Name="GiaBan" ColumnName="GiaBan" />
+                <ScalarProperty Name="TenThuongHieu" ColumnName="TenThuongHieu" />
+                <ScalarProperty Name="TongSoLuongDaBan" ColumnName="TongSoLuongDaBan" />
                 <ScalarProperty Name="TongDoanhThu" ColumnName="TongDoanhThu" />
               </ComplexTypeMapping>
             </ResultMapping>
