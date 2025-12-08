@@ -33,7 +33,7 @@
         <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Logo/Thương hiệu -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="@Url.Action("Index","Home",new { area = ""})">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href=""@Url.Action("DoanhThuHomNay","ThongKe_65131134", new { area = "Admin" })">
                 <div class="sidebar-brand-text mx-3">Xin chào </div>
             </a>
 
@@ -41,11 +41,27 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Mục menu - Trang tổng quan (Dashboard) -->
-            <li class="nav-item active">
+            <!--<li class="nav-item active">
                 <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
+            </li>-->
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item active">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                   aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Tổng quan</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("DoanhThuTheoNam","ThongKe_65131134", new { area = "Admin" })">Thống kê doanh thu</a>
+                        <a class="collapse-item" href="@Url.Action("SanPhamBanChay","ThongKe_65131134", new { area = "Admin" })">Sản phẩm bán chạy nhất</a>
+                        <a class="collapse-item" href="@Url.Action("DoanhThuHomNay","ThongKe_65131134", new { area = "Admin" })">Doanh thu trong ngày</a>
+                    </div>
+                </div>
             </li>
 
             <!-- Đường phân cách -->
@@ -97,21 +113,7 @@
                     <span>Đơn hàng</span>
                 </a>
             </li>
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                   aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Chức năng</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="@Url.Action("DoanhThuTheoNam","ThongKe_65131134", new { area = "Admin" })">Thống kê doanh thu</a>
-                        <a class="collapse-item" href="@Url.Action("SanPhamBanChay","ThongKe_65131134", new { area = "Admin" })">Sản phẩm bán chạy nhất</a>
-                        <a class="collapse-item" href="@Url.Action("DoanhThuHomNay","ThongKe_65131134", new { area = "Admin" })">Doanh thu trong ngày</a>
-                    </div>
-                </div>
-            </li>
+
 
 
             <!-- Đường phân cách chỉ hiện trên màn hình lớn -->

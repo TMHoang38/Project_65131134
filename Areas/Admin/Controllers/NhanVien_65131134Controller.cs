@@ -14,6 +14,21 @@ namespace Project_65131134.Areas.Admin.Controllers
     {
         private CuaHangDongHo_65131134Entities db = new CuaHangDongHo_65131134Entities();
 
+        [HttpGet]
+        public ActionResult TimKiem(string hoTen = "")
+        {
+            ViewBag.hoTen = hoTen;
+            object[] parameters = {
+        new System.Data.SqlClient.SqlParameter("@hoTen", hoTen)
+    };
+            var nhanViens = db.NhanVien.SqlQuery("NhanVien_TimKiem @hoTen", parameters).ToList();
+
+            if (nhanViens.Count == 0)
+                ViewBag.TB = "Không có thông tin tìm kiếm.";
+
+            return View("Index", nhanViens);
+        }
+
         string LayMaNV()
         {
             var maMax = db.NhanVien

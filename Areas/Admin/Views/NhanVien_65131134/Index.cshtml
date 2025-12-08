@@ -35,11 +35,28 @@
     }
 </style>
 
-<h2 class="text-center">Danh sách nhân viên</h2>
+<h2 class="text-center my-4 text-primary fw-bold">Danh sách nhân viên</h2>
 
-<div class="btn btn-success mb-3">
-    @Html.ActionLink("Thêm nhân viên mới", "Create", null, new { @style = "color: white;" })
+<div class="d-flex ">
+    <div class="btn btn-success mb-3">
+        @Html.ActionLink("Thêm nhân viên mới", "Create", null, new { @style = "color: white;" })
+    </div>
+    @using (Html.BeginForm("TimKiem", "NhanVien_65131134", FormMethod.Get, new { @class = "ms-auto d-none d-sm-inline-block form-inline my-2 my-md-0 mw-100 navbar-search border-4" }))
+    {
+        <div class="input-group">
+            <input type="text" class="form-control bg-light small" name="hoTen" value="@ViewBag.hoTen" placeholder="Tìm kiếm tên nhân viên"
+                   aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+    }
 </div>
+
+
+
 
 <div id="gridContent">
     @ViewBag.TB

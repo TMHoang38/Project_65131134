@@ -284,6 +284,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="KhachHang_TimKiem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="HoTen" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="NhanVien_TimKiem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="HoTen" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="sp_LayTopSanPhamBanChay" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="TopN" Type="int" Mode="In" />
           <Parameter Name="TuNgay" Type="datetime" Mode="In" />
@@ -688,6 +694,12 @@
             <Parameter Name="TuNgay" Mode="In" Type="DateTime" />
             <Parameter Name="DenNgay" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <FunctionImport Name="KhachHang_TimKiem" ReturnType="Collection(CuaHangDongHo_65131134Model.KhachHang_TimKiem_Result)">
+          <Parameter Name="HoTen" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="NhanVien_TimKiem" ReturnType="Collection(CuaHangDongHo_65131134Model.NhanVien_TimKiem_Result)">
+          <Parameter Name="HoTen" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="ChatLieuDay">
           <Key>
@@ -745,6 +757,27 @@
           <Property Type="String" Name="TenThuongHieu" Nullable="true" MaxLength="100" />
           <Property Type="Int32" Name="TongSoLuongDaBan" Nullable="true" />
           <Property Type="Decimal" Name="TongDoanhThu" Nullable="true" Precision="38" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="KhachHang_TimKiem_Result">
+          <Property Type="String" Name="MaNhanVien" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="HoTen" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="SoDienThoai" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="ChucVu" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="NgayVaoLam" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="NhanVien_TimKiem_Result">
+          <Property Type="String" Name="MaNhanVien" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="TenDangNhap" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="MatKhau" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="HoTen" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="SoDienThoai" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="DiaChi" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ChucVu" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="VaiTro" Nullable="false" />
+          <Property Type="DateTime" Name="NgayVaoLam" Nullable="true" />
+          <Property Type="DateTime" Name="NgayTao" Nullable="true" Precision="23" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -918,6 +951,35 @@
                 <ScalarProperty Name="TenThuongHieu" ColumnName="TenThuongHieu" />
                 <ScalarProperty Name="TongSoLuongDaBan" ColumnName="TongSoLuongDaBan" />
                 <ScalarProperty Name="TongDoanhThu" ColumnName="TongDoanhThu" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="KhachHang_TimKiem" FunctionName="CuaHangDongHo_65131134Model.Store.KhachHang_TimKiem">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CuaHangDongHo_65131134Model.KhachHang_TimKiem_Result">
+                <ScalarProperty Name="MaNhanVien" ColumnName="MaNhanVien" />
+                <ScalarProperty Name="HoTen" ColumnName="HoTen" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="SoDienThoai" ColumnName="SoDienThoai" />
+                <ScalarProperty Name="ChucVu" ColumnName="ChucVu" />
+                <ScalarProperty Name="NgayVaoLam" ColumnName="NgayVaoLam" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="NhanVien_TimKiem" FunctionName="CuaHangDongHo_65131134Model.Store.NhanVien_TimKiem">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CuaHangDongHo_65131134Model.NhanVien_TimKiem_Result">
+                <ScalarProperty Name="MaNhanVien" ColumnName="MaNhanVien" />
+                <ScalarProperty Name="TenDangNhap" ColumnName="TenDangNhap" />
+                <ScalarProperty Name="MatKhau" ColumnName="MatKhau" />
+                <ScalarProperty Name="HoTen" ColumnName="HoTen" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="SoDienThoai" ColumnName="SoDienThoai" />
+                <ScalarProperty Name="DiaChi" ColumnName="DiaChi" />
+                <ScalarProperty Name="ChucVu" ColumnName="ChucVu" />
+                <ScalarProperty Name="VaiTro" ColumnName="VaiTro" />
+                <ScalarProperty Name="NgayVaoLam" ColumnName="NgayVaoLam" />
+                <ScalarProperty Name="NgayTao" ColumnName="NgayTao" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

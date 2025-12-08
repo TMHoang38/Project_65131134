@@ -14,6 +14,28 @@ namespace Project_65131134.Areas.Admin.Controllers
     {
         private CuaHangDongHo_65131134Entities db = new CuaHangDongHo_65131134Entities();
 
+        [HttpGet]
+        public ActionResult TimKiem(string hoTen = "")
+        {
+            ViewBag.hoTen = hoTen;
+
+            // Sử dụng LINQ để tìm kiếm
+            var nhanViens = db.KhachHang.AsQueryable();
+
+            if (!string.IsNullOrEmpty(hoTen))
+            {
+                // Tìm kiếm theo tên có chứa từ khóa (tương đương LIKE %...%)
+                nhanViens = nhanViens.Where(x => x.HoTen.Contains(hoTen));
+            }
+
+            var result = nhanViens.ToList();
+
+            if (result.Count == 0)
+                ViewBag.TB = "Không có thông tin tìm kiếm.";
+
+            return View("Index", result);
+        }
+
         string LayMaKH()
         {
             var maMax = db.KhachHang

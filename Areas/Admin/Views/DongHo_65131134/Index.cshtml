@@ -30,10 +30,31 @@
         text-decoration: none;
     }
 </style>
-<h2 class="text-center">Danh sách đồng hồ</h2>
+<h2 class="text-center my-4 text-primary fw-bold">Danh sách đồng hồ</h2>
 
-<div class="btn btn-success mb-3">
-    @Html.ActionLink("Thêm đồng hồ mới", "Create", null, new { @style = "color: white;" })
+<div class="d-flex ">
+    <div class="btn btn-success mb-3">
+        @Html.ActionLink("Thêm đồng hồ mới", "Create", null, new { @style = "color: white;" })
+    </div>
+    <form class="justify-content-between d-none d-sm-inline-block form-inline my-2 my-md-0 mw-100 navbar-search border-4">
+        <div class="input-group">
+            <input type="text" class="form-control bg-light small" placeholder="Tìm kiếm..."
+                   aria-label="Search" aria-describedby="basic-addon2">
+            <input type="" class="form-control bg-light small" placeholder="Tìm kiếm..."
+                   aria-label="Search" aria-describedby="basic-addon2">
+            <input type="text" class="form-control bg-light small" placeholder="Tìm kiếm..."
+                   aria-label="Search" aria-describedby="basic-addon2">
+            <input type="text" class="form-control bg-light small" placeholder="Tìm kiếm..."
+                   aria-label="Search" aria-describedby="basic-addon2">
+            <input type="text" class="form-control bg-light small" placeholder="Tìm kiếm..."
+                   aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 <div id="gridContent">
     @ViewBag.TB
@@ -45,7 +66,8 @@
         alternatingRowStyle: "alternatingRowStyle",
           columns: new[]  // colums in grid
          {
-    grid.Column("MaDongHo","Mã đồng hồ"), //the model fields to display
+    grid.Column("MaDongHo","Mã đồng hồ"),
+    grid.Column("TenDongHo","Tên đồng hồ"),
     grid.Column("Giá bán",
     format: item => string.Format(
         new System.Globalization.CultureInfo("vi-VN"), // Chỉ định Culture là tiếng Việt

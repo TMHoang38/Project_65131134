@@ -160,6 +160,9 @@
     <Compile Include="Models\KhachHang.cs">
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\KhachHang_TimKiem_Result.cs">
+      <DependentUpon>Model_65131134.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\LoaiDongHo.cs">
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>
@@ -179,6 +182,9 @@
       <DependentUpon>Model_65131134.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\NhanVien.cs">
+      <DependentUpon>Model_65131134.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\NhanVien_TimKiem_Result.cs">
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\NoiSanXuat.cs">

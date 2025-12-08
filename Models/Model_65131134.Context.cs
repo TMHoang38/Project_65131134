@@ -65,5 +65,23 @@ namespace Project_65131134.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_LayTopSanPhamBanChay_Result>("sp_LayTopSanPhamBanChay", topNParameter, tuNgayParameter, denNgayParameter);
         }
+    
+        public virtual ObjectResult<KhachHang_TimKiem_Result> KhachHang_TimKiem(string hoTen)
+        {
+            var hoTenParameter = hoTen != null ?
+                new ObjectParameter("HoTen", hoTen) :
+                new ObjectParameter("HoTen", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<KhachHang_TimKiem_Result>("KhachHang_TimKiem", hoTenParameter);
+        }
+    
+        public virtual ObjectResult<NhanVien_TimKiem_Result> NhanVien_TimKiem(string hoTen)
+        {
+            var hoTenParameter = hoTen != null ?
+                new ObjectParameter("HoTen", hoTen) :
+                new ObjectParameter("HoTen", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<NhanVien_TimKiem_Result>("NhanVien_TimKiem", hoTenParameter);
+        }
     }
 }
