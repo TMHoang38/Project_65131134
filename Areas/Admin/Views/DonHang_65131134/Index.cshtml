@@ -7,58 +7,42 @@
 }
 
 <style>
+
     .grid-footer {
-        color: #000;
-        font: 17px Calibri;
         text-align: center;
-        font-weight: bold;
+        padding: 15px 0;
     }
+
 
         .grid-footer a {
-            background-color: #ffffff;
-            color: blue;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            padding: 5px 15px;
-            margin: 0 2px;
+            color: #007bff;
             text-decoration: none;
-            border: 1px solid #ddd;
+            padding: 8px 12px;
+            margin: 0 4px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            display: inline-block;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-            .grid-footer a:hover {
-                background-color: #eee;
+
+            .grid-footer a[disabled],
+            .grid-footer b,
+            .grid-footer a.webgrid-pager-current {
+                background-color: #007bff;
+                color: white;
+                border-color: #007bff;
+                font-weight: bold;
+                cursor: default;
             }
 
-    /* Đảm bảo các nút chức năng nằm cùng hàng */
-    .action-links a {
-        display: inline-block;
-        margin-right: 8px;
-        transition: transform 0.2s;
-    }
 
-        .action-links a:hover {
-            transform: scale(1.2);
-        }
-
-    /* Style cho nút filter active */
-    .btn-filter.active {
-        opacity: 1;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
-        border: 2px solid #000;
-    }
-
-    .btn-filter {
-        opacity: 0.8;
-    }
-
-    .table th {
-        background-color: #f8f9fa;
-        text-align: center;
-    }
-
-    .table td {
-        vertical-align: middle;
-    }
+            .grid-footer a:not(.webgrid-pager-current):hover {
+                background-color: #e9ecef;
+                color: #0056b3;
+            }
 </style>
+
 
 <h2 class="text-center my-4 text-primary fw-bold">DANH SÁCH ĐƠN HÀNG</h2>
 
@@ -109,6 +93,7 @@
         fillEmptyRows: false,
         mode: WebGridPagerModes.Numeric,
         columns: grid.Columns(
+            grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + Math.Round(Convert.ToDouble(grid.TotalRowCount / grid.PageCount) / grid.RowsPerPage) * grid.RowsPerPage * grid.PageIndex),
             grid.Column("MaDonHang", "Mã ĐH", style: "text-center"),
             grid.Column("NgayDatHang", "Ngày đặt", format: item => string.Format("{0:dd/MM/yyyy}", item.NgayDatHang), style: "text-center"),
             grid.Column("KhachHang.HoTen", "Tên khách hàng"),

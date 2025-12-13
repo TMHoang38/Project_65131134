@@ -1,0 +1,35 @@
+﻿@model Project_65131134.Models.NoiSanXuat
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>NoiSanXuat</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TenNoiSanXuat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TenNoiSanXuat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MoTa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MoTa)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MaNoiSanXuat }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

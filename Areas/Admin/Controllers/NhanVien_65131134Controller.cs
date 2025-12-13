@@ -156,8 +156,8 @@ namespace Project_65131134.Areas.Admin.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             NhanVien nhanVien = db.NhanVien.Find(id);
-            db.NhanVien.Remove(nhanVien);
-            db.SaveChanges();
+                db.NhanVien.Remove(nhanVien);
+                db.SaveChanges();
             return RedirectToAction("Index");
         }
 

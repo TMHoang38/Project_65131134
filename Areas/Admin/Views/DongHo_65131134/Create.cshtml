@@ -1,149 +1,243 @@
 ﻿@model Project_65131134.Models.DongHo
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Thêm đồng hồ mới";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Thêm đồng hồ mới</h2>
-
 <style>
-    a {
-        color: white;
+    /* 1. Giao diện Card (Khung bao ngoài) */
+    .card-custom {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.08);
     }
 
-        a:hover {
-            text-decoration: none;
-            color: white;
+    .card-header-custom {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        color: white;
+        border-radius: 15px 15px 0 0 !important;
+        padding: 20px;
+    }
+
+    .input-group {
+        border-radius: 0.375rem;
+        transition: all 0.2s;
+        overflow: hidden;
+    }
+
+    .input-group-text {
+        background-color: #f8f9fc;
+        border-right: none;
+        color: #4e73df;
+        border-color: #d1d3e2;
+        min-width: 45px;
+        justify-content: center;
+    }
+
+    .input-group .form-control {
+        border-left: none;
+        color: #6e707e;
+        border-color: #d1d3e2;
+        position: relative;
+        flex: 1 1 auto;
+        width: 1% !important;
+        margin-bottom: 0;
+    }
+
+        .input-group .form-control:focus {
+            box-shadow: none !important;
+            border-color: #d1d3e2;
+            z-index: 3;
+        }
+
+    .input-group:focus-within {
+        z-index: 5;
+        border-radius: 0.375rem;
+    }
+
+        .input-group:focus-within .input-group-text,
+        .input-group:focus-within .form-control {
+            border-color: #4e73df;
+        }
+
+    .btn-custom {
+        border-radius: 50px;
+        padding: 10px 30px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 </style>
 
-
-@using (Html.BeginForm("Create", "DongHo_65131134", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-
-<div class="form-horizontal">
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.MaDongHo, "Mã đồng hồ", htmlAttributes: new { @class = "control-label col-md-2" })
+<div class="container">
+    <div class="row justify-content-center">
         <div class="col-md-10">
-            @Html.EditorFor(model => model.MaDongHo, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-            @Html.ValidationMessageFor(model => model.MaDongHo, "", new { @class = "text-danger" })
+            <div class="card card-custom">
+                <div class="card-header card-header-custom text-center">
+                    <h3 class="mb-0 fw-bold"><i class="fas fa-plus-circle me-2"></i> Thêm Đồng Hồ Mới</h3>
+                </div>
+                <div class="card-body p-5">
+                    @using (Html.BeginForm("Create", "DongHo_65131134", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger text-center mb-4" })
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Mã đồng hồ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-id-card text-primary"></i></span>
+                                    @Html.EditorFor(model => model.MaDongHo, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @style = "background-color: #e9ecef" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.MaDongHo, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Tên đồng hồ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-clock text-primary"></i></span>
+                                    @Html.EditorFor(model => model.TenDongHo, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên đồng hồ" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.TenDongHo, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Thương hiệu</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-tag text-primary"></i></span>
+                                    @Html.DropDownList("MaThuongHieu", null, htmlAttributes: new { @class = "form-control form-select" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.MaThuongHieu, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Nơi sản xuất</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-map-marker-alt text-primary"></i></span>
+                                    @Html.DropDownList("MaNoiSanXuat", null, htmlAttributes: new { @class = "form-control form-select" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.MaNoiSanXuat, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Loại đồng hồ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-list text-primary"></i></span>
+                                    @Html.DropDownList("MaLoai", null, htmlAttributes: new { @class = "form-control form-select" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.MaLoai, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Giá bán</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-dollar-sign text-primary"></i></span>
+                                    @Html.EditorFor(model => model.GiaBan, new { htmlAttributes = new { @class = "form-control", @id = "GiaBanInput", placeholder = "Nhập giá bán" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.GiaBan, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Chất liệu dây</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-link text-primary"></i></span>
+                                    @Html.DropDownList("MaChatLieuDay", null, htmlAttributes: new { @class = "form-control form-select" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.MaChatLieuDay, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Chất liệu vỏ</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-circle text-primary"></i></span>
+                                    @Html.DropDownList("MaChatLieuVo", null, htmlAttributes: new { @class = "form-control form-select" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.MaChatLieuVo, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Số lượng tồn</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-boxes text-primary"></i></span>
+                                    @Html.EditorFor(model => model.SoLuongTon, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập số lượng" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.SoLuongTon, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Kích thước</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-ruler text-primary"></i></span>
+                                    @Html.EditorFor(model => model.KichThuoc, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập kích thước" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.KichThuoc, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Màu sắc</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-palette text-primary"></i></span>
+                                    @Html.EditorFor(model => model.MauSac, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập màu sắc" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.MauSac, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Bảo hành</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-shield-alt text-primary"></i></span>
+                                    @Html.EditorFor(model => model.BaoHanh, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập thời gian bảo hành" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.BaoHanh, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Hình ảnh</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-image text-primary"></i></span>
+                                    <input type="file" name="Avatar" accept="image/*" required class="form-control" />
+                                </div>
+                                @Html.ValidationMessageFor(model => model.HinhAnh, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-custom">
+                                <i class="fas fa-arrow-left me-2"></i> Quay lại
+                            </a>
+
+                            <button type="reset" class="btn btn-warning btn-custom text-white">
+                                <i class="fas fa-sync-alt me-2"></i> Làm mới
+                            </button>
+
+                            <button type="submit" class="btn btn-primary btn-custom">
+                                <i class="fas fa-save me-2"></i> Lưu đồng hồ
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.TenDongHo, "Tên đồng hồ", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.TenDongHo, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.TenDongHo, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.MaThuongHieu, "Thương hiệu", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("MaThuongHieu", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.MaThuongHieu, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.MaNoiSanXuat, "Nơi sản xuất", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("MaNoiSanXuat", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.MaNoiSanXuat, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.MaLoai, "Loại đồng hồ", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("MaLoai", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.MaLoai, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.MaChatLieuDay, "Chất liệu dây", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("MaChatLieuDay", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.MaChatLieuDay, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.MaChatLieuVo, "Chất liệu vỏ", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("MaChatLieuVo", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.MaChatLieuVo, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.GiaBan, "Giá bán", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.GiaBan, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.GiaBan, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.SoLuongTon, "Số lượng tồn", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.SoLuongTon, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.SoLuongTon, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.HinhAnh, "Hình ảnh", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input type="file" style="height:30px;" name="Avatar" accept="image/*" required />
-            @Html.ValidationMessageFor(model => model.HinhAnh, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.KichThuoc, "Kích thước", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.KichThuoc, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.KichThuoc, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.MauSac, "Màu sắc", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.MauSac, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.MauSac, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.BaoHanh, "Bảo hành", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.BaoHanh, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.BaoHanh, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10 d-flex justify-content-between">
-            <input type="submit" value="Thêm mới" class="btn btn-default btn-success" />
-            <div class="btn btn-primary text-white"> @Html.ActionLink("Quay lại", "Index")</div>
-        </div>
-    </div>
-</div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section scripts {
-    <script>// Hàm định dạng số về chuỗi VND (ví dụ: 100000 -> 100.000 VND)
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        // Hàm định dạng số về chuỗi VND (ví dụ: 100000 -> 100.000 VND)
         function formatVND(n) {
             return n.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') + ' VND';
         }
@@ -154,28 +248,29 @@
         }
 
         $(document).ready(function () {
-            var $input = $('#GiaBanInput');
+            var $input = $('#GiaBanInput'); // Script này sẽ hoạt động vì tôi đã thêm id="GiaBanInput" ở trên HTML
 
             // Định dạng giá trị ban đầu nếu có
             if ($input.val() && $input.val() !== '0,00') {
-                $input.val(formatVND(parseFloat($input.val().replace(',', '.')))); // Chuyển sang số và định dạng
+                $input.val(formatVND(parseFloat($input.val().replace(',', '.'))));
             }
 
-            $input.on('blur', function() {
+            $input.on('blur', function () {
                 var value = unformatVND($(this).val());
                 if (value) {
                     $(this).val(formatVND(parseFloat(value)));
                 }
-            }).on('focus', function() {
-                // Khi focus vào, hiển thị giá trị số để người dùng dễ chỉnh sửa và tránh lỗi validation
+            }).on('focus', function () {
+                // Khi focus vào, hiển thị giá trị số để người dùng dễ chỉnh sửa
                 var value = unformatVND($(this).val());
                 $(this).val(value);
             });
 
             // Xử lý khi form submit, đảm bảo gửi giá trị số lên server
-            $('form').submit(function() {
+            $('form').submit(function () {
                 var value = unformatVND($input.val());
                 $input.val(value); // Đặt lại giá trị số trước khi submit
             });
-        });</script>
+        });
+    </script>
 }

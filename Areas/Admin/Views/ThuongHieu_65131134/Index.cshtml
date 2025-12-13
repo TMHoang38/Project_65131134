@@ -1,0 +1,139 @@
+﻿@model IEnumerable<Project_65131134.Models.ThuongHieu>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "MaKhachHang", rowsPerPage: 5);
+}
+<style>
+
+    .grid-footer {
+        text-align: center;
+        padding: 15px 0;
+    }
+
+
+        .grid-footer a {
+            color: #007bff;
+            text-decoration: none;
+            padding: 8px 12px;
+            margin: 0 4px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            display: inline-block;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+
+            .grid-footer a[disabled],
+            .grid-footer b,
+            .grid-footer a.webgrid-pager-current {
+                background-color: #007bff;
+                color: white;
+                border-color: #007bff;
+                font-weight: bold;
+                cursor: default;
+            }
+
+
+            .grid-footer a:not(.webgrid-pager-current):hover {
+                background-color: #e9ecef;
+                color: #0056b3;
+            }
+</style>
+
+
+<h2 class="text-center my-4 text-primary fw-bold">Thương Hiệu</h2>
+<div class="btn btn-success mb-3">
+    @Html.ActionLink("Thêm thương hiệu mới", "Create", null, new { @style = "color: white;" })
+</div>
+<div id="gridContent">
+    @ViewBag.TB
+    @grid.GetHtml(
+        tableStyle: "table table-bordered table-hover",
+        footerStyle: "grid-footer",
+        fillEmptyRows: true,
+        mode: WebGridPagerModes.Numeric,
+        alternatingRowStyle: "alternatingRowStyle",
+        columns: new[]  // colums in grid
+        {
+            grid.Column("STT",format: item => item.WebGrid.Rows.IndexOf(item) + 1 + Math.Round(Convert.ToDouble(grid.TotalRowCount / grid.PageCount) / grid.RowsPerPage) * grid.RowsPerPage * grid.PageIndex),
+            grid.Column("MaThuongHieu","Mã thương hiệu"),
+            grid.Column("TenThuongHieu","Tên thương hiệu"),
+            grid.Column("MoTa","Mô tả"),
+            grid.Column("Chức năng", format: @<text>
+    <div class="d-flex justify-content-sm-around">
+        <span class="action-links">
+            @* Nút Edit *@
+            <a href="@Url.Action("Edit", new { id = item.MaThuongHieu})" title="Cập nhật dữ liệu">
+                <img src="/images/edit.png" width="20" height="20" />
+            </a>
+
+            @* Nút Xóa Mở Modal *@
+            <a href="#"
+               class="delete-btn-trigger"
+               data-bs-toggle="modal"
+               data-bs-target="#deleteModal"
+               data-id="@item.MaThuongHieu"
+               data-url="@Url.Action("Delete", new { id = item.MaThuongHieu })">
+                <abbr title="Xóa dữ liệu">
+                    <img src="/images/delete.png" width="20" height="20" />
+                </abbr>
+            </a>
+        </span>
+    </div>
+            </text>),
+}
+
+)
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            @using (Html.BeginForm("Delete", "ThuongHieu_65131134", FormMethod.Post, new { id = "deleteForm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn xóa thương hiệu có mã <strong id="modal-manv-display"></strong> không?
+                    <br />
+                    <span class="text-danger small">Hành động này không thể hoàn tác.</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    var deleteModal = document.getElementById('deleteModal');
+
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            // Nút kích hoạt modal
+            var button = event.relatedTarget;
+
+            // Lấy dữ liệu từ nút bấm
+            var maNhanVien = button.getAttribute('data-id');
+            var deleteUrl = button.getAttribute('data-url');
+
+            // Cập nhật text hiển thị
+            var modalMaNvDisplay = deleteModal.querySelector('#modal-manv-display');
+            modalMaNvDisplay.textContent = maNhanVien;
+
+            // Cập nhật ACTION của FORM thay vì href của thẻ a
+            var form = deleteModal.querySelector('#deleteForm');
+            if (form) {
+                form.setAttribute('action', deleteUrl);
+            }
+        });
+    }
+</script>

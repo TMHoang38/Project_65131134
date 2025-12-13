@@ -33,7 +33,7 @@
         <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Logo/Thương hiệu -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href=""@Url.Action("DoanhThuHomNay","ThongKe_65131134", new { area = "Admin" })">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="" @Url.Action("DoanhThuHomNay", "ThongKe_65131134", new { area = "Admin" }) ">
                 <div class="sidebar-brand-text mx-3">Xin chào </div>
             </a>
 
@@ -42,12 +42,11 @@
 
             <!-- Mục menu - Trang tổng quan (Dashboard) -->
             <!--<li class="nav-item active">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>-->
-
+        <a class="nav-link" href="#">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>-->
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item active">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
@@ -57,9 +56,15 @@
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="@Url.Action("DoanhThuTheoNam","ThongKe_65131134", new { area = "Admin" })">Thống kê doanh thu</a>
-                        <a class="collapse-item" href="@Url.Action("SanPhamBanChay","ThongKe_65131134", new { area = "Admin" })">Sản phẩm bán chạy nhất</a>
-                        <a class="collapse-item" href="@Url.Action("DoanhThuHomNay","ThongKe_65131134", new { area = "Admin" })">Doanh thu trong ngày</a>
+                        <a class="collapse-item" href="@Url.Action("DoanhThuTheoNam","ThongKe_65131134", new { area = "Admin" })">
+                            <i class="bi bi-graph-up"></i> Thống kê doanh thu
+                        </a>
+                        <a class="collapse-item" href="@Url.Action("SanPhamBanChay","ThongKe_65131134", new { area = "Admin" })">
+                            <i class="bi bi-lightning-fill"></i> Sản phẩm bán chạy nhất
+                        </a>
+                        <a class="collapse-item" href="@Url.Action("DoanhThuHomNay","ThongKe_65131134", new { area = "Admin" })">
+                            <i class="bi bi-cash-coin"></i> Doanh thu trong ngày
+                        </a>
                     </div>
                 </div>
             </li>
@@ -100,11 +105,40 @@
         Addons
     </div>-->
 
-            <li class="nav-item">
-                <a class="nav-link" href="@Url.Action("Index","DongHo_65131134", new { area = "Admin" })">
-                    <i class="bi bi-watch"></i>
-                    <span>Đồng hồ</span>
+            <li class="nav-item active">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#sanPham"
+                   aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Sản phẩm</span>
                 </a>
+                <div id="sanPham" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="@Url.Action("Index","DongHo_65131134", new { area = "Admin" })">
+                            <i class="bi bi-watch"></i>
+                            <span>Đồng hồ</span>
+                        </a>
+                        <a class="collapse-item" href="@Url.Action("Index","ThuongHieu_65131134", new { area = "Admin" })">
+                            <i class="bi bi-tags"></i>
+                            <span>Thương hiệu</span>
+                        </a>
+                        <a class="collapse-item" href="@Url.Action("Index","NoiSanXuat_65131134", new { area = "Admin" })">
+                            <i class="bi bi-globe"></i>
+                            <span>Nơi sản xuất</span>
+                        </a>
+                        <a class="collapse-item" href="@Url.Action("Index","LoaiDongHo_65131134", new { area = "Admin" })">
+                            <i class="bi bi-list-ul"></i>
+                            <span>Loại đồng hồ</span>
+                        </a>
+                        <a class="collapse-item" href="@Url.Action("Index","ChatLieuDay_65131134", new { area = "Admin" })">
+                            <i class="bi bi-link-45deg"></i>
+                            <span>Chất liệu dây</span>
+                        </a>
+                        <a class="collapse-item" href="@Url.Action("Index","ChatLieuVo_65131134", new { area = "Admin" })">
+                            <i class="bi bi-nut"></i>
+                            <span>Chất liệu vỏ  </span>
+                        </a>
+                    </div>
+                </div>
             </li>
 
             <li class="nav-item">
@@ -113,8 +147,6 @@
                     <span>Đơn hàng</span>
                 </a>
             </li>
-
-
 
             <!-- Đường phân cách chỉ hiện trên màn hình lớn -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -152,7 +184,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>&copy; @DateTime.Now.Year - SB Admin 2</span>
+                        <span>&copy; @DateTime.Now.Year - Trần Minh Hoàng - 65131134</span>
                     </div>
                 </div>
             </footer>

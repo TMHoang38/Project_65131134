@@ -5,102 +5,184 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     var grid = new WebGrid(Model, canPage: true, defaultSort: "MaKhachHang", rowsPerPage: 5);
 }
+
 <style>
+
     .grid-footer {
-        color: #000;
-        font: 17px Calibri;
         text-align: center;
-        font-weight: bold;
+        padding: 15px 0;
     }
 
-        .grid-footer a {    
-            background-color: #ffffff;
-            color: blue;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            padding: 1px 10px 2px 10px;
+
+        .grid-footer a {
+            color: #007bff;
+            text-decoration: none;
+            padding: 8px 12px;
+            margin: 0 4px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            display: inline-block;
+            transition: background-color 0.3s, color 0.3s;
         }
 
 
-    .action-icon {
-        margin: 0 4px;
-        display: inline-block;
-    }
+            .grid-footer a[disabled],
+            .grid-footer b,
+            .grid-footer a.webgrid-pager-current {
+                background-color: #007bff;
+                color: white;
+                border-color: #007bff;
+                font-weight: bold;
+                cursor: default;
+            }
 
-    a:hover {
-        text-decoration: none;
+
+            .grid-footer a:not(.webgrid-pager-current):hover {
+                background-color: #e9ecef;
+                color: #0056b3;
+            }
+    .webgrid-header th {
+        white-space: nowrap;
+        text-align: center;
+        vertical-align: middle;
     }
 </style>
+
+
 <h2 class="text-center my-4 text-primary fw-bold">Danh sách đồng hồ</h2>
 
-<div class="d-flex ">
-    <div class="btn btn-success mb-3">
-        @Html.ActionLink("Thêm đồng hồ mới", "Create", null, new { @style = "color: white;" })
-    </div>
-    <form class="justify-content-between d-none d-sm-inline-block form-inline my-2 my-md-0 mw-100 navbar-search border-4">
-        <div class="input-group">
-            <input type="text" class="form-control bg-light small" placeholder="Tìm kiếm..."
-                   aria-label="Search" aria-describedby="basic-addon2">
-            <input type="" class="form-control bg-light small" placeholder="Tìm kiếm..."
-                   aria-label="Search" aria-describedby="basic-addon2">
-            <input type="text" class="form-control bg-light small" placeholder="Tìm kiếm..."
-                   aria-label="Search" aria-describedby="basic-addon2">
-            <input type="text" class="form-control bg-light small" placeholder="Tìm kiếm..."
-                   aria-label="Search" aria-describedby="basic-addon2">
-            <input type="text" class="form-control bg-light small" placeholder="Tìm kiếm..."
-                   aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    @Html.ActionLink("Thêm đồng hồ mới", "Create", null, new { @class = "btn btn-success text-white" })
+
+    <a href="@Url.Action("Index")" class="btn btn-outline-secondary text-nowrap">Tất cả sản phẩm</a>
+
+    <form class="d-flex flex-wrap align-items-center gap-2 flex-grow-1" method="get" action="@Url.Action("Index")">
+
+        <input type="text"
+               name="searchTerm"
+               value="@ViewBag.SearchTerm"
+               class="form-control bg-light"
+               style="flex-grow: 1; min-width: 200px;"
+               placeholder="Nhập tên sản phẩm cần tìm" />
+
+        @Html.DropDownList("brandId",
+                            (SelectList)ViewBag.BrandList,
+                            "Chọn thương hiệu",
+                            new { @class = "form-select bg-light", @style = "width: auto; min-width: 150px;" })
+
+        <select name="priceRange" class="form-select bg-light" style="width: auto; min-width: 180px;">
+            <option value="">Chọn khoảng giá</option>
+            <option value="lt1" @(ViewBag.PriceRange == "lt1" ? "selected" : "")>Dưới 1 triệu</option>
+            <option value="1to3" @(ViewBag.PriceRange == "1to3" ? "selected" : "")>1 - 3 triệu</option>
+            <option value="3to5" @(ViewBag.PriceRange == "3to5" ? "selected" : "")>3 - 5 triệu</option>
+            <option value="5to10" @(ViewBag.PriceRange == "5to10" ? "selected" : "")>5 - 10 triệu</option>
+            <option value="gt10" @(ViewBag.PriceRange == "gt10" ? "selected" : "")>Trên 10 triệu</option>
+        </select>
+
+        <button class="btn btn-primary text-nowrap" type="submit">
+            <i class="fas fa-search me-1"></i> Lọc
+        </button>
     </form>
 </div>
-<div id="gridContent">
+
+<div id="gridContent" class="table-responsive">
     @ViewBag.TB
     @grid.GetHtml(
         tableStyle: "table table-bordered table-hover",
+        headerStyle: "webgrid-header",
         footerStyle: "grid-footer",
         fillEmptyRows: true,
         mode: WebGridPagerModes.Numeric,
         alternatingRowStyle: "alternatingRowStyle",
-          columns: new[]  // colums in grid
-         {
-    grid.Column("MaDongHo","Mã đồng hồ"),
-    grid.Column("TenDongHo","Tên đồng hồ"),
-    grid.Column("Giá bán",
-    format: item => string.Format(
-        new System.Globalization.CultureInfo("vi-VN"), // Chỉ định Culture là tiếng Việt
-        "{0:N0}", // Định dạng số, không có số thập phân
-        item.GiaBan
-    )
-),
-    grid.Column("SoLuongTon","Số lượng tồn"),
-    grid.Column("HinhAnh","Hình ảnh"  ),
-    grid.Column("KichThuoc","Kích thước"),
-    grid.Column("MauSac","Màu sắc"),
-    grid.Column("BaoHanh","Bảo hành"),
-    grid.Column("LoaiDongHo.TenLoai","Tên loại"),
-    grid.Column("NoiSanXuat.TenNoiSanXuat","Nơi sản xuất"),
-    grid.Column("ThuongHieu.TenThuongHieu","Thương hiệu"),
-//grid.Column(format: (item) => Html.ActionLink("Cập nhật", "Edit", "SINHVIEN0720_65131134",new { id = item.MaSV },"SINHVIEN0720_65131134Controller")),
-//grid.Column(format: (item) => Html.ActionLink("Xem chi tiết", "Details","SINHVIEN0720_65131134", new { id = item.MaSV },"SINHVIEN0720_65131134Controller")),
-//grid.Column(format: (item) => Html.ActionLink("Xóa", "Delete","SINHVIEN0720_65131134", new { id = item.MaSV },"SINHVIEN0720_65131134Controller")),
-                            grid.Column("Chức năng", format: @<text>
-                                <div class="d-flex justify-content-sm-around">
-                                    <a href="@Url.Action("Edit",
-                                                     new { id = item.MaDongHo})" class="edit-btn"><abbr title="Cập nhật dữ liệu"><img src="/images/edit.png" width="20" height="20" /></abbr></a>
-                                    <a href="@Url.Action("Delete",
-    new { id = item.MaDongHo})"
-                                       class="delete-btn"
-                                       onclick="return confirm('Bạn có chắc chắn muốn xóa đồng hồ có Mã Đồng Hồ là @item.MaDongHo?');">
-                                        <abbr title="Xóa dữ liệu">
-                                            <img src="/images/delete.png" width="20" height="20" />
-                                        </abbr>
-                                    </a>
-                                </div>
-                            </text>),
+        columns: new[]  // colums in grid
+        {
+            grid.Column("STT",format: item => item.WebGrid.Rows.IndexOf(item) + 1 + Math.Round(Convert.ToDouble(grid.TotalRowCount / grid.PageCount) / grid.RowsPerPage) * grid.RowsPerPage * grid.PageIndex),
+            grid.Column("MaDongHo","Mã đồng hồ"),
+            grid.Column("TenDongHo","Tên đồng hồ"),
+            grid.Column("Giá bán",
+                format: item => string.Format(
+                    new System.Globalization.CultureInfo("vi-VN"),
+                    "{0:N0}",
+                    item.GiaBan
+                )
+            ),
+            grid.Column("SoLuongTon","Số lượng tồn"),
+            grid.Column("HinhAnh","Hình ảnh"),       
+            grid.Column("BaoHanh","Bảo hành"),
+            grid.Column("LoaiDongHo.TenLoai","Tên loại"),
+            grid.Column("NoiSanXuat.TenNoiSanXuat","Nơi sản xuất"),
+            grid.Column("ThuongHieu.TenThuongHieu","Thương hiệu"),
+
+            // --- CỘT CHỨC NĂNG ---
+            grid.Column("Chức năng", format: @<text>
+    <div class="d-flex justify-content-sm-around">
+        @* Nút Edit *@
+        <a href="@Url.Action("Edit", new { id = item.MaDongHo})" class="edit-btn">
+            <abbr title="Cập nhật dữ liệu"><img src="/images/edit.png" width="20" height="20" /></abbr>
+        </a>
+
+        @* Nút Xóa: Kích hoạt Modal *@
+        <a href="#"
+           class="delete-btn-trigger"
+           data-bs-toggle="modal"
+           data-bs-target="#deleteModal"
+           data-id="@item.MaDongHo"
+           data-url="@Url.Action("Delete", new { id = item.MaDongHo })">
+            <abbr title="Xóa dữ liệu">
+                <img src="/images/delete.png" width="20" height="20" />
+            </abbr>
+        </a>
+    </div>
+            </text>),
 }
 )
 </div>
 
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa đồng hồ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            @using (Html.BeginForm("Delete", "DongHo_65131134", FormMethod.Post, new { id = "deleteForm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    Bạn có chắc chắn muốn xóa đồng hồ có Mã Đồng Hồ là <strong id="modal-ma-display"></strong> không?
+                    <br />
+                    <span class="text-danger small">Hành động này không thể hoàn tác.</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy bỏ</button>
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    var deleteModal = document.getElementById('deleteModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            // Button kích hoạt modal
+            var button = event.relatedTarget;
+
+            // Lấy dữ liệu từ attribute data-*
+            var maDongHo = button.getAttribute('data-id');
+            var deleteUrl = button.getAttribute('data-url');
+
+            // Cập nhật nội dung hiển thị trong modal
+            var modalMaDisplay = deleteModal.querySelector('#modal-ma-display');
+            modalMaDisplay.textContent = maDongHo;
+
+            // Cập nhật Action của Form để trỏ về đúng ID cần xóa
+            var form = deleteModal.querySelector('#deleteForm');
+            if (form) {
+                form.setAttribute('action', deleteUrl);
+            }
+        });
+    }
+</script>

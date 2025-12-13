@@ -36,16 +36,63 @@ namespace Project_65131134.Areas.Admin
         }
 
         // GET: Admin/DongHo_65131134
-        public ActionResult Index()
+        public ActionResult Index(string searchTerm, string brandId, string priceRange)
         {
             // CẬP NHẬT: Include thêm ChatLieuDay và ChatLieuVo
-            var dongHo = db.DongHo
+            var dongHoQuery = db.DongHo
                 .Include(d => d.LoaiDongHo)
                 .Include(d => d.NoiSanXuat)
                 .Include(d => d.ThuongHieu)
                 .Include(d => d.ChatLieuDay)
                 .Include(d => d.ChatLieuVo);
-            return View(dongHo.ToList());
+
+            // Lọc theo tên sản phẩm
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var keyword = searchTerm.Trim();
+                dongHoQuery = dongHoQuery.Where(d => d.TenDongHo.Contains(keyword));
+            }
+
+            // Lọc theo thương hiệu
+            if (!string.IsNullOrWhiteSpace(brandId))
+            {
+                dongHoQuery = dongHoQuery.Where(d => d.MaThuongHieu == brandId);
+            }
+
+            // Lọc theo khoảng giá
+            if (!string.IsNullOrWhiteSpace(priceRange))
+            {
+                switch (priceRange)
+                {
+                    case "lt1":
+                        dongHoQuery = dongHoQuery.Where(d => d.GiaBan < 1000000);
+                        break;
+                    case "1to3":
+                        dongHoQuery = dongHoQuery.Where(d => d.GiaBan >= 1000000 && d.GiaBan <= 3000000);
+                        break;
+                    case "3to5":
+                        dongHoQuery = dongHoQuery.Where(d => d.GiaBan > 3000000 && d.GiaBan <= 5000000);
+                        break;
+                    case "5to10":
+                        dongHoQuery = dongHoQuery.Where(d => d.GiaBan > 5000000 && d.GiaBan <= 10000000);
+                        break;
+                    case "gt10":
+                        dongHoQuery = dongHoQuery.Where(d => d.GiaBan > 10000000);
+                        break;
+                }
+            }
+
+            // Dropdown thương hiệu
+            var thuongHieus = db.ThuongHieu
+                .OrderBy(t => t.TenThuongHieu)
+                .ToList();
+            ViewBag.BrandList = new SelectList(thuongHieus, "MaThuongHieu", "TenThuongHieu", brandId);
+
+            // Lưu lại giá trị filter để hiển thị trên View
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.PriceRange = priceRange;
+
+            return View(dongHoQuery.ToList());
         }
 
         // GET: Admin/DongHo_65131134/Details/5
