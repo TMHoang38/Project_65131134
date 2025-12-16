@@ -54,7 +54,6 @@
     .input-group:focus-within {
         z-index: 5;
         border-radius: 0.375rem;
-
     }
 
         .input-group:focus-within .input-group-text,
@@ -142,4 +141,48 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            // Khi người dùng nhập liệu và click ra ngoài (sự kiện blur)
+            $('#TenChatLieu').blur(function () {
+                var ten = $(this).val();
+                if (ten.trim() != "") {
+                    $.ajax({
+                        url: '/Admin/ChatLieuDay_65131134/CheckTenChatLieu',
+                        type: 'GET',
+                        data: { tenChatLieu: ten },
+                        success: function (response) {
+                            if (response.exists) {
+                                // Nếu trùng: Hiện lỗi và Disable nút Lưu
+                                $('span[data-valmsg-for="TenChatLieu"]')
+                                    .text("Tên chất liệu này đã tồn tại!")
+                                    .addClass("field-validation-error")
+                                    .removeClass("field-validation-valid");
+
+                                // Đổi màu viền input thành đỏ
+                                $('#TenChatLieu').addClass('is-invalid');
+
+                                // Khóa nút submit
+                                $('button[type="submit"]').prop('disabled', true);
+                            } else {
+                                // Nếu không trùng: Xóa lỗi và Enable nút Lưu
+                                $('span[data-valmsg-for="TenChatLieu"]')
+                                    .text("");
+
+                                $('#TenChatLieu').removeClass('is-invalid').addClass('is-valid');
+                                $('button[type="submit"]').prop('disabled', false);
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Khi người dùng bắt đầu gõ lại, bỏ trạng thái disable nút Lưu
+            $('#TenChatLieu').on('input', function() {
+                 $('button[type="submit"]').prop('disabled', false);
+                 $('#TenChatLieu').removeClass('is-invalid');
+            });
+        });
+    </script>
 }

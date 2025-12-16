@@ -6,7 +6,7 @@
 }
 
 <style>
-    /* 1. Giao diện Card (Khung bao ngoài) */
+    /* 1. Giao diện Card & Input (Giữ nguyên style đẹp) */
     .card-custom {
         border: none;
         border-radius: 15px;
@@ -35,7 +35,7 @@
         justify-content: center;
     }
 
-    .input-group .form-control {
+    .input-group .form-control, .input-group .form-select {
         border-left: none;
         color: #6e707e;
         border-color: #d1d3e2;
@@ -45,11 +45,21 @@
         margin-bottom: 0;
     }
 
-        .input-group .form-control:focus {
+        .input-group .form-control:focus, .input-group .form-select:focus {
             box-shadow: none !important;
             border-color: #d1d3e2;
             z-index: 3;
         }
+
+        .input-group .form-control.is-invalid, .input-group .form-select.is-invalid {
+            border-color: #dc3545;
+            background-image: none;
+        }
+
+    .input-group.has-error .input-group-text {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
 
     .input-group:focus-within {
         z-index: 5;
@@ -57,7 +67,8 @@
     }
 
         .input-group:focus-within .input-group-text,
-        .input-group:focus-within .form-control {
+        .input-group:focus-within .form-control,
+        .input-group:focus-within .form-select {
             border-color: #4e73df;
         }
 
@@ -72,6 +83,15 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+
+    .invalid-feedback {
+        display: none;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #dc3545;
+        padding-left: 0.5rem;
+    }
 </style>
 
 <div class="container">
@@ -82,7 +102,7 @@
                     <h3 class="mb-0 fw-bold"><i class="fas fa-plus-circle me-2"></i> Thêm Đồng Hồ Mới</h3>
                 </div>
                 <div class="card-body p-5">
-                    @using (Html.BeginForm("Create", "DongHo_65131134", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    @using (Html.BeginForm("Create", "DongHo_65131134", FormMethod.Post, new { enctype = "multipart/form-data", id = "createForm" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger text-center mb-4" })
@@ -97,86 +117,94 @@
                                 @Html.ValidationMessageFor(model => model.MaDongHo, "", new { @class = "text-danger small" })
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Tên đồng hồ</label>
+                                <label class="form-label fw-bold text-secondary">Tên đồng hồ <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-clock text-primary"></i></span>
-                                    @Html.EditorFor(model => model.TenDongHo, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên đồng hồ" } })
+                                    @Html.EditorFor(model => model.TenDongHo, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên đồng hồ", required = "required" } })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.TenDongHo, "", new { @class = "text-danger small" })
                             </div>
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Thương hiệu</label>
+                                <label class="form-label fw-bold text-secondary">Thương hiệu <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-tag text-primary"></i></span>
-                                    @Html.DropDownList("MaThuongHieu", null, htmlAttributes: new { @class = "form-control form-select" })
+                                    @Html.DropDownList("MaThuongHieu", null, "-- Chọn thương hiệu --", htmlAttributes: new { @class = "form-control form-select", required = "required" })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.MaThuongHieu, "", new { @class = "text-danger small" })
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Nơi sản xuất</label>
+                                <label class="form-label fw-bold text-secondary">Nơi sản xuất <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-map-marker-alt text-primary"></i></span>
-                                    @Html.DropDownList("MaNoiSanXuat", null, htmlAttributes: new { @class = "form-control form-select" })
+                                    @Html.DropDownList("MaNoiSanXuat", null, "-- Chọn nơi sản xuất --", htmlAttributes: new { @class = "form-control form-select", required = "required" })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.MaNoiSanXuat, "", new { @class = "text-danger small" })
                             </div>
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Loại đồng hồ</label>
+                                <label class="form-label fw-bold text-secondary">Loại đồng hồ <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-list text-primary"></i></span>
-                                    @Html.DropDownList("MaLoai", null, htmlAttributes: new { @class = "form-control form-select" })
+                                    @Html.DropDownList("MaLoai", null, "-- Chọn loại đồng hồ --", htmlAttributes: new { @class = "form-control form-select", required = "required" })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.MaLoai, "", new { @class = "text-danger small" })
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Giá bán</label>
+                                <label class="form-label fw-bold text-secondary">Giá bán <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-dollar-sign text-primary"></i></span>
-                                    @Html.EditorFor(model => model.GiaBan, new { htmlAttributes = new { @class = "form-control", @id = "GiaBanInput", placeholder = "Nhập giá bán" } })
+                                    @Html.EditorFor(model => model.GiaBan, new { htmlAttributes = new { @class = "form-control", @id = "GiaBanInput", placeholder = "Nhập giá bán", required = "required" } })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.GiaBan, "", new { @class = "text-danger small" })
                             </div>
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Chất liệu dây</label>
+                                <label class="form-label fw-bold text-secondary">Chất liệu dây <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-link text-primary"></i></span>
-                                    @Html.DropDownList("MaChatLieuDay", null, htmlAttributes: new { @class = "form-control form-select" })
+                                    @Html.DropDownList("MaChatLieuDay", null, "-- Chọn chất liệu dây --", htmlAttributes: new { @class = "form-control form-select", required = "required" })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.MaChatLieuDay, "", new { @class = "text-danger small" })
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Chất liệu vỏ</label>
+                                <label class="form-label fw-bold text-secondary">Chất liệu vỏ <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-circle text-primary"></i></span>
-                                    @Html.DropDownList("MaChatLieuVo", null, htmlAttributes: new { @class = "form-control form-select" })
+                                    @Html.DropDownList("MaChatLieuVo", null, "-- Chọn chất liệu vỏ --", htmlAttributes: new { @class = "form-control form-select", required = "required" })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.MaChatLieuVo, "", new { @class = "text-danger small" })
                             </div>
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Số lượng tồn</label>
+                                <label class="form-label fw-bold text-secondary">Số lượng tồn <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-boxes text-primary"></i></span>
-                                    @Html.EditorFor(model => model.SoLuongTon, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập số lượng" } })
+                                    @Html.EditorFor(model => model.SoLuongTon, new { htmlAttributes = new { @class = "form-control", @id = "SoLuongTon", placeholder = "Nhập số lượng", required = "required" } })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.SoLuongTon, "", new { @class = "text-danger small" })
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold text-secondary">Kích thước</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-ruler text-primary"></i></span>
-                                    @Html.EditorFor(model => model.KichThuoc, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập kích thước" } })
+                                    @Html.EditorFor(model => model.KichThuoc, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập kích thước (VD: 40mm)" } })
                                 </div>
                                 @Html.ValidationMessageFor(model => model.KichThuoc, "", new { @class = "text-danger small" })
                             </div>
@@ -184,34 +212,47 @@
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Màu sắc</label>
+                                <label class="form-label fw-bold text-secondary">Màu sắc <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-palette text-primary"></i></span>
-                                    @Html.EditorFor(model => model.MauSac, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập màu sắc" } })
+                                    @Html.EditorFor(model => model.MauSac, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập màu sắc", required = "required" } })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.MauSac, "", new { @class = "text-danger small" })
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Bảo hành</label>
+                                <label class="form-label fw-bold text-secondary">Bảo hành <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-shield-alt text-primary"></i></span>
-                                    @Html.EditorFor(model => model.BaoHanh, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập thời gian bảo hành" } })
+                                    @* Thêm ID BaoHanh *@
+                                    @Html.EditorFor(model => model.BaoHanh, new { htmlAttributes = new { @class = "form-control", @id = "BaoHanh", placeholder = "Nhập thời gian bảo hành (VD: 12)", required = "required" } })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.BaoHanh, "", new { @class = "text-danger small" })
                             </div>
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Hình ảnh</label>
-                                <div class="input-group">
+                                <label class="form-label fw-bold text-secondary">Hình ảnh <span class="text-danger">*</span></label>
+                                <div class="input-group p-0">
                                     <span class="input-group-text"><i class="fas fa-image text-primary"></i></span>
-                                    <input type="file" name="Avatar" accept="image/*" required class="form-control" />
+                                    <input type="file" name="Avatar" id="Avatar" accept="image/*" required class="form-control" />
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.HinhAnh, "", new { @class = "text-danger small" })
                             </div>
-                        </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Mô tả sản phẩm</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-align-left text-primary"></i></span>
+                                    @Html.TextAreaFor(model => model.MoTa, new { @class = "form-control", @rows = "1", placeholder = "Nhập mô tả...", style = "height: 38px;" })
+                                    @* Lưu ý: Nếu muốn ô mô tả cao bằng ô chọn file mặc định, để rows="1" hoặc style height cố định *@
+                                </div>
+                                @Html.ValidationMessageFor(model => model.MoTa, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
                         <hr class="my-4" />
 
                         <div class="d-flex justify-content-center gap-3">
@@ -223,7 +264,7 @@
                                 <i class="fas fa-sync-alt me-2"></i> Làm mới
                             </button>
 
-                            <button type="submit" class="btn btn-primary btn-custom">
+                            <button type="submit" id="submitBtn" class="btn btn-primary btn-custom">
                                 <i class="fas fa-save me-2"></i> Lưu đồng hồ
                             </button>
                         </div>
@@ -234,43 +275,215 @@
     </div>
 </div>
 
-@section scripts {
+@section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        // Hàm định dạng số về chuỗi VND (ví dụ: 100000 -> 100.000 VND)
+
+<script>
+        // --- KHAI BÁO HELPER FUNCTIONS ---
+
         function formatVND(n) {
+            if (!n || isNaN(n)) return "";
             return n.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') + ' VND';
         }
 
-        // Hàm chuyển chuỗi về số (để gửi lên server)
         function unformatVND(s) {
-            return s.replace(/[^0-9]/g, ''); // Xóa tất cả ký tự không phải số
+            if (!s) return "";
+            return s.replace(/[^0-9]/g, '');
         }
 
-        $(document).ready(function () {
-            var $input = $('#GiaBanInput'); // Script này sẽ hoạt động vì tôi đã thêm id="GiaBanInput" ở trên HTML
+        function showFieldError(field, message) {
+            field.classList.add('is-invalid');
+            let parent = field.closest('.input-group') || field.parentElement;
+            let errorContainer = parent.querySelector('.invalid-feedback');
+            if (!errorContainer) errorContainer = parent.nextElementSibling;
 
-            // Định dạng giá trị ban đầu nếu có
-            if ($input.val() && $input.val() !== '0,00') {
-                $input.val(formatVND(parseFloat($input.val().replace(',', '.'))));
+            if (errorContainer && errorContainer.classList.contains('invalid-feedback')) {
+                errorContainer.textContent = message;
+                errorContainer.style.display = 'block';
+            }
+            if (field.closest('.input-group')) {
+                field.closest('.input-group').classList.add('has-error');
+            }
+        }
+
+        function clearFieldError(field) {
+            field.classList.remove('is-invalid');
+            let parent = field.closest('.input-group') || field.parentElement;
+            let errorContainer = parent.querySelector('.invalid-feedback');
+            if (!errorContainer) errorContainer = parent.nextElementSibling;
+
+            if (errorContainer) {
+                errorContainer.textContent = '';
+                errorContainer.style.display = 'none';
+            }
+            if (field.closest('.input-group')) {
+                field.closest('.input-group').classList.remove('has-error');
+            }
+        }
+
+        function showToast(message, type = 'error') {
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 90%;';
+                document.body.appendChild(toastContainer);
+            }
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show`;
+            toast.style.cssText = 'min-width: 300px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+            const title = type === 'error' ? 'Lỗi!' : 'Thành công!';
+            toast.innerHTML = `<strong>${title}</strong> ${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+            toastContainer.prepend(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        function validateField(field) {
+            const value = field.value.trim();
+            if (field.hasAttribute('required') && !value) {
+                let msg = 'Thông tin này không được để trống';
+                if (field.tagName === 'SELECT') msg = 'Vui lòng chọn giá trị';
+                showFieldError(field, msg);
+                return false;
+            }
+            return true;
+        }
+
+        // --- MAIN SCRIPT ---
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // 1. XỬ LÝ SỐ LƯỢNG TỒN (Chỉ nhập số)
+            const soLuongInput = document.getElementById('SoLuongTon');
+            if (soLuongInput) {
+                soLuongInput.addEventListener('input', function () {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    clearFieldError(this);
+                });
             }
 
-            $input.on('blur', function () {
-                var value = unformatVND($(this).val());
-                if (value) {
-                    $(this).val(formatVND(parseFloat(value)));
+            // 2. XỬ LÝ BẢO HÀNH (KHÔNG NHẬP SỐ ÂM)
+            const baoHanhInput = document.getElementById('BaoHanh');
+            if (baoHanhInput) {
+                // Chặn nhấn phím dấu trừ (-)
+                baoHanhInput.addEventListener('keydown', function (e) {
+                    if (e.key === '-' || e.key === 'Subtract') {
+                        e.preventDefault();
+                    }
+                });
+
+                // Xử lý nếu user cố tình paste số âm hoặc nhập văn bản có dấu trừ
+                baoHanhInput.addEventListener('input', function () {
+                    if (this.value.includes('-')) {
+                        this.value = this.value.replace(/-/g, ''); // Xóa dấu trừ
+                        showFieldError(this, 'Thời gian bảo hành không được là số âm');
+                    } else {
+                        // Nếu giá trị hợp lệ thì xóa lỗi (nếu có)
+                        if (this.value.trim() !== '') clearFieldError(this);
+                    }
+                });
+            }
+
+            // 3. XỬ LÝ GIÁ BÁN (Format VND)
+            var $priceInput = $('#GiaBanInput');
+            if ($priceInput.length) {
+                if ($priceInput.val() && $priceInput.val() !== '0,00' && $priceInput.val() !== '0') {
+                    var rawVal = $priceInput.val().replace(',', '.');
+                    $priceInput.val(formatVND(parseFloat(rawVal)));
                 }
-            }).on('focus', function () {
-                // Khi focus vào, hiển thị giá trị số để người dùng dễ chỉnh sửa
-                var value = unformatVND($(this).val());
-                $(this).val(value);
+
+                $priceInput.on('blur', function () {
+                    var value = unformatVND($(this).val());
+                    if (value) {
+                        $(this).val(formatVND(parseFloat(value)));
+                        clearFieldError(this);
+                    } else {
+                        validateField(this);
+                    }
+                }).on('focus', function () {
+                    var value = unformatVND($(this).val());
+                    $(this).val(value);
+                }).on('input', function () {
+                    clearFieldError(this);
+                });
+            }
+
+            // 4. SUBMIT FORM
+            const form = document.getElementById('createForm');
+            if (form) {
+                form.addEventListener('submit', function (event) {
+                    let isValid = true;
+                    let firstErrorField = null;
+
+                    // Validate các trường required
+                    document.querySelectorAll('[required]').forEach(field => {
+                        if (!validateField(field)) {
+                            isValid = false;
+                            if (!firstErrorField) firstErrorField = field;
+                        }
+                    });
+
+                    // Validate Giá Bán > 0
+                    const priceRaw = unformatVND($priceInput.val());
+                    if (priceRaw === '' || parseInt(priceRaw) <= 0) {
+                        isValid = false;
+                        showFieldError($priceInput[0], "Giá bán phải lớn hơn 0");
+                        if (!firstErrorField) firstErrorField = $priceInput[0];
+                    }
+
+                    if (!isValid) {
+                        event.preventDefault();
+                        showToast('Vui lòng kiểm tra lại các thông tin báo lỗi!', 'error');
+                        if (firstErrorField) {
+                            firstErrorField.focus();
+                            firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    } else {
+                        $priceInput.val(priceRaw); // Gửi số nguyên lên server
+                        const submitBtn = document.getElementById('submitBtn');
+                        if (submitBtn) {
+                            submitBtn.disabled = true;
+                            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang lưu...';
+                        }
+                    }
+                });
+            }
+
+            // Gán sự kiện validate tức thì
+            const requiredFields = document.querySelectorAll('[required]');
+            requiredFields.forEach(field => {
+                field.addEventListener('blur', function () { validateField(this); });
+                field.addEventListener('input', function () { clearFieldError(this); });
+                field.addEventListener('change', function () { clearFieldError(this); });
             });
 
-            // Xử lý khi form submit, đảm bảo gửi giá trị số lên server
-            $('form').submit(function () {
-                var value = unformatVND($input.val());
-                $input.val(value); // Đặt lại giá trị số trước khi submit
-            });
+            // Focus ô đầu tiên
+            const firstInput = document.querySelector('form input:not([readonly])');
+            if (firstInput) firstInput.focus();
         });
-    </script>
+
+        // --- MAIN SCRIPT ---
+document.addEventListener('DOMContentLoaded', function () {
+
+    // --- ĐOẠN CODE MỚI CẦN THÊM ---
+    // Kiểm tra thông báo lỗi từ Server (ViewBag)
+    var serverError = '@Html.Raw(ViewBag.ErrorToast)';
+    if (serverError && serverError.trim() !== "") {
+        showToast(serverError, 'error');
+
+        // Tự động focus vào ô Tên đồng hồ nếu bị trùng
+        var nameInput = document.querySelector('input[name="TenDongHo"]');
+        if (nameInput) {
+            nameInput.focus();
+            showFieldError(nameInput, "Tên đồng hồ đã tồn tại");
+        }
+    }
+    // --- HẾT ĐOẠN CODE MỚI ---
+
+    // ... (Các code xử lý số lượng tồn, bảo hành... cũ của bạn giữ nguyên ở dưới) ...
+
+    // 1. XỬ LÝ SỐ LƯỢNG TỒN (Chỉ nhập số)
+    const soLuongInput = document.getElementById('SoLuongTon');
+    // ...
+
+</script>
 }

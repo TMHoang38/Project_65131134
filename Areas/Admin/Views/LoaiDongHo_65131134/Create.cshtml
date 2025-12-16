@@ -72,6 +72,15 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+
+    /* Style cho class báo lỗi Ajax */
+    .is-invalid {
+        border-color: #e74a3b !important;
+    }
+
+    .is-valid {
+        border-color: #1cc88a !important;
+    }
 </style>
 
 <div class="container">
@@ -124,7 +133,7 @@
                                 <i class="fas fa-arrow-left me-2"></i> Quay lại
                             </a>
 
-                            <button type="reset" class="btn btn-warning btn-custom text-white">
+                            <button type="reset" class="btn btn-warning btn-custom text-white" id="btnReset">
                                 <i class="fas fa-sync-alt me-2"></i> Làm mới
                             </button>
 
@@ -141,4 +150,54 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            // Sự kiện khi người dùng nhập xong và click ra ngoài (Blur) tại ô TenLoai
+            $('#TenLoai').blur(function () {
+                var ten = $(this).val();
+                if (ten.trim() != "") {
+                    $.ajax({
+                        url: '/Admin/LoaiDongHo_65131134/CheckTenLoai',
+                        type: 'GET',
+                        data: { tenLoai: ten },
+                        success: function (response) {
+                            if (response.exists) {
+                                // Nếu trùng: Hiện lỗi, đỏ viền, khóa nút Lưu
+                                $('span[data-valmsg-for="TenLoai"]')
+                                    .text("Tên loại đồng hồ này đã tồn tại! Vui lòng nhập tên khác.")
+                                    .addClass("field-validation-error")
+                                    .removeClass("field-validation-valid");
+
+                                $('#TenLoai').addClass('is-invalid');
+                                $('button[type="submit"]').prop('disabled', true);
+                            } else {
+                                // Nếu không trùng: Xanh viền, mở nút Lưu
+                                $('span[data-valmsg-for="TenLoai"]').text("");
+                                $('#TenLoai').removeClass('is-invalid').addClass('is-valid');
+                                $('button[type="submit"]').prop('disabled', false);
+                            }
+                        },
+                        error: function() {
+                            console.log("Lỗi kết nối kiểm tra tên loại");
+                        }
+                    });
+                }
+            });
+
+            // Khi người dùng gõ lại, bỏ trạng thái lỗi tạm thời
+            $('#TenLoai').on('input', function() {
+                 $('button[type="submit"]').prop('disabled', false);
+                 $('#TenLoai').removeClass('is-invalid').removeClass('is-valid');
+                 $('span[data-valmsg-for="TenLoai"]').text("");
+            });
+
+            // Xử lý nút Reset
+            $('#btnReset').click(function() {
+                $('#TenLoai').removeClass('is-invalid').removeClass('is-valid');
+                $('button[type="submit"]').prop('disabled', false);
+                $('span[data-valmsg-for="TenLoai"]').text("");
+            });
+        });
+    </script>
 }

@@ -1,123 +1,298 @@
 ﻿@model Project_65131134.Models.DongHo
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Chi tiết đồng hồ";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    // Format tiền tệ
+    var formatTien = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+    string giaBanHienThi = String.Format(formatTien, "{0:c0}", Model.GiaBan);
+    string giaNhapHienThi = String.Format(formatTien, "{0:c0}", Model.GiaNhap);
+
+    // Xử lý trạng thái tồn kho (Dùng SoLuongTon thay vì SoLuong)
+    bool conHang = (Model.SoLuongTon > 0);
+    string trangThaiText = conHang ? "Còn hàng" : "Hết hàng";
+    string trangThaiClass = conHang ? "text-success" : "text-danger";
+    string trangThaiIcon = conHang ? "fa-check-circle" : "fa-times-circle";
 }
 
-<h2>Details</h2>
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Thông tin chi tiết đồng hồ</h4>
+                <span class="badge bg-light text-dark fs-6">Mã ĐH: @Model.MaDongHo</span>
+            </div>
+        </div>
 
-<div>
-    <h4>DongHo</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.TenDongHo)
-        </dt>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-3"><i class="fas fa-clock me-2"></i>Thông tin sản phẩm</h5>
 
-        <dd>
-            @Html.DisplayFor(model => model.TenDongHo)
-        </dd>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Tên đồng hồ:</div>
+                            <div class="col-sm-8 fw-bold text-dark">@Html.DisplayFor(model => model.TenDongHo)</div>
+                        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MoTa)
-        </dt>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Loại đồng hồ:</div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-info p-2">
+                                    @Html.DisplayFor(model => model.LoaiDongHo.TenLoai)
+                                </span>
+                            </div>
+                        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.MoTa)
-        </dd>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Thương hiệu:</div>
+                            <div class="col-sm-8">
+                                <i class="fas fa-copyright text-secondary me-1"></i>
+                                @Html.DisplayFor(model => model.ThuongHieu.TenThuongHieu)
+                            </div>
+                        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.GiaBan)
-        </dt>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Nơi sản xuất:</div>
+                            <div class="col-sm-8">
+                                <i class="fas fa-globe-asia text-secondary me-1"></i>
+                                @Html.DisplayFor(model => model.NoiSanXuat.TenNoiSanXuat)
+                            </div>
+                        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.GiaBan)
-        </dd>
+                        <h5 class="text-primary mb-3 mt-4"><i class="fas fa-ruler-combined me-2"></i>Thông số kỹ thuật</h5>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.GiaNhap)
-        </dt>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Kích thước:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.KichThuoc)</div>
+                        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.GiaNhap)
-        </dd>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Màu sắc:</div>
+                            <div class="col-sm-8">@Html.DisplayFor(model => model.MauSac)</div>
+                        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SoLuongTon)
-        </dt>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Bảo hành:</div>
+                            <div class="col-sm-8">
+                                <span class="badge bg-warning text-dark">
+                                    <i class="fas fa-shield-alt me-1"></i> @Html.DisplayFor(model => model.BaoHanh)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.SoLuongTon)
-        </dd>
+                <div class="col-md-6">
+                    <div class="mb-4">
+                        <h5 class="text-primary mb-3"><i class="fas fa-tags me-2"></i>Kho & Giá bán</h5>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.HinhAnh)
-        </dt>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Giá bán:</div>
+                            <div class="col-sm-8">
+                                <span class="fs-5 text-danger fw-bold">@giaBanHienThi</span>
+                            </div>
+                        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.HinhAnh)
-        </dd>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Giá nhập:</div>
+                            <div class="col-sm-8">
+                                <span class="text-muted fst-italic">@giaNhapHienThi</span>
+                            </div>
+                        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.KichThuoc)
-        </dt>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Số lượng tồn:</div>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-layer-group"></i></span>
+                                    <input type="text" class="form-control bg-light fw-bold" value="@Model.SoLuongTon" readonly>
+                                    <span class="input-group-text bg-light">Chiếc</span>
+                                </div>
+                            </div>
+                        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.KichThuoc)
-        </dd>
+                        <div class="row mb-3">
+                            <div class="col-sm-4 fw-bold text-muted">Tình trạng:</div>
+                            <div class="col-sm-8">
+                                <div class="alert alert-light border py-2 mb-0">
+                                    <i class="fas @trangThaiIcon @trangThaiClass me-2"></i>
+                                    <span class="@trangThaiClass fw-bold">@trangThaiText</span>
+                                </div>
+                            </div>
+                        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MauSac)
-        </dt>
+                        <div class="row mb-3 mt-4">
+                            <div class="col-sm-4 fw-bold text-muted">File hình ảnh:</div>
+                            <div class="col-sm-8">
+                                <code class="bg-light p-1 rounded text-break">@Model.HinhAnh</code>
+                                @* Nếu muốn hiển thị ảnh thực tế thì bỏ comment dòng dưới *@
+                                @* <img src="~/Content/Images/@Model.HinhAnh" class="img-thumbnail mt-2 shadow-sm" style="max-height: 150px;" /> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.MauSac)
-        </dd>
+            <div class="row">
+                <div class="col-12">
+                    <h5 class="text-primary mb-3"><i class="fas fa-align-left me-2"></i>Mô tả chi tiết</h5>
+                    <div class="bg-light p-3 rounded border">
+                        @Html.Raw(Model.MoTa?.Replace("\n", "<br />"))
+                    </div>
+                </div>
+            </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BaoHanh)
-        </dt>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="alert alert-light border">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center p-3">
+                                    <i class="fas fa-calendar-plus fa-2x text-primary mb-2"></i>
+                                    <h6 class="fw-bold text-muted">Ngày tạo</h6>
+                                    <p class="mb-0">@(Model.NgayTao.HasValue ? Model.NgayTao.Value.ToString("dd/MM/yyyy") : "N/A")</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3">
+                                    <i class="fas fa-cubes fa-2x text-success mb-2"></i>
+                                    <h6 class="fw-bold text-muted">Tổng tồn kho</h6>
+                                    <p class="mb-0">@Model.SoLuongTon sản phẩm</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3">
+                                    <i class="fas fa-money-bill-wave fa-2x text-purple mb-2"></i>
+                                    <h6 class="fw-bold text-muted">Đơn giá bán</h6>
+                                    <p class="mb-0">@giaBanHienThi</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.BaoHanh)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.NgayTao)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.NgayTao)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.LoaiDongHo.TenLoai)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LoaiDongHo.TenLoai)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.NoiSanXuat.TenNoiSanXuat)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.NoiSanXuat.TenNoiSanXuat)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ThuongHieu.TenThuongHieu)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ThuongHieu.TenThuongHieu)
-        </dd>
-
-    </dl>
+            <div class="border-top pt-4 mt-3">
+                <div class="d-flex justify-content-between">
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary px-4">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+                    </a>
+                    <div>
+                        <a href="@Url.Action("Edit", new { id = Model.MaDongHo })" class="btn btn-warning px-4">
+                            <i class="fas fa-edit me-2"></i>Cập nhật đồng hồ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.MaDongHo }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    /* CSS Styles đồng bộ với giao diện */
+    .card {
+        border-radius: 10px;
+        border: none;
+        margin-bottom: 2rem;
+    }
+
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+    }
+
+    .badge.bg-warning {
+        background-color: #ffc107 !important;
+        color: #212529 !important;
+        font-weight: 600;
+    }
+
+    .badge.bg-info {
+        background-color: #0dcaf0 !important;
+        color: white !important;
+        font-weight: 600;
+    }
+
+    .badge {
+        font-size: 0.9em;
+        padding: 0.5em 1em;
+        border-radius: 20px;
+    }
+
+    .text-purple {
+        color: #6f42c1 !important;
+    }
+
+    h5 {
+        color: #2c3e50;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f1f1f1;
+    }
+
+    .row.mb-3 {
+        padding: 8px 0;
+        border-bottom: 1px solid #f8f9fa;
+        align-items: center;
+    }
+
+        .row.mb-3:last-child {
+            border-bottom: none;
+        }
+
+    .text-muted {
+        color: #6c757d !important;
+    }
+
+    code {
+        font-family: 'Courier New', monospace;
+        color: #e83e8c;
+    }
+
+    .input-group .btn, .input-group .input-group-text {
+        border-color: #dee2e6;
+    }
+
+    .input-group .form-control {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        cursor: default;
+    }
+
+    .alert-light {
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+    }
+
+    .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+        background-color: white;
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+            border-color: #6c757d;
+        }
+
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: #212529;
+        transition: all 0.3s;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+            color: #212529;
+        }
+
+    .border-top {
+        border-top-color: #dee2e6 !important;
+    }
+
+</style>

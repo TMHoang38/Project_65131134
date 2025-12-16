@@ -25,13 +25,13 @@ namespace Project_65131134.Areas.Admin.Controllers
                 return "CLD001";
             }
 
-            var numericPart = maMax.Substring(2);
+            var numericPart = maMax.Substring(3);
             if (!int.TryParse(numericPart, out int currentNumber))
             {
                 currentNumber = 0;
             }
 
-            return $"CLD{(currentNumber + 1):D3}";
+            return $"CLD{(currentNumber + 1):D2}";
         }
         // GET: Admin/ChatLieuDay_65131134
         public ActionResult Index()
@@ -149,6 +149,12 @@ namespace Project_65131134.Areas.Admin.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+        // Kiểm tra trùng tên bằng Ajax
+        public JsonResult CheckTenChatLieu(string tenChatLieu)
+        {
+            bool exists = db.ChatLieuDay.Any(x => x.TenChatLieu.ToLower().Trim() == tenChatLieu.ToLower().Trim());
+            return Json(new { exists = exists }, JsonRequestBehavior.AllowGet);
         }
     }
 }

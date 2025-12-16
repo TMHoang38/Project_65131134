@@ -6,7 +6,7 @@
 }
 
 <style>
-    /* 1. Giao diện Card (Khung bao ngoài) */
+    /* Giao diện Card & Input */
     .card-custom {
         border: none;
         border-radius: 15px;
@@ -54,7 +54,6 @@
     .input-group:focus-within {
         z-index: 5;
         border-radius: 0.375rem;
-
     }
 
         .input-group:focus-within .input-group-text,
@@ -73,6 +72,15 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+
+    /* Style cho class báo lỗi Ajax */
+    .is-invalid {
+        border-color: #e74a3b !important;
+    }
+
+    .is-valid {
+        border-color: #1cc88a !important;
+    }
 </style>
 
 <div class="container">
@@ -125,7 +133,7 @@
                                 <i class="fas fa-arrow-left me-2"></i> Quay lại
                             </a>
 
-                            <button type="reset" class="btn btn-warning btn-custom text-white">
+                            <button type="reset" class="btn btn-warning btn-custom text-white" id="btnReset">
                                 <i class="fas fa-sync-alt me-2"></i> Làm mới
                             </button>
 
@@ -142,4 +150,54 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            // Sự kiện khi người dùng nhập xong và click ra ngoài (Blur) tại ô TenThuongHieu
+            $('#TenThuongHieu').blur(function () {
+                var ten = $(this).val();
+                if (ten.trim() != "") {
+                    $.ajax({
+                        url: '/Admin/ThuongHieu_65131134/CheckTenThuongHieu',
+                        type: 'GET',
+                        data: { tenThuongHieu: ten },
+                        success: function (response) {
+                            if (response.exists) {
+                                // Nếu trùng: Hiện lỗi, đỏ viền, khóa nút Lưu
+                                $('span[data-valmsg-for="TenThuongHieu"]')
+                                    .text("Tên thương hiệu này đã tồn tại! Vui lòng nhập tên khác.")
+                                    .addClass("field-validation-error")
+                                    .removeClass("field-validation-valid");
+
+                                $('#TenThuongHieu').addClass('is-invalid');
+                                $('button[type="submit"]').prop('disabled', true);
+                            } else {
+                                // Nếu không trùng: Xanh viền, mở nút Lưu
+                                $('span[data-valmsg-for="TenThuongHieu"]').text("");
+                                $('#TenThuongHieu').removeClass('is-invalid').addClass('is-valid');
+                                $('button[type="submit"]').prop('disabled', false);
+                            }
+                        },
+                        error: function() {
+                            console.log("Lỗi kết nối kiểm tra tên thương hiệu");
+                        }
+                    });
+                }
+            });
+
+            // Khi người dùng gõ lại, bỏ trạng thái lỗi tạm thời
+            $('#TenThuongHieu').on('input', function() {
+                 $('button[type="submit"]').prop('disabled', false);
+                 $('#TenThuongHieu').removeClass('is-invalid').removeClass('is-valid');
+                 $('span[data-valmsg-for="TenThuongHieu"]').text("");
+            });
+
+            // Xử lý nút Reset để xóa class màu mè
+            $('#btnReset').click(function() {
+                $('#TenThuongHieu').removeClass('is-invalid').removeClass('is-valid');
+                $('button[type="submit"]').prop('disabled', false);
+                $('span[data-valmsg-for="TenThuongHieu"]').text("");
+            });
+        });
+    </script>
 }

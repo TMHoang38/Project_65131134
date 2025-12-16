@@ -1909,6 +1909,7 @@
     <Content Include="Images\check.png" />
     <Content Include="Images\delete.png" />
     <Content Include="Images\edit.png" />
+    <Content Include="Images\file.png" />
     <Content Include="Images\view.png" />
     <Content Include="Images\visibility.png" />
     <Content Include="Models\Model_65131134.Context.tt">

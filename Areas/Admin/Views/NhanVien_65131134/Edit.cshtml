@@ -30,8 +30,7 @@
         background-color: #f8f9fc;
         border-right: none;
         color: #4e73df;
-
-        min-width: 45px; 
+        min-width: 45px;
         justify-content: center;
     }
 
@@ -56,7 +55,7 @@
         z-index: 5;
         border-radius: 0.375rem;
         /*       điểm cần xóa */
-/*        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);*/
+        /*        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);*/
     }
 
         .input-group:focus-within .input-group-text,
@@ -167,7 +166,7 @@
                                     <span class="input-group-text"><i class="fas fa-user-tag text-primary"></i></span>
                                     @{
                                         var vaiTroOptions = new List<SelectListItem>
-                                                                {
+                                                                                        {
                                             new SelectListItem { Text = "Quản lý", Value = "0", Selected = (Model.VaiTro + "") == "0" },
                                             new SelectListItem { Text = "Nhân viên bán hàng", Value = "1", Selected = (Model.VaiTro + "") == "1" },
                                             new SelectListItem { Text = "Nhân viên giao hàng", Value = "2", Selected = (Model.VaiTro + "") == "2" }
@@ -217,11 +216,10 @@
 
     <script>
         $(document).ready(function () {
-            // Hiệu ứng ẩn hiện mật khẩu
+            // --- Giữ nguyên phần Ẩn/Hiện mật khẩu cũ ---
             $("#toggle-password").click(function () {
                 var input = $("#password-field");
                 var icon = $(this).find("i");
-
                 if (input.attr("type") === "password") {
                     input.attr("type", "text");
                     icon.removeClass("fa-eye").addClass("fa-eye-slash");
@@ -229,6 +227,104 @@
                     input.attr("type", "password");
                     icon.removeClass("fa-eye-slash").addClass("fa-eye");
                 }
+            });
+
+            // --- CÁC HÀM VALIDATION MỚI ---
+
+            function showError(inputInfo, message) {
+                inputInfo.closest('.input-group').next('.text-danger.custom-error').remove();
+                inputInfo.closest('.input-group').after('<span class="text-danger custom-error small">' + message + '</span>');
+                inputInfo.addClass('is-invalid');
+            }
+
+            function clearError(inputInfo) {
+                inputInfo.closest('.input-group').next('.text-danger.custom-error').remove();
+                inputInfo.removeClass('is-invalid');
+            }
+
+            // Xử lý nút LƯU
+            $("form").on("submit", function (e) {
+                var isValid = true;
+
+                // 1. Kiểm tra Ngày vào làm
+                var inputDateVal = $("#NgayVaoLam").val();
+                if (inputDateVal) {
+                    var inputDate = new Date(inputDateVal);
+                    var today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (inputDate > today) {
+                        showError($("#NgayVaoLam"), "Ngày vào làm không được lớn hơn ngày hôm nay.");
+                        isValid = false;
+                    } else {
+                        clearError($("#NgayVaoLam"));
+                    }
+                }
+
+                // 2. Kiểm tra Email
+                var email = $("#Email").val();
+                var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                if (email && !emailRegex.test(email)) {
+                    showError($("#Email"), "Email không đúng định dạng.");
+                    isValid = false;
+                } else {
+                    clearError($("#Email"));
+                }
+
+                // 3. Kiểm tra Số điện thoại (Chỉ số, max 10)
+                var sdt = $("#SoDienThoai").val();
+                if (sdt) {
+                    if (!/^\d+$/.test(sdt)) {
+                        showError($("#SoDienThoai"), "Số điện thoại chỉ được nhập số.");
+                        isValid = false;
+                    } else if (sdt.length > 10) {
+                        showError($("#SoDienThoai"), "Số điện thoại không được quá 10 số.");
+                        isValid = false;
+                    } else {
+                        clearError($("#SoDienThoai"));
+                    }
+                }
+
+                // 4. Kiểm tra Tên đăng nhập (Ajax)
+                if (isValid) {
+                    e.preventDefault(); // Dừng submit để check Ajax
+
+                    var username = $("#TenDangNhap").val();
+                    var currentId = $("#MaNhanVien").val(); // Lấy mã NV hiện tại
+
+                    if (username) {
+                        $.ajax({
+                            url: '@Url.Action("CheckUsername", "NhanVien_65131134")', // Gọi đúng hàm của bạn
+                            type: "POST",
+                            data: {
+                                username: username,
+                                currentId: currentId // Gửi thêm ID để loại trừ chính mình
+                            },
+                            success: function (result) {
+                                // Controller trả về: { isTaken: true/false }
+                                if (result.isTaken === true) {
+                                    showError($("#TenDangNhap"), "Tên đăng nhập đã tồn tại trong hệ thống.");
+                                } else {
+                                    clearError($("#TenDangNhap"));
+                                    // Submit form thật sự
+                                    $("form").off("submit").submit();
+                                }
+                            },
+                            error: function () {
+                                alert("Lỗi kết nối server. Vui lòng thử lại.");
+                            }
+                        });
+                    } else {
+                        $("form").off("submit").submit();
+                    }
+                } else {
+                    e.preventDefault();
+                }
+            });
+
+            // Xóa lỗi khi nhập liệu
+            $("#NgayVaoLam, #Email, #SoDienThoai, #TenDangNhap").on('input change', function() {
+                clearError($(this));
             });
         });
     </script>

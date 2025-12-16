@@ -13,6 +13,14 @@ namespace Project_65131134.Areas.Admin.Controllers
     public class NhanVien_65131134Controller : Controller
     {
         private CuaHangDongHo_65131134Entities db = new CuaHangDongHo_65131134Entities();
+        [HttpPost]
+        public JsonResult CheckUsername(string username, string currentId)
+        {
+            
+            bool isExists = db.NhanVien.Any(x => x.TenDangNhap == username && x.MaNhanVien != currentId);
+
+            return Json(new { isTaken = isExists });
+        }
 
         [HttpGet]
         public ActionResult TimKiem(string hoTen = "")

@@ -5,7 +5,6 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-
 <style>
     /* 1. Giao diện Card (Khung bao ngoài) */
     .card-custom {
@@ -27,26 +26,22 @@
         overflow: hidden;
     }
 
-
     .input-group-text {
         background-color: #f8f9fc;
-        border-right: none; 
-        color: #4e73df; 
+        border-right: none;
+        color: #4e73df;
         border-color: #d1d3e2;
     }
 
-
     .input-group .form-control {
-        border-left: none; 
+        border-left: none;
         color: #6e707e;
         border-color: #d1d3e2;
-
         position: relative;
         flex: 1 1 auto;
         width: 1% !important;
         margin-bottom: 0;
     }
-
 
         .input-group .form-control:focus {
             box-shadow: none !important;
@@ -54,19 +49,26 @@
             z-index: 3;
         }
 
+        /* Style cho trạng thái lỗi */
+        .input-group .form-control.is-invalid {
+            border-color: #dc3545;
+            background-image: none; /* Xóa icon mặc định của bootstrap validation */
+        }
+
+    .input-group.has-error .input-group-text {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
 
     .input-group:focus-within {
-
         z-index: 5;
         border-radius: 0.375rem;
     }
-
 
         .input-group:focus-within .input-group-text,
         .input-group:focus-within .form-control {
             border-color: #4e73df;
         }
-
 
     .btn-custom {
         border-radius: 50px;
@@ -79,6 +81,16 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+
+    /* Style cho thông báo lỗi dưới input */
+    .invalid-feedback {
+        display: none;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #dc3545;
+        padding-left: 0.5rem;
+    }
 </style>
 
 <div class="container">
@@ -89,7 +101,8 @@
                     <h3 class="mb-0 fw-bold"><i class="fas fa-user-plus me-2"></i> Thêm Nhân Viên Mới</h3>
                 </div>
                 <div class="card-body p-5">
-                    @using (Html.BeginForm())
+                    @* Thêm ID="createForm" vào đây để script bắt sự kiện *@
+                    @using (Html.BeginForm("Create", "NhanVien_65131134", FormMethod.Post, new { id = "createForm" }))
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true, "", new { @class = "text-danger text-center mb-4" })
@@ -104,33 +117,38 @@
                                 @Html.ValidationMessageFor(model => model.MaNhanVien, "", new { @class = "text-danger small" })
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Tên đăng nhập</label>
+                                <label class="form-label fw-bold text-secondary">Tên đăng nhập <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-user text-primary"></i></span>
-                                    @Html.EditorFor(model => model.TenDangNhap, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên đăng nhập" } })
+                                    @* Thêm required *@
+                                    @Html.EditorFor(model => model.TenDangNhap, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên đăng nhập", required = "required" } })
                                 </div>
-                                @Html.ValidationMessageFor(model => model.TenDangNhap, "", new { @class = "text-danger small" })
+                                <div class="invalid-feedback"></div> @Html.ValidationMessageFor(model => model.TenDangNhap, "", new { @class = "text-danger small" })
                             </div>
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Họ và tên</label>
+                                <label class="form-label fw-bold text-secondary">Họ và tên <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-signature text-primary"></i></span>
-                                    @Html.EditorFor(model => model.HoTen, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập họ và tên" } })
+                                    @Html.EditorFor(model => model.HoTen, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập họ và tên", required = "required" } })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.HoTen, "", new { @class = "text-danger small" })
                             </div>
+
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Mật khẩu</label>
+                                <label class="form-label fw-bold text-secondary">Mật khẩu <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-lock text-primary"></i></span>
-                                    @Html.EditorFor(model => model.MatKhau, new { htmlAttributes = new { @class = "form-control", @type = "password", @id = "password-field", placeholder = "Nhập mật khẩu" } })
-                                    <span class="input-group-text bg-white border-left-0" style="cursor: pointer;" id="toggle-password">
+                                    @Html.EditorFor(model => model.MatKhau, new { htmlAttributes = new { @class = "form-control", @type = "password", @id = "MatKhau", placeholder = "Nhập mật khẩu", required = "required" } })
+                                    @* Sử dụng class toggle-password và data-target *@
+                                    <span class="input-group-text bg-white border-left-0 toggle-password" style="cursor: pointer;" data-target="MatKhau">
                                         <i class="fas fa-eye text-muted"></i>
                                     </span>
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.MatKhau, "", new { @class = "text-danger small" })
                             </div>
                         </div>
@@ -140,44 +158,44 @@
                                 <label class="form-label fw-bold text-secondary">Email</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-envelope text-primary"></i></span>
-                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "example@gmail.com" } })
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "example@gmail.com", type = "email" } })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger small" })
                             </div>
+
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Số điện thoại</label>
+                                <label class="form-label fw-bold text-secondary">Xác nhận mật khẩu <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-phone text-primary"></i></span>
-                                    @Html.EditorFor(model => model.SoDienThoai, new { htmlAttributes = new { @class = "form-control", placeholder = "09xx xxx xxx" } })
+                                    <span class="input-group-text"><i class="fas fa-lock text-primary"></i></span>
+                                    <input type="password" class="form-control" id="ConfirmMatKhau" name="ConfirmMatKhau" placeholder="Nhập lại mật khẩu" required />
+
+                                    <span class="input-group-text bg-white border-left-0 toggle-password" style="cursor: pointer;" data-target="ConfirmMatKhau">
+                                        <i class="fas fa-eye text-muted"></i>
+                                    </span>
                                 </div>
-                                @Html.ValidationMessageFor(model => model.SoDienThoai, "", new { @class = "text-danger small" })
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Địa chỉ</label>
+                                <label class="form-label fw-bold text-secondary">Địa chỉ <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-map-marker-alt text-primary"></i></span>
-                                    @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập địa chỉ thường trú" } })
+                                    @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập địa chỉ thường trú", required = "required" } })
                                 </div>
+                                <div class="invalid-feedback"></div>
                                 @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger small" })
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Vai trò</label>
+                                <label class="form-label fw-bold text-secondary">Số điện thoại <span class="text-danger">*</span></label>
                                 <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-user-tag text-primary"></i></span>
-                                    @{
-                                        var vaiTroOptions = new List<SelectListItem>
-                                                                {
-                                            new SelectListItem { Text = "Quản lý", Value = "0", Selected = (Model.VaiTro + "") == "0" },
-                                            new SelectListItem { Text = "Nhân viên bán hàng", Value = "1", Selected = (Model.VaiTro + "") == "1" },
-                                            new SelectListItem { Text = "Nhân viên giao hàng", Value = "2", Selected = (Model.VaiTro + "") == "2" }
-                                        };
-                                    }
-                                    @Html.DropDownListFor(model => model.VaiTro, vaiTroOptions, "-- Chọn vai trò --", new { @class = "form-control form-select" })
+                                    <span class="input-group-text"><i class="fas fa-phone text-primary"></i></span>
+                                    @Html.EditorFor(model => model.SoDienThoai, new { htmlAttributes = new { @class = "form-control", placeholder = "09xx xxx xxx", required = "required" } })
                                 </div>
-                                @Html.ValidationMessageFor(model => model.VaiTro, "", new { @class = "text-danger small" })
+                                <div class="invalid-feedback"></div>
+                                @Html.ValidationMessageFor(model => model.SoDienThoai, "", new { @class = "text-danger small" })
                             </div>
                         </div>
 
@@ -195,6 +213,23 @@
                                 </div>
                                 @Html.ValidationMessageFor(model => model.NgayVaoLam, "", new { @class = "text-danger small" })
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Vai trò <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user-tag text-primary"></i></span>
+                                    @{
+                                        var vaiTroOptions = new List<SelectListItem>
+                                                                {
+                                            new SelectListItem { Text = "Quản lý", Value = "0", Selected = (Model.VaiTro + "") == "0" },
+                                            new SelectListItem { Text = "Nhân viên bán hàng", Value = "1", Selected = (Model.VaiTro + "") == "1" },
+                                            new SelectListItem { Text = "Nhân viên giao hàng", Value = "2", Selected = (Model.VaiTro + "") == "2" }
+                                        };
+                                    }
+                                    @Html.DropDownListFor(model => model.VaiTro, vaiTroOptions, "-- Chọn vai trò --", new { @class = "form-control form-select", required = "required" })
+                                </div>
+                                <div class="invalid-feedback"></div>
+                                @Html.ValidationMessageFor(model => model.VaiTro, "", new { @class = "text-danger small" })
+                            </div>
                         </div>
 
                         <hr class="my-4" />
@@ -208,7 +243,7 @@
                                 <i class="fas fa-sync-alt me-2"></i> Làm mới
                             </button>
 
-                            <button type="submit" class="btn btn-primary btn-custom">
+                            <button type="submit" id="submitBtn" class="btn btn-primary btn-custom">
                                 <i class="fas fa-save me-2"></i> Lưu nhân viên
                             </button>
                         </div>
@@ -222,21 +257,278 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script>
-        $(document).ready(function () {
-            // Hiệu ứng ẩn hiện mật khẩu
-            $("#toggle-password").click(function () {
-                var input = $("#password-field");
-                var icon = $(this).find("i");
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
 
-                if (input.attr("type") === "password") {
-                    input.attr("type", "text");
-                    icon.removeClass("fa-eye").addClass("fa-eye-slash");
-                } else {
-                    input.attr("type", "password");
-                    icon.removeClass("fa-eye-slash").addClass("fa-eye");
+        // --- 1. XỬ LÝ SỐ ĐIỆN THOẠI (Chỉ nhập số, Max 10) ---
+        const phoneInput = document.getElementById('SoDienThoai');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function (e) {
+                // Chỉ giữ lại số, xóa hết các ký tự khác
+                this.value = this.value.replace(/[^0-9]/g, '');
+
+                // Cắt chuỗi nếu dài quá 10 ký tự
+                if (this.value.length > 10) {
+                    this.value = this.value.slice(0, 10);
+                }
+
+                // Xóa thông báo lỗi khi người dùng đang nhập lại
+                clearFieldError(this);
+            });
+        }
+
+        // --- 2. XỬ LÝ KIỂM TRA TRÙNG TÊN ĐĂNG NHẬP (AJAX) ---
+        const usernameInput = document.getElementById('TenDangNhap');
+        if (usernameInput) {
+            // Sự kiện 'blur': Khi người dùng nhập xong và click ra ngoài ô input
+            usernameInput.addEventListener('blur', function () {
+                const username = this.value.trim();
+                // Chỉ check nếu có dữ liệu
+                if (username.length > 0) {
+                    checkUsernameAvailability(username, this);
+                }
+            });
+
+            // Khi người dùng quay lại sửa tên, tạm thời xóa lỗi cũ
+            usernameInput.addEventListener('input', function () {
+                clearFieldError(this);
+                this.removeAttribute('data-duplicate'); // Xóa cờ đánh dấu trùng
+            });
+        }
+
+        // --- 3. LOGIC ẨN/HIỆN MẬT KHẨU ---
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            const eyeIcon = button.querySelector('i');
+            button.addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target');
+                const targetField = document.getElementById(targetId);
+
+                if (targetField) {
+                    if (targetField.type === 'password') {
+                        targetField.type = 'text';
+                        eyeIcon.classList.remove('fa-eye');
+                        eyeIcon.classList.add('fa-eye-slash');
+                    } else {
+                        targetField.type = 'password';
+                        eyeIcon.classList.remove('fa-eye-slash');
+                        eyeIcon.classList.add('fa-eye');
+                    }
                 }
             });
         });
-    </script>
+
+        // --- 4. SỰ KIỆN SUBMIT FORM ---
+        const form = document.getElementById('createForm');
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                // Gọi hàm validate tổng
+                if (!validateForm()) {
+                    event.preventDefault(); // Chặn gửi nếu lỗi
+                    event.stopPropagation();
+                } else {
+                    // Nếu OK -> Hiện loading
+                    const submitBtn = document.getElementById('submitBtn');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Đang xử lý...';
+                    }
+                }
+            });
+        }
+
+        // Gán sự kiện blur cho các trường required khác để báo lỗi tức thì
+        const requiredFields = document.querySelectorAll('[required]');
+        requiredFields.forEach(field => {
+            if (field.id !== 'TenDangNhap') { // Tên đăng nhập đã có logic riêng ở trên
+                field.addEventListener('blur', function () { validateField(this); });
+                field.addEventListener('input', function () { clearFieldError(this); });
+            }
+        });
+
+        // Focus vào ô đầu tiên khi mở trang
+        const firstInput = document.querySelector('form input[type="text"]');
+        if (firstInput) firstInput.focus();
+    });
+
+    // ==========================================
+    // KHỐI HÀM XỬ LÝ LOGIC (HELPER FUNCTIONS)
+    // ==========================================
+
+    // 1. Hàm gọi AJAX kiểm tra trùng Username
+    function checkUsernameAvailability(username, field) {
+        // LƯU Ý: Đường dẫn này phải đúng với Controller của bạn
+        // Nếu Controller tên là NhanVien_65131134Controller và nằm trong Area Admin
+        const url = '/Admin/NhanVien_65131134/CheckUsername';
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: { username: username },
+            success: function (response) {
+                if (response.isTaken) {
+                    // Nếu Server trả về true (đã tồn tại)
+                    showFieldError(field, 'Tên đăng nhập này đã được sử dụng. Vui lòng chọn tên khác.');
+                    field.setAttribute('data-duplicate', 'true'); // Đánh dấu cờ trùng để chặn submit
+                } else {
+                    // Nếu Server trả về false (hợp lệ)
+                    clearFieldError(field);
+                    field.removeAttribute('data-duplicate');
+                }
+            },
+            error: function () {
+                console.log('Không thể kết nối đến server để kiểm tra tên đăng nhập.');
+            }
+        });
+    }
+
+    // 2. Hàm Validate toàn bộ form
+    function validateForm() {
+        let isValid = true;
+        let firstErrorField = null;
+
+        // Duyệt qua tất cả các trường required
+        document.querySelectorAll('[required]').forEach(field => {
+            // Kiểm tra riêng cho Tên đăng nhập (dựa vào cờ data-duplicate từ Ajax)
+            if (field.id === 'TenDangNhap' && field.getAttribute('data-duplicate') === 'true') {
+                isValid = false;
+                showFieldError(field, 'Tên đăng nhập này đã tồn tại.');
+                if (!firstErrorField) firstErrorField = field;
+            }
+            // Kiểm tra các trường khác
+            else if (!validateField(field)) {
+                isValid = false;
+                if (!firstErrorField) firstErrorField = field;
+            }
+        });
+
+        // Kiểm tra mật khẩu khớp nhau
+        if (!checkPasswordMatch()) {
+            isValid = false;
+            const confirmField = document.getElementById('ConfirmMatKhau');
+            if (!firstErrorField) firstErrorField = confirmField;
+        }
+
+        // Kiểm tra Số điện thoại (Bắt buộc phải đủ 10 số)
+        const phoneField = document.getElementById('SoDienThoai');
+        if (phoneField && phoneField.value.trim().length !== 10) {
+            isValid = false;
+            showFieldError(phoneField, 'Số điện thoại phải nhập đúng 10 chữ số.');
+            if (!firstErrorField) firstErrorField = phoneField;
+        }
+
+        // Xử lý hiển thị thông báo lỗi tổng
+        if (!isValid) {
+            showToast('Vui lòng kiểm tra lại các thông tin báo lỗi màu đỏ!', 'error');
+            if (firstErrorField) {
+                setTimeout(() => {
+                    firstErrorField.focus();
+                    firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+        }
+        return isValid;
+    }
+
+    // 3. Hàm kiểm tra Password Match
+    function checkPasswordMatch() {
+        const matKhau = document.getElementById('MatKhau').value;
+        const confirmMatKhauField = document.getElementById('ConfirmMatKhau');
+        const confirmMatKhau = confirmMatKhauField.value;
+
+        if (matKhau && confirmMatKhau && matKhau !== confirmMatKhau) {
+            showFieldError(confirmMatKhauField, 'Mật khẩu xác nhận không khớp');
+            return false;
+        }
+        return true;
+    }
+
+    // 4. Hàm Validate từng trường đơn lẻ
+    function validateField(field) {
+        const value = field.value.trim();
+
+        // Kiểm tra rỗng
+        if (field.hasAttribute('required') && !value) {
+            let msg = 'Thông tin này không được để trống';
+            if (field.id === 'VaiTro') msg = 'Vui lòng chọn vai trò';
+            showFieldError(field, msg);
+            return false;
+        }
+
+        // Có thể thêm các logic validate khác ở đây nếu cần
+        return true;
+    }
+
+    // 5. Hàm hiển thị lỗi UI
+    function showFieldError(field, message) {
+        field.classList.add('is-invalid'); // Border đỏ
+
+        // Tìm thẻ div hiển thị lỗi
+        let parent = field.closest('.input-group') || field.parentElement;
+        let errorContainer = parent.querySelector('.invalid-feedback');
+
+        // Nếu không nằm trong cùng parent, tìm thẻ kế tiếp
+        if (!errorContainer) errorContainer = parent.nextElementSibling;
+
+        if (errorContainer && errorContainer.classList.contains('invalid-feedback')) {
+            errorContainer.textContent = message;
+            errorContainer.style.display = 'block';
+        }
+
+        // Đổi màu border của input-group
+        if (field.closest('.input-group')) {
+            field.closest('.input-group').classList.add('has-error');
+        }
+    }
+
+    // 6. Hàm xóa lỗi UI
+    function clearFieldError(field) {
+        field.classList.remove('is-invalid');
+
+        let parent = field.closest('.input-group') || field.parentElement;
+        let errorContainer = parent.querySelector('.invalid-feedback');
+
+        if (!errorContainer) errorContainer = parent.nextElementSibling;
+
+        if (errorContainer) {
+            errorContainer.textContent = '';
+            errorContainer.style.display = 'none';
+        }
+
+        if (field.closest('.input-group')) {
+            field.closest('.input-group').classList.remove('has-error');
+        }
+    }
+
+    // 7. Hàm hiển thị Toast thông báo góc màn hình
+    function showToast(message, type = 'error') {
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: 90%;';
+            document.body.appendChild(toastContainer);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show`;
+        toast.style.cssText = 'min-width: 300px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);';
+
+        const title = type === 'error' ? 'Lỗi!' : 'Thành công!';
+        toast.innerHTML = `
+            <strong>${title}</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+
+        toastContainer.prepend(toast);
+
+        // Tự động tắt sau 3 giây
+        setTimeout(() => {
+            if (typeof bootstrap !== 'undefined' && bootstrap.Alert) {
+                new bootstrap.Alert(toast).close();
+            } else {
+                toast.remove();
+            }
+        }, 3000);
+    }
+</script>
 }

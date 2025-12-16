@@ -16,43 +16,25 @@ namespace Project_65131134.Areas.Admin.Controllers
 
         string LayMaTH()
         {
-            var maMax = db.ThuongHieu
-                .Select(n => n.MaThuongHieu)
-                .OrderByDescending(m => m)
-                .FirstOrDefault();
-
-            if (string.IsNullOrEmpty(maMax) || maMax.Length < 3)
-            {
-                return "TH001";
-            }
-
+            var maMax = db.ThuongHieu.Select(n => n.MaThuongHieu).OrderByDescending(m => m).FirstOrDefault();
+            if (string.IsNullOrEmpty(maMax) || maMax.Length < 3) return "TH001";
             var numericPart = maMax.Substring(2);
-            if (!int.TryParse(numericPart, out int currentNumber))
-            {
-                currentNumber = 0;
-            }
-
+            if (!int.TryParse(numericPart, out int currentNumber)) currentNumber = 0;
             return $"TH{(currentNumber + 1):D3}";
         }
+
+        // --- BỔ SUNG: Hàm kiểm tra trùng tên cho Ajax (Client-side) ---
+        public JsonResult CheckTenThuongHieu(string tenThuongHieu)
+        {
+            // Kiểm tra tồn tại, bỏ qua chữ hoa/thường và khoảng trắng
+            bool exists = db.ThuongHieu.Any(x => x.TenThuongHieu.ToLower().Trim() == tenThuongHieu.ToLower().Trim());
+            return Json(new { exists = exists }, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: Admin/ThuongHieu_65131134
         public ActionResult Index()
         {
             return View(db.ThuongHieu.ToList());
-        }
-
-        // GET: Admin/ThuongHieu_65131134/Details/5
-        public ActionResult Details(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ThuongHieu thuongHieu = db.ThuongHieu.Find(id);
-            if (thuongHieu == null)
-            {
-                return HttpNotFound();
-            }
-            return View(thuongHieu);
         }
 
         // GET: Admin/ThuongHieu_65131134/Create
@@ -66,14 +48,28 @@ namespace Project_65131134.Areas.Admin.Controllers
         }
 
         // POST: Admin/ThuongHieu_65131134/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "MaThuongHieu,TenThuongHieu,MoTa")] ThuongHieu thuongHieu)
         {
             if (ModelState.IsValid)
             {
+                // --- BỔ SUNG: Kiểm tra trùng tại Server (Server-side) ---
+                bool checkTrung = db.ThuongHieu.Any(x => x.TenThuongHieu.ToLower().Trim() == thuongHieu.TenThuongHieu.ToLower().Trim());
+
+                if (checkTrung)
+                {
+                    ModelState.AddModelError("TenThuongHieu", "Tên thương hiệu này đã tồn tại! Vui lòng chọn tên khác.");
+
+                    // Giữ lại mã cũ để không bị mất khi reload trang
+                    if (string.IsNullOrEmpty(thuongHieu.MaThuongHieu))
+                    {
+                        thuongHieu.MaThuongHieu = LayMaTH();
+                    }
+                    return View(thuongHieu);
+                }
+                // ------------------------------------------------------
+
                 thuongHieu.MaThuongHieu = LayMaTH();
                 db.ThuongHieu.Add(thuongHieu);
                 db.SaveChanges();
@@ -87,24 +83,23 @@ namespace Project_65131134.Areas.Admin.Controllers
             return View(thuongHieu);
         }
 
-        // GET: Admin/ThuongHieu_65131134/Edit/5
-        public ActionResult Edit(string id)
+        // ... (Các hàm Details, Edit, Delete giữ nguyên như cũ) ...
+        public ActionResult Details(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             ThuongHieu thuongHieu = db.ThuongHieu.Find(id);
-            if (thuongHieu == null)
-            {
-                return HttpNotFound();
-            }
+            if (thuongHieu == null) return HttpNotFound();
             return View(thuongHieu);
         }
 
-        // POST: Admin/ThuongHieu_65131134/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        public ActionResult Edit(string id)
+        {
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            ThuongHieu thuongHieu = db.ThuongHieu.Find(id);
+            if (thuongHieu == null) return HttpNotFound();
+            return View(thuongHieu);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "MaThuongHieu,TenThuongHieu,MoTa")] ThuongHieu thuongHieu)
@@ -118,22 +113,14 @@ namespace Project_65131134.Areas.Admin.Controllers
             return View(thuongHieu);
         }
 
-        // GET: Admin/ThuongHieu_65131134/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             ThuongHieu thuongHieu = db.ThuongHieu.Find(id);
-            if (thuongHieu == null)
-            {
-                return HttpNotFound();
-            }
+            if (thuongHieu == null) return HttpNotFound();
             return View(thuongHieu);
         }
 
-        // POST: Admin/ThuongHieu_65131134/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
@@ -146,10 +133,7 @@ namespace Project_65131134.Areas.Admin.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            if (disposing) db.Dispose();
             base.Dispose(disposing);
         }
     }

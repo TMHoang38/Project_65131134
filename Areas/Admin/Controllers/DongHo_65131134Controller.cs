@@ -130,14 +130,14 @@ namespace Project_65131134.Areas.Admin
         }
 
         // POST: Admin/DongHo_65131134/Create
+        // POST: Admin/DongHo_65131134/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        // CẬP NHẬT: Thêm MaChatLieuDay, MaChatLieuVo vào Bind
         public ActionResult Create([Bind(Include = "MaDongHo,TenDongHo,MaThuongHieu,MaNoiSanXuat,MaLoai,MoTa,GiaBan,GiaNhap,SoLuongTon,HinhAnh,KichThuoc,MauSac,BaoHanh,NgayTao,MaChatLieuDay,MaChatLieuVo")] DongHo dongHo)
         {
             var AnhDH = Request.Files["Avatar"];
 
-            // Xử lý upload ảnh (nếu có ảnh mới upload)
+            // Xử lý upload ảnh
             if (AnhDH != null && AnhDH.ContentLength > 0)
             {
                 string postedFileName = System.IO.Path.GetFileName(AnhDH.FileName);
@@ -146,15 +146,27 @@ namespace Project_65131134.Areas.Admin
                 dongHo.HinhAnh = postedFileName;
             }
 
+            // --- BẮT ĐẦU ĐOẠN CODE THÊM MỚI ---
+            // Kiểm tra tên đồng hồ đã tồn tại chưa (So sánh không phân biệt hoa thường)
+            if (db.DongHo.Any(x => x.TenDongHo.ToLower() == dongHo.TenDongHo.ToLower()))
+            {
+                // 1. Thêm lỗi vào ModelState để hiện đỏ ở ô input
+                ModelState.AddModelError("TenDongHo", "Tên đồng hồ này đã tồn tại trong hệ thống!");
+
+                // 2. Thêm thông báo vào ViewBag để hiện Toast Script
+                ViewBag.ErrorToast = "Đồng hồ này đã có trong hệ thống! Vui lòng kiểm tra lại tên.";
+            }
+            // --- KẾT THÚC ĐOẠN CODE THÊM MỚI ---
+
             if (ModelState.IsValid)
             {
-                dongHo.MaDongHo = LayMaDH(); // Đảm bảo mã luôn mới nhất khi lưu
+                dongHo.MaDongHo = LayMaDH();
                 db.DongHo.Add(dongHo);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            // Nếu model lỗi, load lại Dropdown
+            // ... (Phần load lại ViewBag cũ giữ nguyên) ...
             if (string.IsNullOrEmpty(dongHo.MaDongHo))
             {
                 dongHo.MaDongHo = LayMaDH();
@@ -163,8 +175,6 @@ namespace Project_65131134.Areas.Admin
             ViewBag.MaLoai = new SelectList(db.LoaiDongHo, "MaLoai", "TenLoai", dongHo.MaLoai);
             ViewBag.MaNoiSanXuat = new SelectList(db.NoiSanXuat, "MaNoiSanXuat", "TenNoiSanXuat", dongHo.MaNoiSanXuat);
             ViewBag.MaThuongHieu = new SelectList(db.ThuongHieu, "MaThuongHieu", "TenThuongHieu", dongHo.MaThuongHieu);
-
-            // CẬP NHẬT: Load lại ViewBag cho Dropdown Chất liệu khi có lỗi
             ViewBag.MaChatLieuDay = new SelectList(db.ChatLieuDay, "MaChatLieuDay", "TenChatLieu", dongHo.MaChatLieuDay);
             ViewBag.MaChatLieuVo = new SelectList(db.ChatLieuVo, "MaChatLieuVo", "TenChatLieu", dongHo.MaChatLieuVo);
 
@@ -263,5 +273,7 @@ namespace Project_65131134.Areas.Admin
             }
             base.Dispose(disposing);
         }
+
+
     }
 }

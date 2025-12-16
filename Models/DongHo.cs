@@ -36,13 +36,12 @@ namespace Project_65131134.Models
         public string MoTa { get; set; }
         [Required(ErrorMessage = "Hãy nhập thông tin!")]
         [DisplayName("Giá bán")]
-        [MinLength(1000, ErrorMessage = "Giá bán phải lớn hơn hoặc bằng 1.000")]
         public decimal GiaBan { get; set; }
         [DisplayName("Giá nhập")]
         public Nullable<decimal> GiaNhap { get; set; }
         [DisplayName("Số lượng tồn")]
         [Required(ErrorMessage = "Hãy nhập thông tin!")]
-        [MinLength(0, ErrorMessage = "Số lượng tồn phải lớn hơn hoặc bằng 0")]
+        [Range(0, int.MaxValue, ErrorMessage = "Số lượng tồn phải lớn hơn hoặc bằng 0")]
         public Nullable<int> SoLuongTon { get; set; }
         [DisplayName("Hình ảnh")]
         public string HinhAnh { get; set; }
@@ -55,7 +54,7 @@ namespace Project_65131134.Models
         public string MauSac { get; set; }
         [DisplayName("Bảo hành")]
         [Required(ErrorMessage = "Hãy nhập thông tin!")]
-        [MinLength(0, ErrorMessage = "Bảo hành phải lớn hơn hoặc bằng 0")]
+        [Range(0, int.MaxValue, ErrorMessage = "Bảo hành phải lớn hơn hoặc bằng 0")]
         public Nullable<int> BaoHanh { get; set; }
         [DisplayName("Ngày tạo")]
         [Required(ErrorMessage = "Hãy nhập thông tin!")]

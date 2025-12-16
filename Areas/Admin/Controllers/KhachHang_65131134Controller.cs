@@ -14,6 +14,34 @@ namespace Project_65131134.Areas.Admin.Controllers
     {
         private CuaHangDongHo_65131134Entities db = new CuaHangDongHo_65131134Entities();
 
+        [HttpPost]
+        public JsonResult CheckUsername(string username, string id)
+        {
+            // 1. Xử lý chuỗi đầu vào
+            username = username?.Trim();
+
+            // Nếu username rỗng sau khi trim thì coi như không trùng (để validate required lo)
+            if (string.IsNullOrEmpty(username))
+            {
+                return Json(new { isTaken = false });
+            }
+
+            bool isTaken;
+
+            // 2. Logic kiểm tra
+            if (string.IsNullOrEmpty(id)) // Trường hợp Thêm mới
+            {
+                isTaken = db.KhachHang.Any(x => x.TenDangNhap.ToLower() == username.ToLower());
+            }
+            else // Trường hợp Chỉnh sửa
+            {
+                isTaken = db.KhachHang.Any(x => x.TenDangNhap.ToLower() == username.ToLower() && x.MaKhachHang != id);
+            }
+
+            // 3. Trả về JSON
+            return Json(new { isTaken = isTaken });
+        }
+
         [HttpGet]
         public ActionResult TimKiem(string hoTen = "")
         {

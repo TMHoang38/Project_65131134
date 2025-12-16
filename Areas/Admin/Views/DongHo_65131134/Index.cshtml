@@ -115,24 +115,27 @@
 
             // --- CỘT CHỨC NĂNG ---
             grid.Column("Chức năng", format: @<text>
-    <div class="d-flex justify-content-sm-around">
-        @* Nút Edit *@
-        <a href="@Url.Action("Edit", new { id = item.MaDongHo})" class="edit-btn">
-            <abbr title="Cập nhật dữ liệu"><img src="/images/edit.png" width="20" height="20" /></abbr>
-        </a>
+                <div class="d-flex justify-content-sm-around">
+                    @* Nút Edit *@
+                    <a href="@Url.Action("Edit", new { id = item.MaDongHo})" class="edit-btn">
+                        <abbr title="Cập nhật dữ liệu"><img src="/images/edit.png" width="20" height="20" /></abbr>
+                    </a>
+                    <a href="@Url.Action("Details", new { id = item.MaDongHo})" class="details-btn">
+                        <abbr title="Xem chi tiết dữ liệu"><img src="/images/file.png" width="20" height="20" /></abbr>
+                    </a>
 
-        @* Nút Xóa: Kích hoạt Modal *@
-        <a href="#"
-           class="delete-btn-trigger"
-           data-bs-toggle="modal"
-           data-bs-target="#deleteModal"
-           data-id="@item.MaDongHo"
-           data-url="@Url.Action("Delete", new { id = item.MaDongHo })">
-            <abbr title="Xóa dữ liệu">
-                <img src="/images/delete.png" width="20" height="20" />
-            </abbr>
-        </a>
-    </div>
+                    @* Nút Xóa: Kích hoạt Modal *@
+                    <a href="#"
+                       class="delete-btn-trigger"
+                       data-bs-toggle="modal"
+                       data-bs-target="#deleteModal"
+                       data-id="@item.MaDongHo"
+                       data-url="@Url.Action("Delete", new { id = item.MaDongHo })">
+                        <abbr title="Xóa dữ liệu">
+                            <img src="/images/delete.png" width="20" height="20" />
+                        </abbr>
+                    </a>
+                </div>
             </text>),
 }
 )

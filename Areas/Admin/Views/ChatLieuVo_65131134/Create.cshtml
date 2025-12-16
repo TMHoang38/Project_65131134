@@ -6,7 +6,7 @@
 }
 
 <style>
-    /* 1. Giao diện Card (Khung bao ngoài) */
+    /* Giao diện Card & Input giống Chất Liệu Dây */
     .card-custom {
         border: none;
         border-radius: 15px;
@@ -72,6 +72,15 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+
+    /* Style cho class báo lỗi Ajax */
+    .is-invalid {
+        border-color: #e74a3b !important;
+    }
+
+    .is-valid {
+        border-color: #1cc88a !important;
+    }
 </style>
 
 <div class="container">
@@ -100,7 +109,7 @@
                                 <label class="form-label fw-bold text-secondary">Tên chất liệu</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-tag text-primary"></i></span>
-                                    @Html.EditorFor(model => model.TenChatLieu, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên chất liệu" } })
+                                    @Html.EditorFor(model => model.TenChatLieu, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên chất liệu vỏ" } })
                                 </div>
                                 @Html.ValidationMessageFor(model => model.TenChatLieu, "", new { @class = "text-danger small" })
                             </div>
@@ -124,7 +133,7 @@
                                 <i class="fas fa-arrow-left me-2"></i> Quay lại
                             </a>
 
-                            <button type="reset" class="btn btn-warning btn-custom text-white">
+                            <button type="reset" class="btn btn-warning btn-custom text-white" id="btnReset">
                                 <i class="fas fa-sync-alt me-2"></i> Làm mới
                             </button>
 
@@ -141,4 +150,53 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            // Sự kiện khi người dùng nhập xong và click ra ngoài (Blur)
+            $('#TenChatLieu').blur(function () {
+                var ten = $(this).val();
+                if (ten.trim() != "") {
+                    $.ajax({
+                        url: '/Admin/ChatLieuVo_65131134/CheckTenChatLieu',
+                        type: 'GET',
+                        data: { tenChatLieu: ten },
+                        success: function (response) {
+                            if (response.exists) {
+                                // Nếu trùng: Hiện lỗi, đỏ viền, khóa nút Lưu
+                                $('span[data-valmsg-for="TenChatLieu"]')
+                                    .text("Tên chất liệu vỏ này đã tồn tại! Vui lòng chọn tên khác.")
+                                    .addClass("field-validation-error")
+                                    .removeClass("field-validation-valid");
+
+                                $('#TenChatLieu').addClass('is-invalid');
+                                $('button[type="submit"]').prop('disabled', true);
+                            } else {
+                                // Nếu không trùng: Xanh viền, mở nút Lưu
+                                $('span[data-valmsg-for="TenChatLieu"]').text("");
+                                $('#TenChatLieu').removeClass('is-invalid').addClass('is-valid');
+                                $('button[type="submit"]').prop('disabled', false);
+                            }
+                        },
+                        error: function () {
+                            console.log("Lỗi kiểm tra Ajax");
+                        }
+                    });
+                }
+            });
+
+            // Khi người dùng gõ lại, bỏ trạng thái lỗi tạm thời
+            $('#TenChatLieu').on('input', function () {
+                $('button[type="submit"]').prop('disabled', false);
+                $('#TenChatLieu').removeClass('is-invalid').removeClass('is-valid');
+                $('span[data-valmsg-for="TenChatLieu"]').text("");
+            });
+
+            // Xử lý nút Reset để xóa class màu mè
+            $('#btnReset').click(function () {
+                $('#TenChatLieu').removeClass('is-invalid').removeClass('is-valid');
+                $('button[type="submit"]').prop('disabled', false);
+            });
+        });
+    </script>
 }
