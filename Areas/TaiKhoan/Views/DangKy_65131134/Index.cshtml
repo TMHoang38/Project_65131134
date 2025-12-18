@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.Title = "Đăng ký thành viên";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title - Luxury Timepiece</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <style>
+
+        body {
+            /* Hình nền bộ máy đồng hồ phía sau */
+            background: linear-gradient(rgba(11, 17, 24, 0.85), rgba(11, 17, 24, 0.9)), url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=2080&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Roboto', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-custom {
+            background-color: #141b25; /* Màu nền thẻ tối */
+            border: 1px solid rgba(197, 160, 89, 0.3); /* Viền vàng mờ */
+            box-shadow: 0 0 25px rgba(0,0,0,0.6);
+            width: 100%;
+            max-width: 550px;
+            border-radius: 8px;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            color: #c5a059; /* Màu vàng kim */
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .form-control-user {
+            background-color: #0b1118 !important;
+            border: 1px solid #2c3e50;
+            color: #e0e0e0 !important;
+            border-radius: 4px !important;
+            padding: 22px 15px !important;
+        }
+
+            .form-control-user:focus {
+                border-color: #c5a059;
+                box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.25);
+            }
+
+        .btn-gold {
+            background: linear-gradient(45deg, #b88a44, #e6c87a);
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 12px;
+            font-family: 'Playfair Display', serif;
+            text-transform: uppercase;
+            transition: transform 0.2s;
+        }
+
+            .btn-gold:hover {
+                color: #000;
+                transform: scale(1.02);
+                background: linear-gradient(45deg, #e6c87a, #b88a44);
+            }
+
+        .link-footer {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+            .link-footer:hover {
+                color: #c5a059;
+                text-decoration: none;
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="card card-custom animated fade-in">
+        <div class="card-body p-5">
+            <div class="text-center mb-4">
+                <h1 class="brand-title">THAM GIA TIMEPIECE</h1>
+                <p class="text-muted small">Trở thành thành viên để nhận ưu đãi đặc quyền</p>
+            </div>
+
+            @using (Html.BeginForm("DangKy", "TaiKhoan", FormMethod.Post, new { @class = "user" }))
+            {
+                <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="text" class="form-control form-control-user" name="Ho" placeholder="Họ">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control form-control-user" name="Ten" placeholder="Tên">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control form-control-user" name="Email" placeholder="Địa chỉ Email">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control form-control-user" name="TaiKhoan" placeholder="Tên tài khoản">
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <input type="password" class="form-control form-control-user" name="MatKhau" placeholder="Mật khẩu">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="password" class="form-control form-control-user" name="NhapLaiMatKhau" placeholder="Nhập lại mật khẩu">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-gold btn-user btn-block rounded-pill">
+                    Đăng ký tài khoản
+                </button>
+            }
+
+            <hr style="border-color: rgba(255,255,255,0.1);">
+
+            <div class="text-center">
+                <a class="small link-footer" href="@Url.Action("Index", "QuenMatKhau_65131134", new { area = "TaiKhoan" })">
+                    <i class="fas fa-question-circle"></i> Quên mật khẩu?
+                </a>
+            </div>
+            <div class="text-center mt-2">
+                <span class="text-muted small">Đã là thành viên?</span>
+                <a class="small link-footer font-weight-bold" href="@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })" style="color: #c5a059;">
+                    Đăng nhập ngay
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="~/Content/js/sb-admin-2.min.js"></script>
+</body>
+</html>

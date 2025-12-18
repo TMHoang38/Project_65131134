@@ -1,0 +1,203 @@
+﻿@model Project_65131134.Models.KhachHang
+
+@{
+    ViewBag.Title = "Chỉnh sửa thông tin";
+    Layout = "~/Areas/NhanVienGiaoHang/Views/Shared/_Layout.cshtml";
+}
+
+@* ... Giữ nguyên phần Style của bạn ... *@
+<style>
+    /* BỔ SUNG: Style hiển thị lỗi giống trang Create */
+    .invalid-feedback {
+        display: none;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #dc3545;
+        padding-left: 0.5rem;
+    }
+
+    .input-group .form-control.is-invalid {
+        border-color: #dc3545;
+    }
+    /* ... Các style cũ ... */
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card card-custom">
+                <div class="card-header card-header-custom text-center">
+                    <h3 class="mb-0 fw-bold"><i class="fas fa-user-edit me-2"></i> Chỉnh Sửa Thông Tin</h3>
+                </div>
+                <div class="card-body p-5">
+                    @* CẬP NHẬT: Thêm id="editForm" *@
+                    @using (Html.BeginForm("Edit", "KhachHang_65131134", FormMethod.Post, new { id = "editForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger text-center mb-4" })
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Mã khách hàng</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-id-card text-primary"></i></span>
+                                    @* Cần ID để script lấy giá trị gửi về server *@
+                                    @Html.TextBoxFor(model => model.MaKhachHang, new { @class = "form-control", @readonly = "readonly", @style = "background-color: #e9ecef", @id = "MaKhachHang" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Tên đăng nhập</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user text-primary"></i></span>
+                                    @* Thêm required và id *@
+                                    @Html.EditorFor(model => model.TenDangNhap, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập tên đăng nhập", required = "required", @id = "TenDangNhap" } })
+                                </div>
+                                @* Thêm div hiện lỗi *@
+                                <div class="invalid-feedback"></div>
+                                @Html.ValidationMessageFor(model => model.TenDangNhap, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        @* ... Giữ nguyên các trường input khác (HoTen, MatKhau, Email, DiaChi...) ... *@
+                        @* Lưu ý: Đảm bảo các input required có attribute required="required" *@
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-secondary">Họ tên</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-signature text-primary"></i></span>
+                                    @Html.EditorFor(model => model.HoTen, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                                </div>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+
+                        <hr class="my-4" />
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-custom">Quay lại</a>
+                            <button type="submit" id="submitBtn" class="btn btn-success btn-custom">
+                                <i class="fas fa-save me-2"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // --- 1. KIỂM TRA TRÙNG TÊN ĐĂNG NHẬP (DÀNH CHO EDIT) ---
+            const usernameInput = document.getElementById('TenDangNhap');
+            const idInput = document.getElementById('MaKhachHang'); // Lấy ID hiện tại
+
+            if (usernameInput && idInput) {
+                usernameInput.addEventListener('blur', function () {
+                    const username = this.value.trim();
+                    const currentId = idInput.value;
+
+                    if (username.length > 0) {
+                        checkUsernameAvailability(username, currentId, this);
+                    }
+                });
+
+                usernameInput.addEventListener('input', function () {
+                    clearFieldError(this);
+                    this.removeAttribute('data-duplicate');
+                });
+            }
+
+            // --- 2. XỬ LÝ SUBMIT FORM ---
+            const form = document.getElementById('editForm');
+            if (form) {
+                form.addEventListener('submit', function (event) {
+                    let isValid = true;
+
+                    // Check lỗi trùng tên
+                    if (usernameInput.getAttribute('data-duplicate') === 'true') {
+                        isValid = false;
+                        showFieldError(usernameInput, 'Tên đăng nhập này đã tồn tại.');
+                        usernameInput.focus();
+                    }
+
+                    // Check các trường required khác (đơn giản)
+                    const requiredFields = form.querySelectorAll('[required]');
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            isValid = false;
+                            showFieldError(field, 'Không được để trống');
+                        }
+                    });
+
+                    if (!isValid) {
+                        event.preventDefault();
+                        alert('Vui lòng kiểm tra lại thông tin nhập lỗi.');
+                    }
+                });
+            }
+
+            // --- HÀM AJAX CHECK TRÙNG ---
+            function checkUsernameAvailability(username, id, field) {
+                $.ajax({
+                    url: '/NhanVienGiaoHang/KhachHang_65131134/CheckUsername', // Gọi Action vừa tạo
+                    type: 'POST',
+                    data: { username: username, id: id }, // Gửi kèm ID để loại trừ chính mình
+                    success: function (response) {
+                        if (response.isTaken) {
+                            showFieldError(field, 'Tên đăng nhập này đã được sử dụng bởi người khác.');
+                            field.setAttribute('data-duplicate', 'true');
+                        } else {
+                            clearFieldError(field);
+                            field.removeAttribute('data-duplicate');
+                        }
+                    },
+                    error: function () {
+                        console.log('Lỗi kết nối server.');
+                    }
+                });
+            }
+
+            // --- CÁC HÀM UI HELPERS ---
+            function showFieldError(field, message) {
+                field.classList.add('is-invalid');
+                let parent = field.closest('.input-group') || field.parentElement;
+                let errorContainer = parent.querySelector('.invalid-feedback') || parent.nextElementSibling;
+                if (errorContainer && errorContainer.classList.contains('invalid-feedback')) {
+                    errorContainer.textContent = message;
+                    errorContainer.style.display = 'block';
+                }
+            }
+
+            function clearFieldError(field) {
+                field.classList.remove('is-invalid');
+                let parent = field.closest('.input-group') || field.parentElement;
+                let errorContainer = parent.querySelector('.invalid-feedback') || parent.nextElementSibling;
+                if (errorContainer) {
+                    errorContainer.style.display = 'none';
+                }
+            }
+        });
+
+        // Giữ lại script toggle password cũ của bạn
+        $(document).ready(function () {
+            $("#toggle-password").click(function () {
+                var input = $("#password-field");
+                var icon = $(this).find("i");
+                if (input.attr("type") === "password") {
+                    input.attr("type", "text");
+                    icon.removeClass("fa-eye").addClass("fa-eye-slash");
+                } else {
+                    input.attr("type", "password");
+                    icon.removeClass("fa-eye-slash").addClass("fa-eye");
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,195 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập hệ thống";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title - Luxury Watch Store</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <link href="~/Content/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <style>
+        /* --- WATCH STORE THEME --- */
+        :root {
+            --primary-gold: #c5a059; /* Màu vàng kim sang trọng */
+            --dark-bg: #0b1118; /* Màu nền đen xanh đậm */
+            --card-bg: #141b25; /* Màu nền thẻ */
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            /* Hình nền đồng hồ cơ khí sang trọng */
+            background: linear-gradient(rgba(11, 17, 24, 0.85), rgba(11, 17, 24, 0.9)), url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=2080&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Roboto', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-login {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(197, 160, 89, 0.3); /* Viền vàng mờ */
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .card-header-custom {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-gold);
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .form-control-user {
+            background-color: #0b1118 !important;
+            border: 1px solid #2c3e50;
+            color: #fff !important;
+            border-radius: 4px !important; /* Vuông vức hơn cho nam tính */
+            padding: 25px 15px !important;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+            .form-control-user:focus {
+                background-color: #0f1820 !important;
+                border-color: var(--primary-gold);
+                box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.25);
+            }
+
+        /* Chỉnh màu placeholder */
+        ::placeholder {
+            color: #6c757d !important;
+            opacity: 1;
+        }
+
+        .btn-gold {
+            background: linear-gradient(45deg, #b88a44, #e6c87a);
+            color: #000;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+            .btn-gold:hover {
+                background: linear-gradient(45deg, #e6c87a, #b88a44);
+                color: #000;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(197, 160, 89, 0.4);
+            }
+
+        .custom-checkbox .custom-control-label {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+            background-color: var(--primary-gold);
+            border-color: var(--primary-gold);
+        }
+
+        .link-footer {
+            color: #888;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+            .link-footer:hover {
+                color: var(--primary-gold);
+                text-decoration: none;
+            }
+
+        .icon-gold {
+            color: var(--primary-gold);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card card-login animated fade-in">
+        <div class="card-body p-5">
+            <div class="card-header-custom">
+                <i class="fas fa-clock icon-gold"></i>
+                <h1 class="brand-title">TIMEPIECE</h1>
+                <p class="small text-muted mb-0">Hệ thống quản lý cửa hàng</p>
+            </div>
+
+            @using (Html.BeginForm("DangNhap", "TaiKhoan", FormMethod.Post, new { @class = "user" }))
+            {
+                <div class="form-group mb-4">
+                    <input type="text" class="form-control form-control-user"
+                           id="exampleInputEmail" name="TaiKhoan"
+                           placeholder="Tên đăng nhập">
+                </div>
+                <div class="form-group mb-4">
+                    <input type="password" class="form-control form-control-user"
+                           id="exampleInputPassword" name="MatKhau"
+                           placeholder="Mật khẩu">
+                </div>
+                <div class="form-group mb-4">
+                    <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <label class="custom-control-label" for="customCheck">
+                            Ghi nhớ phiên đăng nhập
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-user btn-block">
+                    Đăng nhập ngay
+                </button>
+            }
+
+            <hr style="border-top: 1px solid rgba(255,255,255,0.1);">
+
+            <div class="text-center mt-3">
+                <a class="small link-footer" href="@Url.Action("Index", "QuenMatKhau_65131134", new { area = "TaiKhoan" })">
+                    <i class="fas fa-lock mr-1"></i> Quên mật khẩu?
+                </a>
+            </div>
+            <div class="text-center mt-2">
+                <a class="small link-footer" href="@Url.Action("Index", "DangKy_65131134", new { area = "TaiKhoan" })">
+                    Chưa có tài khoản? <span style="color: var(--primary-gold)">Đăng ký ngay</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="~/Content/js/sb-admin-2.min.js"></script>
+
+</body>
+</html>

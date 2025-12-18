@@ -1,0 +1,318 @@
+﻿@model IEnumerable<Project_65131134.Models.DatHang>
+
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Areas/NhanVienGiaoHang/Views/Shared/_Layout.cshtml";
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "NgayDatHang", rowsPerPage: 5);
+}
+
+<style>
+
+    .grid-footer {
+        text-align: center;
+        padding: 15px 0;
+    }
+
+
+        .grid-footer a {
+            color: #007bff;
+            text-decoration: none;
+            padding: 8px 12px;
+            margin: 0 4px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            display: inline-block;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+
+            .grid-footer a[disabled],
+            .grid-footer b,
+            .grid-footer a.webgrid-pager-current {
+                background-color: #007bff;
+                color: white;
+                border-color: #007bff;
+                font-weight: bold;
+                cursor: default;
+            }
+
+
+            .grid-footer a:not(.webgrid-pager-current):hover {
+                background-color: #e9ecef;
+                color: #0056b3;
+            }
+</style>
+
+
+<h2 class="text-center my-4 text-primary fw-bold">DANH SÁCH ĐƠN HÀNG</h2>
+
+<div class="my-3">
+    @{
+        var trangThaiHienTai = ViewBag.TrangThaiHienTai as int?;
+        // Khai báo tên Controller và Area để dùng chung cho ngắn gọn
+        string controllerName = "DonHang_65131134";
+        string areaName = "NhanVienGiaoHang";
+    }
+
+    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = (int?)null })"
+       class="btn btn-secondary btn-filter mb-2 @(trangThaiHienTai == null ? "active" : "")">
+        Tất cả
+    </a>
+
+    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = 0 })"
+       class="btn btn-warning btn-filter mb-2 @(trangThaiHienTai == 0 ? "active" : "")">
+        Chờ xác nhận
+    </a>
+
+    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = 1 })"
+       class="btn btn-info btn-filter mb-2 @(trangThaiHienTai == 1 ? "active" : "")" style="color:white">
+        Chuẩn bị hàng
+    </a>
+
+    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = 3 })"
+       class="btn btn-primary btn-filter mb-2 @(trangThaiHienTai == 3 ? "active" : "")">
+        Đang giao
+    </a>
+
+    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = 4 })"
+       class="btn btn-success btn-filter mb-2 @(trangThaiHienTai == 4 ? "active" : "")">
+        Hoàn thành
+    </a>
+
+    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = 5 })"
+       class="btn btn-danger btn-filter mb-2 @(trangThaiHienTai == 5 ? "active" : "")">
+        Đã hủy
+    </a>
+</div>
+
+<div id="gridContent" class="table-responsive">
+    @grid.GetHtml(
+        tableStyle: "table table-bordered table-hover align-middle",
+        headerStyle: "bg-light text-center",
+        footerStyle: "grid-footer",
+        fillEmptyRows: false,
+        mode: WebGridPagerModes.Numeric,
+        columns: grid.Columns(
+            grid.Column("STT", format: item => item.WebGrid.Rows.IndexOf(item) + 1 + Math.Round(Convert.ToDouble(grid.TotalRowCount / grid.PageCount) / grid.RowsPerPage) * grid.RowsPerPage * grid.PageIndex),
+            grid.Column("MaDonHang", "Mã ĐH", style: "text-center"),
+            grid.Column("NgayDatHang", "Ngày đặt", format: item => string.Format("{0:dd/MM/yyyy}", item.NgayDatHang), style: "text-center"),
+            grid.Column("KhachHang.HoTen", "Tên khách hàng"),
+            grid.Column("KhachHang.SoDienThoai", "SĐT", style: "text-center"),
+            grid.Column("TongTien", "Tổng tiền", format: item => string.Format("{0:N0} đ", item.TongTien), style: "text-end fw-bold"),
+            grid.Column("Trạng thái", style: "text-center", format: @<text>
+                    @{
+                        var tt = item.TrangThaiDonHang != null ? (int)item.TrangThaiDonHang : 0;
+                        string badgeClass = "bg-secondary";
+                        string statusText = "Không xác định";
+
+                        switch (tt)
+                        {
+                            case 0: badgeClass = "bg-warning text-dark"; statusText = "Chờ xác nhận"; break;
+                            case 1: badgeClass = "bg-info text-white"; statusText = "Chuẩn bị hàng"; break;
+                            case 2: badgeClass = "bg-primary"; statusText = "Chờ giao"; break;
+                            case 3: badgeClass = "bg-primary"; statusText = "Đang giao"; break;
+                            case 4: badgeClass = "bg-success"; statusText = "Thành công"; break;
+                            case 5: badgeClass = "bg-danger"; statusText = "Đã hủy"; break;
+                        }
+                    }
+                    <span class="badge @badgeClass">@statusText</span>
+            </text>),
+grid.Column("Chức năng", style: "text-center", format: @<text>
+    <div class="action-links">
+        @{
+            var currentStatus = item.TrangThaiDonHang ?? 0;
+            // Chỉ cho phép update nếu chưa thành công (4) và chưa hủy (5)
+            var canUpdate = currentStatus < 4 && currentStatus != 5 && currentStatus != 2;
+            // Cho phép hủy nếu chưa hủy (5) và chưa thành công (4)
+            var canCancel = currentStatus != 5 && currentStatus != 4;
+        }
+
+        @if (canUpdate)
+        {
+            <a href="#" class="update-status-btn"
+               data-order-id="@item.MaDonHang"
+               data-current-status="@(item.TrangThaiDonHang ?? 0)"
+               data-bs-toggle="modal"
+               data-bs-target="#confirmUpdateModal"
+               title="Chuyển trạng thái">
+                <img src="@Url.Content("~/Images/check.png")" width="24" height="24" alt="Duyệt" />
+            </a>
+        }
+
+        <a href="@Url.Action("Details", new { id = item.MaDonHang })" title="Xem chi tiết">
+            <img src="@Url.Content("~/Images/visibility.png")" width="24" height="24" alt="Xem" />
+        </a>
+
+        @if (canCancel)
+        {
+            <a href="#" class="cancel-order-btn" data-order-id="@item.MaDonHang"
+               data-bs-toggle="modal" data-bs-target="#confirmCancelModal"
+               title="Hủy đơn hàng">
+                <img src="@Url.Content("~/Images/delete.png")" width="24" height="24" alt="Hủy" />
+            </a>
+        }
+    </div>
+</text>)
+)
+)
+</div>
+
+<div class="modal fade" id="confirmUpdateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-info-circle-fill"></i> Xác nhận thay đổi trạng thái
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body fs-5 text-center py-4" id="modalUpdateMessage">
+                Bạn có chắc chắn muốn cập nhật trạng thái?
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Không</button>
+                <button type="button" class="btn btn-primary px-4" id="confirmUpdateBtn" data-bs-dismiss="modal">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmCancelModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Xác nhận hủy đơn
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body fs-5 text-center py-4">
+                Bạn có chắc chắn muốn <b class="text-danger">HỦY</b> đơn hàng này không?<br />
+                <span class="fs-6 text-muted">(Hành động này không thể hoàn tác)</span>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-danger px-4" id="confirmCancelBtn" data-bs-dismiss="modal">Xác nhận Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+    var currentOrderId = null;
+    var currentStatusVal = 0; // Mặc định là 0
+
+    $(document).ready(function () {
+        // Đảm bảo jQuery đã được load
+        if (typeof jQuery === 'undefined') {
+            console.error('jQuery chưa được load!');
+            return;
+        }
+
+        // --- 1. XỬ LÝ NÚT UPDATE TRẠNG THÁI ---
+        $(document).on('click', '.update-status-btn', function (e) {
+            e.preventDefault();
+            currentOrderId = $(this).data('order-id');
+            currentStatusVal = parseInt($(this).data('current-status'));
+
+            console.log("Đã chọn đơn: " + currentOrderId + " - Trạng thái cũ: " + currentStatusVal);
+
+            var message = "Bạn có chắc chắn muốn cập nhật trạng thái?";
+            if (currentStatusVal === 0) message = "Xác nhận <b>DUYỆT ĐƠN</b> này?<br>(Chuyển sang: Chuẩn bị hàng)";
+            else if (currentStatusVal === 1) message = "Đã <b>CHUẨN BỊ XONG</b> đơn này?<br>(Chuyển sang: Đang giao)";
+            else if (currentStatusVal === 3) message = "Đã <b>GIAO THÀNH CÔNG</b>?<br>(Chuyển sang: Hoàn thành)";
+
+            $('#modalUpdateMessage').html(message);
+        });
+
+        // Xử lý khi bấm nút ĐỒNG Ý UPDATE
+        $('#confirmUpdateBtn').off('click').on('click', function () {
+            if (!currentOrderId) {
+                alert("Lỗi: Không tìm thấy mã đơn hàng!");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("UpdateStatus", "DonHang_65131134", new { Area = "NhanVienGiaoHang" })',
+                type: 'POST',
+                data: { id: currentOrderId },
+                success: function (response) {
+                    if (response.success) {
+                        // Đóng modal update
+                        var modalElement = document.getElementById('confirmUpdateModal');
+                         if (typeof jQuery !== 'undefined' && typeof jQuery.fn.modal !== 'undefined') {
+                            $(modalElement).modal('hide');
+                        } else if (typeof bootstrap !== 'undefined') {
+                            var bsModal = bootstrap.Modal.getInstance(modalElement);
+                            if (bsModal) bsModal.hide();
+                        }
+
+                        // Tính toán trạng thái tiếp theo để chuyển tab
+                        var nextStatus = -1;
+                        if (currentStatusVal === 0) nextStatus = 1;
+                        else if (currentStatusVal === 1) nextStatus = 3;
+                        else if (currentStatusVal === 3) nextStatus = 4;
+
+                        if (nextStatus !== -1) {
+                            var baseUrl = '@Url.Action("Index", "DonHang_65131134", new { Area = "NhanVienGiaoHang" })';
+                            window.location.href = baseUrl + '?trangThai=' + nextStatus;
+                        } else {
+                            location.reload();
+                        }
+                    } else {
+                        alert(response.message || 'Lỗi xử lý từ server');
+                    }
+                },
+                error: function (xhr) {
+                    alert('Lỗi kết nối: ' + xhr.statusText);
+                }
+            });
+        });
+
+        // --- 2. XỬ LÝ NÚT HỦY ĐƠN (Đã sửa) ---
+
+        // Lưu ID khi bấm nút thùng rác
+        $(document).on('click', '.cancel-order-btn', function (e) {
+            e.preventDefault();
+            currentOrderId = $(this).data('order-id');
+        });
+
+        // Khi bấm "Xác nhận Hủy" trong Modal
+        $('#confirmCancelBtn').off('click').on('click', function () {
+            if (!currentOrderId) {
+                alert("Lỗi: Không tìm thấy mã đơn hàng!");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("CancelOrder", "DonHang_65131134", new { Area = "NhanVienGiaoHang" })',
+                type: 'POST',
+                data: { id: currentOrderId },
+                success: function (res) {
+                    if (res.success) {
+                        // --- SỬA ĐỔI QUAN TRỌNG TẠI ĐÂY ---
+                        // Không cần code đóng modal phức tạp vì chúng ta sẽ chuyển trang ngay lập tức.
+
+                        // 1. Tạo đường dẫn đến Action Index
+                        var baseUrl = '@Url.Action("Index", "DonHang_65131134", new { Area = "NhanVienGiaoHang" })';
+
+                        // 2. Thêm tham số trangThai=5 để mở tab "Đã hủy"
+                        var redirectUrl = baseUrl + '?trangThai=5';
+
+                        // 3. Thực hiện chuyển trang (Reload toàn bộ)
+                        window.location.href = redirectUrl;
+
+                    } else {
+                        alert(res.message || "Lỗi khi hủy đơn hàng");
+                    }
+                },
+                error: function (xhr) {
+                    alert('Lỗi kết nối: ' + xhr.statusText);
+                }
+            });
+        });
+
+    });
+    </script>
+}
