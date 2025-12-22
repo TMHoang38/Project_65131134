@@ -102,14 +102,38 @@
                 <p class="text-muted small mb-0">Nhập email của bạn để chúng tôi gửi hướng dẫn</p>
             </div>
 
-            @using (Html.BeginForm("QuenMatKhau", "TaiKhoan", FormMethod.Post, new { @class = "user" }))
+            @if (ViewBag.ErrorMessage != null)
             {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    @ViewBag.ErrorMessage
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+
+            @if (ViewBag.SuccessMessage != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    @ViewBag.SuccessMessage
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+
+            @using (Html.BeginForm("QuenMatKhau", "QuenMatKhau_65131134", FormMethod.Post, new { @class = "user" }))
+            {
+                @Html.AntiForgeryToken()
                 <div class="form-group">
                     <input type="email" class="form-control form-control-user" name="Email"
-                           placeholder="Nhập địa chỉ Email...">
+                           placeholder="Nhập địa chỉ Email..." required>
+                    @Html.ValidationMessage("Email", "", new { @class = "text-danger small" })
                 </div>
                 <button type="submit" class="btn btn-gold btn-user btn-block rounded-pill">
-                    Khôi mật khẩu
+                    Gửi email khôi phục
                 </button>
             }
 

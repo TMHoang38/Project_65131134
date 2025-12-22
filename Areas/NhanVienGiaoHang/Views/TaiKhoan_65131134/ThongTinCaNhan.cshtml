@@ -1,0 +1,162 @@
+@model Project_65131134.Models.NhanVien
+@{
+    ViewBag.Title = "Thông tin cá nhân";
+    Layout = "~/Areas/NhanVienGiaoHang/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* CSS đồng bộ với giao diện Đổi mật khẩu */
+    .profile-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+
+    .card-header-main {
+        background-color: #ffffff;
+        border-bottom: none;
+        padding-top: 2.5rem;
+    }
+
+    .form-control-custom {
+        border-radius: 0 10px 10px 0; /* Bo góc bên phải */
+        padding: 12px 15px;
+        border: 1px solid #e3e6f0;
+        height: auto;
+        font-size: 0.95rem;
+    }
+
+        .form-control-custom:focus {
+            box-shadow: none;
+            border-color: #4e73df;
+        }
+
+        /* Style cho input bị disabled */
+        .form-control-custom:disabled {
+            background-color: #eaecf4;
+            opacity: 1;
+        }
+
+    .input-group-text-custom {
+        background: #f8f9fc;
+        border: 1px solid #e3e6f0;
+        color: #4e73df;
+        border-radius: 10px 0 0 10px; /* Bo góc bên trái */
+        width: 45px;
+        justify-content: center;
+    }
+
+    .btn-custom {
+        border-radius: 50px;
+        padding: 10px 30px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+        }
+
+    .form-label-style {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #5a5c69;
+        margin-left: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-md-10">
+        <div class="card profile-card mt-4 mb-5">
+
+            <div class="card-header-main text-center">
+                <div class="mb-3">
+                    <span class="fa-stack fa-2x text-primary">
+                        <i class="fas fa-circle fa-stack-2x" style="opacity: 0.15"></i>
+                        <i class="fas fa-user-tie fa-stack-1x"></i>
+                    </span>
+                </div>
+                <h4 class="font-weight-bold text-dark mb-1">Hồ sơ của tôi</h4>
+                <p class="text-muted small mb-0">Quản lý và cập nhật thông tin cá nhân của bạn</p>
+            </div>
+
+            <div class="card-body px-4 px-md-5 pb-5 pt-3">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show rounded-lg shadow-sm" role="alert">
+                        <i class="fas fa-check-circle mr-2"></i> @TempData["SuccessMessage"]
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("ThongTinCaNhan", "TaiKhoan_65131134", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.MaNhanVien)
+
+            <div class="row">
+
+                <div class="col-md-6 form-group mb-3">
+                    <label class="form-label-style">Họ và tên</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-text-custom"><i class="fas fa-id-card"></i></span>
+                        </div>
+                        @Html.TextBoxFor(m => m.HoTen, new { @class = "form-control form-control-custom", placeholder = "Nhập họ tên" })
+                    </div>
+                </div>
+                <div class="col-md-6 form-group mb-4">
+                    <label class="form-label-style">Địa chỉ liên hệ</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-text-custom"><i class="fas fa-map-marker-alt"></i></span>
+                        </div>
+                        @Html.TextBoxFor(m => m.DiaChi, new { @class = "form-control form-control-custom", placeholder = "Nhập địa chỉ" })
+                    </div>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label class="form-label-style">Email</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-text-custom"><i class="fas fa-envelope"></i></span>
+                        </div>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control form-control-custom", placeholder = "Nhập email" })
+                    </div>
+                </div>
+
+                <div class="col-md-6 form-group mb-3">
+                    <label class="form-label-style">Số điện thoại</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-text-custom"><i class="fas fa-phone"></i></span>
+                        </div>
+                        @Html.TextBoxFor(m => m.SoDienThoai, new { @class = "form-control form-control-custom", placeholder = "Nhập số điện thoại" })
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <a class="btn btn-success btn-custom mr-2" href="@Url.Action("Index","KhachHang_65131134")">
+                    <i class="fas fa-arrow-left mr-1"></i> Quay lại
+                </a>
+                <a class="btn btn-outline-primary btn-custom" href="@Url.Action("DoiMatKhau", "TaiKhoan_65131134")">
+                    <i class="fas fa-key mr-1"></i> Đổi mật khẩu
+                </a>
+
+                <button type="submit" class="btn btn-primary btn-custom shadow">
+                    <i class="fas fa-save mr-1"></i> Lưu thay đổi
+                </button>
+            </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

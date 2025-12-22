@@ -1,0 +1,256 @@
+﻿@model Project_65131134.Models.ViewModels.DongHoPaginationViewModel
+@using Project_65131134.Helpers
+
+@{
+    Layout = null;
+}
+
+<style>
+    /* Card sản phẩm */
+    .product-card {
+        border: none;
+        transition: all 0.4s ease;
+        border-radius: 0; 
+        overflow: hidden;
+    }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+
+    .product-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 1/1;
+        background: #f9f9f9;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.6s ease;
+    }
+
+    .product-card:hover .product-image {
+        transform: scale(1.1);
+    }
+
+    /* Overlay khi hover */
+    .add-to-cart-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: all 0.4s ease;
+    }
+
+    .product-card:hover .add-to-cart-overlay {
+        opacity: 1;
+    }
+
+    /* Nút bấm màu Gold */
+    .btn-gold {
+        background-color: #b8860b;
+        color: white;
+        border: 1px solid #b8860b;
+        border-radius: 0;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+        .btn-gold:hover {
+            background-color: #000;
+            border-color: #000;
+            color: #fff;
+        }
+
+    .btn-outline-light {
+        border-radius: 0;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+    /* Phân trang (Pagination) */
+    .pagination-container {
+        margin-top: 50px;
+    }
+
+    .pagination .page-link {
+        color: #333;
+        border: 1px solid #e0e0e0;
+        margin: 0 3px;
+        padding: 10px 18px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        transition: all 0.3s;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #b8860b;
+        border-color: #b8860b;
+        color: white;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #000;
+        color: #fff;
+        border-color: #000;
+    }
+
+    .product-name {
+        font-size: 1rem;
+        color: #1a1a1a;
+        height: 2.4em;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .product-price {
+        color: #b8860b;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="row g-4 " id="list-dong-ho">
+    @if (Model.DanhSachDongHo != null && Model.DanhSachDongHo.Any())
+    {
+        foreach (var item in Model.DanhSachDongHo)
+        {
+            var webpPath = !string.IsNullOrEmpty(item.HinhAnh) ? System.IO.Path.ChangeExtension(item.HinhAnh, ".webp") : "";
+            var originalPath = item.HinhAnh;
+            var imagePath = !string.IsNullOrEmpty(webpPath) ? Url.Content("~/Images/DongHo/" + webpPath) : (!string.IsNullOrEmpty(originalPath) ? Url.Content("~/Images/DongHo/" + originalPath) : Url.Content("~/images/no-image.png"));
+            var price = string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:N0}", item.GiaBan);
+
+            <div class="col-sm-6 col-md-4">
+                <div class="product-card shadow-sm bg-white">
+                    <div class="product-image-wrapper">
+                        <img src="@imagePath" alt="@item.TenDongHo" class="product-image"
+                             onerror="this.src='@Url.Content("~/Images/DongHo/" + originalPath)'; this.onerror=function(){this.src='@Url.Content("~/images/no-image.png")';};" />
+
+                        <div class="add-to-cart-overlay">
+                            <div class="d-flex flex-column gap-2 w-75">
+                                <a href="@Url.Action("ChiTiet", "Home_65131134", new { area = "Shop", id = item.MaDongHo })"
+                                   class="btn btn-outline-light btn-sm py-2 fw-bold">
+                                    <i class="bi bi-eye me-2"></i>Chi tiết
+                                </a>
+
+                                @if (AuthenticationHelper.IsLoggedIn() && AuthenticationHelper.IsKhachHang())
+                                {
+                                    <button class="btn btn-gold btn-sm py-2 fw-bold add-to-cart-btn"
+                                            data-ma-dong-ho="@item.MaDongHo"
+                                            data-ten-dong-ho="@item.TenDongHo">
+                                        <i class="bi bi-cart-plus me-2"></i>Thêm giỏ hàng
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })"
+                                       class="btn btn-gold btn-sm py-2 fw-bold">
+                                        Thêm giỏ hàng
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-info p-3 text-center">
+                        <h5 class="product-name mb-2 fw-bold text-uppercase">@item.TenDongHo</h5>
+                        <div class="d-flex justify-content-center align-items-center gap-2">
+                            <span class="product-price fw-bold">@price đ</span>
+                            @if (item.ThuongHieu != null)
+                            {
+                                <span class="badge bg-light text-muted border fw-normal">@item.ThuongHieu.TenThuongHieu</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        if (Model.TotalPages > 1)
+        {
+            <div class="col-12 pagination-container">
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        @* Nút Trang trước *@
+                        <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="javascript:void(0)" onclick="changePage(@(Model.CurrentPage - 1))">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="javascript:void(0)" onclick="changePage(@i)">@i</a>
+                            </li>
+                        }
+
+                        @* Nút Trang sau *@
+                        <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="javascript:void(0)" onclick="changePage(@(Model.CurrentPage + 1))">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-search fs-1 text-muted"></i>
+            <p class="text-muted fs-5 mt-3">Không tìm thấy sản phẩm nào phù hợp.</p>
+        </div>
+    }
+</div>
+
+<script>
+    function changePage(page) {
+        if (page < 1 || page > @Model.TotalPages) return;
+
+        // Lấy các tham số tìm kiếm hiện tại từ form
+        var searchTerm = $('#searchTerm').val() || '';
+        var brandId = $('#brandId').val() || '';
+        var priceRange = $('#priceRange').val() || '';
+
+        // Hiệu ứng mờ dần khi load
+        $('#productsGrid').css('opacity', '0.5');
+
+        $.ajax({
+            url: '@Url.Action("Index", "Home_65131134")',
+            type: 'GET',
+            data: {
+                page: page,
+                searchTerm: searchTerm,
+                brandId: brandId,
+                priceRange: priceRange
+            },
+            success: function (result) {
+                $('#productsGrid').html(result);
+                $('#productsGrid').css('opacity', '1');
+
+                // Cuộn lên đầu danh sách
+                $('html, body').animate({
+                    scrollTop: $("#productsGrid").offset().top - 100
+                }, 400);
+            },
+            error: function () {
+                alert('Không thể tải dữ liệu.');
+                $('#productsGrid').css('opacity', '1');
+            }
+        });
+    }
+</script>

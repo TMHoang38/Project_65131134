@@ -7,6 +7,25 @@
 
 <style>
     /* 1. Giao diện Card (Khung bao ngoài) */
+    .current-image-preview {
+        width: 120px;
+        height: 120px;
+        border: 2px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fc;
+        border: 1px dashed #d1d3e2;
+    }
+
+        .current-image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
     .card-custom {
         border: none;
         border-radius: 15px;
@@ -203,10 +222,36 @@
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <label class="form-label fw-bold text-secondary">Hình ảnh</label>
+                                <label class="form-label fw-bold text-secondary">Hình ảnh hiện tại & Thay đổi</label>
+
+                                @* --- Phần hiển thị ảnh hiện tại --- *@
+                                <div class="current-image-preview">
+                                    @{
+                                        // Logic lấy đường dẫn ảnh tương tự Index
+                                        var webpPath = !string.IsNullOrEmpty(Model.HinhAnh)
+                                                       ? System.IO.Path.ChangeExtension(Model.HinhAnh, ".webp")
+                                                       : "";
+                                        var originalPath = Model.HinhAnh;
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(originalPath))
+                                    {
+                                        <img src="~/Images/DongHo/@webpPath"
+                                             id="previewImg"
+                                             onerror="this.src='/Images/DongHo/@originalPath'; this.onerror=function(){this.src='/images/no-image.png';};"
+                                             alt="Ảnh hiện tại" />
+                                    }
+                                    else
+                                    {
+                                        <img src="/images/no-image.png" id="previewImg" alt="No Image" />
+                                    }
+                                </div>
+
+                                @* --- Phần Input File --- *@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="fas fa-image text-primary"></i></span>
-                                    <input type="file" name="Avatar" accept="image/*" class="form-control" />
+                                    <input type="file" name="Avatar" id="fileInput" accept="image/*" class="form-control" />
+                                    @Html.HiddenFor(model => model.HinhAnh)
                                 </div>
                                 @Html.ValidationMessageFor(model => model.HinhAnh, "", new { @class = "text-danger small" })
                             </div>

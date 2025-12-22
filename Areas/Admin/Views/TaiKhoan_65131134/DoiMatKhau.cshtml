@@ -1,0 +1,193 @@
+@{
+    ViewBag.Title = "Đổi mật khẩu";
+}
+
+<style>
+    /* CSS Tùy chỉnh */
+    .password-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden; /* Đảm bảo con không bị tràn ra ngoài */
+    }
+
+    .form-control-custom {
+        border-radius: 0;
+        padding: 12px 15px;
+        border: 1px solid #e3e6f0;
+        height: auto;
+        font-size: 0.95rem;
+    }
+
+        .form-control-custom:focus {
+            box-shadow: none;
+            border-color: #4e73df;
+        }
+
+    .input-group-text-custom {
+        background: #f8f9fc;
+        border: 1px solid #e3e6f0;
+        color: #4e73df;
+        border-radius: 10px 0 0 10px;
+        width: 45px; /* Cố định chiều rộng icon để thẳng hàng */
+        justify-content: center;
+    }
+
+    /* Bo góc cho input ở giữa */
+    .input-middle {
+        border-radius: 0;
+    }
+
+    /* Bo góc cho nút toggle bên phải */
+    .btn-toggle-password {
+        border-radius: 0 10px 10px 0;
+        border: 1px solid #e3e6f0;
+        border-left: none;
+        background: #fff;
+        color: #6e707e;
+        z-index: 0;
+        width: 45px;
+    }
+
+        .btn-toggle-password:hover {
+            background: #f8f9fc;
+            color: #4e73df;
+        }
+
+    .btn-custom {
+        border-radius: 50px;
+        padding: 10px 30px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+        }
+
+    /* Căn giữa dọc màn hình nếu muốn (Optional) */
+    .center-screen-container {
+        min-height: 80vh; /* Chiếm 80% chiều cao màn hình */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+        <div class="card shadow-lg mb-4 password-card mt-5">
+            <div class="card-header py-4 bg-white border-bottom-0 text-center">
+                <div class="mb-3">
+                    <span class="fa-stack fa-2x text-primary">
+                        <i class="fas fa-circle fa-stack-2x" style="opacity: 0.15"></i>
+                        <i class="fas fa-lock fa-stack-1x"></i>
+                    </span>
+                </div>
+                <h4 class="font-weight-bold text-dark mb-1">Đổi mật khẩu an toàn</h4>
+                <p class="text-muted small mb-0">Vui lòng nhập mật khẩu hiện tại và mật khẩu mới</p>
+            </div>
+
+            <div class="card-body px-4 pb-4 pt-0">
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show rounded-lg shadow-sm" role="alert">
+                        <i class="fas fa-check-circle mr-2"></i> @TempData["SuccessMessage"]
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
+
+                @if (ViewBag.ErrorMessage != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show rounded-lg shadow-sm" role="alert">
+                        <i class="fas fa-exclamation-triangle mr-2"></i> @ViewBag.ErrorMessage
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("DoiMatKhau", "TaiKhoan_65131134", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+            <div class="ms-5">
+
+                <div class="form-group mb-3">
+                    <label class="small font-weight-bold text-secondary ml-1">Mật khẩu hiện tại</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-text-custom"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input type="password" name="MatKhauHienTai" id="currentPass" class="form-control form-control-custom input-middle" placeholder="Nhập mật khẩu đang dùng" required />
+                        <div class="input-group-append">
+                            <button class="btn btn-toggle-password" type="button" onclick="togglePassword('currentPass', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="small font-weight-bold text-secondary ml-1">Mật khẩu mới</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-text-custom"><i class="fas fa-lock"></i></span>
+                        </div>
+                        <input type="password" name="MatKhauMoi" id="newPass" class="form-control form-control-custom input-middle" placeholder="Ít nhất 6 ký tự" minlength="6" required />
+                        <div class="input-group-append">
+                            <button class="btn btn-toggle-password" type="button" onclick="togglePassword('newPass', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="small font-weight-bold text-secondary ml-1">Xác nhận mật khẩu mới</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text input-group-text-custom"><i class="fas fa-check-double"></i></span>
+                        </div>
+                        <input type="password" name="XacNhanMatKhau" id="confirmPass" class="form-control form-control-custom input-middle" placeholder="Nhập lại mật khẩu mới" minlength="6" required />
+                        <div class="input-group-append">
+                            <button class="btn btn-toggle-password" type="button" onclick="togglePassword('confirmPass', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                    <div class="text-center mt-4">
+                        <a class="btn btn-outline-secondary btn-custom mr-2" href="@Url.Action("ThongTinCaNhan","TaiKhoan_65131134")">
+                            <i class="fas fa-arrow-left mr-1"></i> Hủy bỏ
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-custom shadow">
+                            <i class="fas fa-save mr-1"></i> Cập nhật mật khẩu
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePassword(fieldId, btn) {
+        var input = document.getElementById(fieldId);
+        var icon = btn.querySelector('i');
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+</script>

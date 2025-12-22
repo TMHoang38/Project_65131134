@@ -138,21 +138,33 @@
     <Compile Include="Areas\Admin\Controllers\NhanVien_65131134Controller.cs" />
     <Compile Include="Areas\Admin\Controllers\DongHo_65131134Controller.cs" />
     <Compile Include="Areas\Admin\Controllers\NoiSanXuat_65131134Controller.cs" />
+    <Compile Include="Areas\Admin\Controllers\TaiKhoan_65131134Controller.cs" />
     <Compile Include="Areas\Admin\Controllers\ThongKe_65131134Controller.cs" />
     <Compile Include="Areas\Admin\Controllers\ThuongHieu_65131134Controller.cs" />
     <Compile Include="Areas\NhanVienBanHang\Controllers\DonHang_65131134Controller.cs" />
     <Compile Include="Areas\NhanVienBanHang\Controllers\KhachHang_65131134Controller.cs" />
+    <Compile Include="Areas\NhanVienBanHang\Controllers\TaiKhoan_65131134Controller.cs" />
     <Compile Include="Areas\NhanVienBanHang\NhanVienBanHangAreaRegistration.cs" />
     <Compile Include="Areas\NhanVienGiaoHang\Controllers\DonHang_65131134Controller.cs" />
     <Compile Include="Areas\NhanVienGiaoHang\Controllers\KhachHang_65131134Controller.cs" />
+    <Compile Include="Areas\NhanVienGiaoHang\Controllers\TaiKhoan_65131134Controller.cs" />
     <Compile Include="Areas\NhanVienGiaoHang\NhanVienGiaoHangAreaRegistration.cs" />
     <Compile Include="Areas\Shop\Controllers\Home_65131134Controller.cs" />
+    <Compile Include="Areas\Shop\Controllers\KhachHang_65131134Controller.cs" />
     <Compile Include="Areas\Shop\ShopAreaRegistration.cs" />
     <Compile Include="Areas\TaiKhoan\Controllers\DangKy_65131134Controller.cs" />
     <Compile Include="Areas\TaiKhoan\Controllers\DangNhap_65131134Controller.cs" />
     <Compile Include="Areas\TaiKhoan\Controllers\QuenMatKhau_65131134Controller.cs" />
     <Compile Include="Areas\TaiKhoan\TaiKhoanAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Helpers\AuthenticationHelper.cs" />
+    <Compile Include="Helpers\DonHangWorkflowHelper.cs" />
+    <Compile Include="Helpers\EmailHelper.cs" />
+    <Compile Include="Helpers\PasswordResetHelper.cs" />
+    <Compile Include="Helpers\Attributes\AdminRoleAttribute.cs" />
+    <Compile Include="Helpers\Attributes\CustomerRoleAttribute.cs" />
+    <Compile Include="Helpers\Attributes\NhanVienBanHangRoleAttribute.cs" />
+    <Compile Include="Helpers\Attributes\NhanVienGiaoHangRoleAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -219,6 +231,10 @@
     <Compile Include="Models\ThuongHieu.cs">
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\DangKyViewModel.cs" />
+    <Compile Include="Models\ViewModels\DoiMatKhauViewModel.cs" />
+    <Compile Include="Models\ViewModels\DongHoPaginationViewModel.cs" />
+    <Compile Include="Models\ViewModels\CartViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2219,6 +2235,21 @@
     <Content Include="Areas\TaiKhoan\Views\DangNhap_65131134\Index.cshtml" />
     <Content Include="Areas\TaiKhoan\Views\DangKy_65131134\Index.cshtml" />
     <Content Include="Areas\TaiKhoan\Views\QuenMatKhau_65131134\Index.cshtml" />
+    <Content Include="Areas\Shop\Views\KhachHang_65131134\ChinhSuaHoSo.cshtml" />
+    <Content Include="Areas\Shop\Views\KhachHang_65131134\DonHangCuaToi.cshtml" />
+    <Content Include="Areas\TaiKhoan\Views\QuenMatKhau_65131134\ResetMatKhau.cshtml" />
+    <Content Include="Areas\Shop\Views\KhachHang_65131134\DoiMatKhau.cshtml" />
+    <Content Include="Areas\Admin\Views\TaiKhoan_65131134\DoiMatKhau.cshtml" />
+    <Content Include="Areas\Admin\Views\TaiKhoan_65131134\ThongTinCaNhan.cshtml" />
+    <Content Include="Areas\NhanVienGiaoHang\Views\TaiKhoan_65131134\DoiMatKhau.cshtml" />
+    <Content Include="Areas\NhanVienGiaoHang\Views\TaiKhoan_65131134\ThongTinCaNhan.cshtml" />
+    <Content Include="Areas\NhanVienBanHang\Views\TaiKhoan_65131134\DoiMatKhau.cshtml" />
+    <Content Include="Areas\NhanVienBanHang\Views\TaiKhoan_65131134\ThongTinCaNhan.cshtml" />
+    <Content Include="Areas\Shop\Views\Home_65131134\_DongHoListPartial.cshtml" />
+    <Content Include="Areas\Shop\Views\Home_65131134\ChiTiet.cshtml" />
+    <Content Include="Areas\Shop\Views\KhachHang_65131134\ThanhToan.cshtml" />
+    <Content Include="Areas\Shop\Views\KhachHang_65131134\GioHang.cshtml" />
+    <Content Include="Areas\Shop\Views\KhachHang_65131134\ChiTietDonHang.cshtml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

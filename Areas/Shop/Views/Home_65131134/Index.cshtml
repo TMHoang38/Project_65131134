@@ -1,29 +1,32 @@
-﻿
+﻿@using Project_65131134.Helpers
+@model Project_65131134.Models.ViewModels.DongHoPaginationViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Thế Giới Đồng Hồ Cao Cấp";
     Layout = "~/Areas/Shop/Views/Shared/_Layout.cshtml";
 }
-
-
-<section class="py-0 bg-black" id="header">
-    <div class="bg-holder" style="background-image:url(@Url.Content("~/assets/img/gallery/header-bg.png"));background-position:right top;background-size:contain;">
-    </div>
-    <!--/.bg-holder-->
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<section class="py-0 bg-black position-relative" id="header">
+    <div class="bg-holder hero-overlay" style="background-image:url(@Url.Content("~/assets/img/gallery/header-bg.png"));background-position:right center;background-size:contain;"></div>
     <div class="container">
         <div class="row align-items-center min-vh-75 min-vh-xl-100">
-            <div class="col-md-8 col-lg-6 text-md-start text-center">
-                <h1 class="display-1 lh-sm text-uppercase text-light">Custom Watches For <br class="d-none d-xxl-block" /> Any Occasion</h1>
-                <div class="pt-4">
-                <a class="btn btn-sm btn-outline-primary me-3" href="#">DESIGN &amp; ORDER</a>
-                <a class="btn btn-sm btn-outline-primary" href="#">REQUEST VIRTUAL</a>
+            <div class="col-md-8 col-lg-6 text-md-start text-center z-index-2">
+                @if (AuthenticationHelper.IsLoggedIn() && AuthenticationHelper.IsKhachHang())
+                {
+                    <p class="text-uppercase text-gold fw-bold mb-2 tracking-widest">Chào mừng trở lại</p>
+                }
+                <h1 class="display-2 lh-sm text-uppercase text-light fw-bold">Nâng Tầm <span class="text-gold">Đẳng Cấp</span> <br /> Thời Gian</h1>
+                <p class="text-light opacity-75 fs-1 mb-4">Khám phá bộ sưu tập đồng hồ chế tác thủ công tinh xảo dành riêng cho bạn.</p>
+                <div class="pt-2">
+                    <a class="btn btn-gold-outline px-4 py-2 me-3" href="#collections">BỘ SƯU TẬP</a>
+                    <a class="btn btn-gold px-4 py-2" href="#store">CỬA HÀNG</a>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
 <section class="bg-black py-8 pt-0" id="store">
-    <div class="bg-holder" style="background-image:url(@Url.Content("~/assets/img/gallery/store-bg.png"));background-position:left bottom;background-size:contain;">
+    <div class="bg-holder" style="background-image:url(@Url.Content("~/assets/img/gallery/store-bg.png")); background-position:left bottom; background-size:contain;">
     </div>
     <!--/.bg-holder-->
 
@@ -64,309 +67,230 @@
         </div>
     </div>
 </section>
-<section class="py-0 pb-6" id="collections">
+
+<section class="py-6 bg-soft-white" id="collections">
     <div class="container">
-        <div class="row h-100">
-            <div class="col-lg-7 mt-7">
-                <h5 class="fs-3 fs-lg-5 lh-sm mb-0 text-uppercase">Collections</h5>
-            </div>
-            <div class="col-12">
-                <nav>
-                    <div class="nav nav-tabs watch-tabs mb-4 justify-content-end" id="nav-tab" role="tablist">
-                        <button class="nav-link active" id="nav-latest-tab" data-bs-toggle="tab" data-bs-target="#nav-latest" type="button" role="tab" aria-controls="nav-latest" aria-selected="true">LATEST </button>
-                        <button class="nav-link" id="nav-popular-tab" data-bs-toggle="tab" data-bs-target="#nav-popular" type="button" role="tab" aria-controls="nav-popular" aria-selected="false">POPULAR</button>
-                    </div>
-                </nav>
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-latest" role="tabpanel" aria-labelledby="nav-latest-tab">
-                        <div class="carousel slide" id="carouselLatest" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active" data-bs-interval="10000">
-                                    <div class="row h-100 align-items-center">
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-2.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$650.00</h6>
-                                                    <h4 class="text-light">ADRIATICA ADR</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-3.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$126.00</h6>
-                                                    <h4 class="text-light">SEIKO SNZGO7K1</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-1.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$250.00</h6>
-                                                    <h4 class="text-light">ROAMER RM 220837</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item" data-bs-interval="5000">
-                                    <div class="row h-100 align-items-center">
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-2.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$650.00</h6>
-                                                    <h4 class="text-light">ADRIATICA ADR</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-3.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$126.00</h6>
-                                                    <h4 class="text-light">SEIKO SNZGO7K1</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-1.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$250.00</h6>
-                                                    <h4 class="text-light">ROAMER RM 220837</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item" data-bs-interval="3000">
-                                    <div class="row h-100 align-items-center">
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-2.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$650.00</h6>
-                                                    <h4 class="text-light">ADRIATICA ADR</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-3.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$126.00</h6>
-                                                    <h4 class="text-light">SEIKO SNZGO7K1</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-1.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$250.00</h6>
-                                                    <h4 class="text-light">ROAMER RM 220837</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="row h-100 align-items-center">
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-2.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$650.00</h6>
-                                                    <h4 class="text-light">ADRIATICA ADR</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-3.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$126.00</h6>
-                                                    <h4 class="text-light">SEIKO SNZGO7K1</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-1.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$250.00</h6>
-                                                    <h4 class="text-light">ROAMER RM 220837</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselLatest" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span></button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselLatest" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next </span></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="nav-popular" role="tabpanel" aria-labelledby="nav-popular-tab">
-                        <div class="carousel slide" id="carouselPopular" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                                <div class="carousel-item active" data-bs-interval="10000">
-                                    <div class="row h-100 align-items-center">
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-2.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$650.00</h6>
-                                                    <h4 class="text-light">ADRIATICA ADR</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-3.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$126.00</h6>
-                                                    <h4 class="text-light">SEIKO SNZGO7K1</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-1.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$250.00</h6>
-                                                    <h4 class="text-light">ROAMER RM 220837</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item" data-bs-interval="5000">
-                                    <div class="row h-100 align-items-center">
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-2.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$650.00</h6>
-                                                    <h4 class="text-light">ADRIATICA ADR</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-3.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$126.00</h6>
-                                                    <h4 class="text-light">SEIKO SNZGO7K1</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-1.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$250.00</h6>
-                                                    <h4 class="text-light">ROAMER RM 220837</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item" data-bs-interval="3000">
-                                    <div class="row h-100 align-items-center">
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-2.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$650.00</h6>
-                                                    <h4 class="text-light">ADRIATICA ADR</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-3.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$126.00</h6>
-                                                    <h4 class="text-light">SEIKO SNZGO7K1</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-1.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$250.00</h6>
-                                                    <h4 class="text-light">ROAMER RM 220837</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="carousel-item">
-                                    <div class="row h-100 align-items-center">
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-2.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$650.00</h6>
-                                                    <h4 class="text-light">ADRIATICA ADR</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-3.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$126.00</h6>
-                                                    <h4 class="text-light">SEIKO SNZGO7K1</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6 col-md-4 mb-3 mb-md-0">
-                                            <div class="card bg-black text-white p-6 pb-8">
-                                                <img class="card-img" src="~/assets/img/gallery/watch-1.png" alt="..." />
-                                                <div class="card-img-overlay bg-dark-gradient d-flex flex-column-reverse align-items-center">
-                                                    <h6 class="text-primary">$250.00</h6>
-                                                    <h4 class="text-light">ROAMER RM 220837</h4>
-                                                </div><a class="stretched-link" href="#"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselPopular" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span></button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselPopular" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next </span></button>
-                                </div>
-                            </div>
-                        </div>
+        <div class="text-center mb-5">
+            <h2 class="fs-2 fw-bolder text-uppercase mb-2 text-dark tracking-tight fs-4">Đồng Hồ Thời Trang</h2>
+            <hr class="mx-auto border-warning border-3" style="width: 35%;">
+        </div>
+
+        <div class="filter-wrapper shadow-lg p-4 bg-white">
+            <form id="filterForm" method="get" action="@Url.Action("Index", "Home_65131134")" class="row g-3">
+                <div class="col-md-auto">
+                    <button type="button" id="btnReset" class="btn btn-dark w-100 h-100">Tất cả</button>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0"><i class="fas fa-search"></i></span>
+                        <input type="text" name="searchTerm" id="searchTerm" value="@ViewBag.SearchTerm" class="form-control border-start-0 ps-0" placeholder="Tìm kiếm tên..." />
                     </div>
                 </div>
-            </div>
+                <div class="col-md-3">
+                    @Html.DropDownList("brandId", (SelectList)ViewBag.BrandList, "Thương hiệu", new { @class = "form-select custom-select", id = "brandId" })
+                </div>
+                <div class="col-md-3">
+                    <select name="priceRange" id="priceRange" class="form-select custom-select">
+                        <option value="">Khoảng giá</option>
+                        <option value="lt5" @(ViewBag.PriceRange == "lt5" ? "selected" : "")>Dưới 5 triệu</option>
+                        <option value="5to10" @(ViewBag.PriceRange == "5to10" ? "selected" : "")>5 - 10 triệu</option>
+                        <option value="10to50" @(ViewBag.PriceRange == "10to50" ? "selected" : "")>10 - 50 triệu</option>
+                        <option value="50to100" @(ViewBag.PriceRange == "50to100" ? "selected" : "")>50 - 100 triệu</option>
+                        <option value="gt100" @(ViewBag.PriceRange == "gt100" ? "selected" : "")>Trên 100 triệu</option>
+                    </select>
+                </div>
+                <div class="col-md-auto">
+                    <button class="btn btn-gold w-100 fw-bold p-2 h-100 w-200 px-4" type="submit">TÌM KIẾM</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row" id="productsGrid">
+            @Html.Partial("_DongHoListPartial", Model)
         </div>
     </div>
 </section>
-<!-- ============================================-->
-<!-- <section> begin ============================-->
-<section class="py-6 bg-dark">
+<style>
+    :root {
+        --gold: #C5A059;
+        --gold-dark: #A68545;
+        --black: #111111;
+        --soft-white: #f8f9fa;
+    }
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6 col-lg-3 mb-4 mb-lg-0 d-flex flex-center"><img src="~/assets/img/gallery/rado.png" alt="brands" /></div>
-            <div class="col-sm-6 col-lg-3 mb-4 mb-lg-0 d-flex flex-center"><img src="~/assets/img/gallery/swatch.png" alt="brands" /></div>
-            <div class="col-sm-6 col-lg-3 mb-4 mb-lg-0 d-flex flex-center"><img src="~/assets/img/gallery/omega-1.png" alt="brands" /></div>
-            <div class="col-sm-6 col-lg-3 mb-4 mb-lg-0 d-flex flex-center"><img src="~/assets/img/gallery/zenith.png" alt="brands" /></div>
-        </div>
-    </div>
-    <!-- end of .container-->
+    /* General Refinements */
+    .text-gold {
+        color: var(--gold) !important;
+    }
 
-</section>
+    .tracking-widest {
+        letter-spacing: 0.2em;
+    }
 
+    .bg-soft-white {
+        background-color: var(--soft-white);
+    }
 
+    .gold-divider {
+        width: 60px;
+        height: 3px;
+        background-color: var(--gold);
+        transition: width 0.3s ease;
+    }
 
+    /* Hero Section */
+    .hero-overlay {
+        filter: brightness(0.6);
+    }
 
+    /* Buttons */
+    .btn-gold {
+        background-color: var(--gold);
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+        .btn-gold:hover {
+            background-color: var(--gold-dark);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+    .btn-gold-outline {
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        background: transparent;
+        text-transform: uppercase;
+    }
+
+        .btn-gold-outline:hover {
+            background: var(--gold);
+            color: white;
+        }
+
+    .btn-carousel {
+        background: transparent;
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        transition: all 0.3s;
+    }
+
+        .btn-carousel:hover {
+            background: var(--gold);
+            color: white;
+        }
+
+    /* Form Styling */
+    .filter-wrapper {
+        border-radius: 15px;
+        margin-top: -50px;
+        position: relative;
+        z-index: 10;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .custom-select, .form-control {
+        border: 1px solid #e0e0e0;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+        .custom-select:focus, .form-control:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.15);
+        }
+
+    /* Product Cards (Assuming they are in the Partial) */
+    .product-card {
+        border: none !important;
+        background: #fff;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .border-gold-left {
+        border-left: 5px solid var(--gold);
+        padding-left: 0;
+    }
+
+    /* Animation cho list sản phẩm khi load AJAX */
+    #productsGrid {
+        transition: opacity 0.4s ease;
+    }
+
+</style>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // Hàm thực hiện lọc AJAX
+            function performFilter() {
+                var formData = $('#filterForm').serialize();
+                var url = $('#filterForm').attr('action');
+
+                // Hiệu ứng loading mờ
+                $('#productsGrid').css('opacity', '0.5');
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: formData,
+                    success: function (result) {
+                        $('#productsGrid').html(result);
+                        $('#productsGrid').css('opacity', '1');
+                    },
+                    error: function () {
+                        alert('Không thể tải dữ liệu.');
+                        $('#productsGrid').css('opacity', '1');
+                    }
+                });
+            }
+
+            // Bắt sự kiện Submit form
+            $('#filterForm').on('submit', function (e) {
+                e.preventDefault();
+                performFilter();
+            });
+
+            // Nút reset "Tất cả"
+            $('#btnReset').click(function() {
+                $('#searchTerm').val('');
+                $('#brandId').val('');
+                $('#priceRange').val('');
+                performFilter();
+            });
+
+            // Add to Cart AJAX (Sử dụng Delegation vì danh sách sẽ bị thay thế)
+            $(document).on('click', '.add-to-cart-btn', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var maDongHo = btn.data('ma-dong-ho');
+                $.post('@Url.Action("AddToCart", "Home_65131134")', { maDongHo: maDongHo }, function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        updateCartCount();
+                    } else {
+                        if (response.requireLogin) window.location.href = '@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })';
+                        else alert(response.message);
+                    }
+                });
+            });
+
+            function updateCartCount() {
+                $.get('@Url.Action("GetCartCount", "Home_65131134")', function(data) {
+                    var cartBadge = $('#cartBadge');
+                    if(data.cartCount > 0) {
+                        cartBadge.text(data.cartCount).show();
+                    } else {
+                        cartBadge.hide();
+                    }
+                });
+            }
+        });
+    </script>
+}

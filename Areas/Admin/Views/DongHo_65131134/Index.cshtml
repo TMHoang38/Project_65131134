@@ -46,6 +46,38 @@
         text-align: center;
         vertical-align: middle;
     }
+    .image-container-admin {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+    }
+
+    /* Định dạng ảnh: Hiển thị toàn bộ khung hình, không bị méo */
+    .img-watch-admin {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain; /* Quan trọng: Giúp hiện hết toàn bộ đồng hồ */
+        transition: transform 0.2s;
+    }
+
+        .img-watch-admin:hover {
+            transform: scale(1.2); /* Hiệu ứng phóng lớn nhẹ khi di chuột vào */
+        }
+
+    .no-image-placeholder {
+        font-size: 10px;
+        color: #999;
+        text-transform: uppercase;
+    }
+
 </style>
 
 
@@ -107,35 +139,58 @@
                 )
             ),
             grid.Column("SoLuongTon","Số lượng tồn"),
-            grid.Column("HinhAnh","Hình ảnh"),       
-            grid.Column("BaoHanh","Bảo hành"),
-            grid.Column("LoaiDongHo.TenLoai","Tên loại"),
-            grid.Column("NoiSanXuat.TenNoiSanXuat","Nơi sản xuất"),
-            grid.Column("ThuongHieu.TenThuongHieu","Thương hiệu"),
+          grid.Column("HinhAnh", "Hình ảnh", format: @<text>
+    @{
+        // 1. Tự động chuyển đổi tên file sang đuôi .webp để hiển thị
+        var webpPath = !string.IsNullOrEmpty(item.HinhAnh)
+                       ? System.IO.Path.ChangeExtension(item.HinhAnh, ".webp")
+                       : "";
+        var originalPath = item.HinhAnh;
+    }
 
-            // --- CỘT CHỨC NĂNG ---
-            grid.Column("Chức năng", format: @<text>
-                <div class="d-flex justify-content-sm-around">
-                    @* Nút Edit *@
-                    <a href="@Url.Action("Edit", new { id = item.MaDongHo})" class="edit-btn">
-                        <abbr title="Cập nhật dữ liệu"><img src="/images/edit.png" width="20" height="20" /></abbr>
-                    </a>
-                    <a href="@Url.Action("Details", new { id = item.MaDongHo})" class="details-btn">
-                        <abbr title="Xem chi tiết dữ liệu"><img src="/images/file.png" width="20" height="20" /></abbr>
-                    </a>
+    <div class="image-container-admin">
+        @if (!string.IsNullOrEmpty(originalPath))
+        {
+        <img src="~/Images/DongHo/@webpPath"
+             alt="@item.TenDongHo"
+             class="img-watch-admin"
+             @* Nếu không có file .webp, nó sẽ tự động tìm file gốc (.jpg/.png) *@
+             onerror="this.src='/Images/DongHo/@originalPath'; this.onerror=function(){this.src='/images/no-image.png';};" />
+        }
+        else
+        {
+        <div class="no-image-placeholder">No Image</div>
+        }
+    </div>
+        </text>),
+              grid.Column("BaoHanh","Bảo hành"),
+              grid.Column("LoaiDongHo.TenLoai","Tên loại"),
+              grid.Column("NoiSanXuat.TenNoiSanXuat","Nơi sản xuất"),
+              grid.Column("ThuongHieu.TenThuongHieu","Thương hiệu"),
 
-                    @* Nút Xóa: Kích hoạt Modal *@
-                    <a href="#"
-                       class="delete-btn-trigger"
-                       data-bs-toggle="modal"
-                       data-bs-target="#deleteModal"
-                       data-id="@item.MaDongHo"
-                       data-url="@Url.Action("Delete", new { id = item.MaDongHo })">
-                        <abbr title="Xóa dữ liệu">
-                            <img src="/images/delete.png" width="20" height="20" />
-                        </abbr>
-                    </a>
-                </div>
+              // --- CỘT CHỨC NĂNG ---
+              grid.Column("Chức năng", format: @<text>
+            <div class="d-flex justify-content-sm-around">
+                @* Nút Edit *@
+                <a href="@Url.Action("Edit", new { id = item.MaDongHo})" class="edit-btn">
+                    <abbr title="Cập nhật dữ liệu"><img src="/images/edit.png" width="20" height="20" /></abbr>
+                </a>
+                <a href="@Url.Action("Details", new { id = item.MaDongHo})" class="details-btn">
+                    <abbr title="Xem chi tiết dữ liệu"><img src="/images/file.png" width="20" height="20" /></abbr>
+                </a>
+
+                @* Nút Xóa: Kích hoạt Modal *@
+                <a href="#"
+                   class="delete-btn-trigger"
+                   data-bs-toggle="modal"
+                   data-bs-target="#deleteModal"
+                   data-id="@item.MaDongHo"
+                   data-url="@Url.Action("Delete", new { id = item.MaDongHo })">
+                    <abbr title="Xóa dữ liệu">
+                        <img src="/images/delete.png" width="20" height="20" />
+                    </abbr>
+                </a>
+            </div>
             </text>),
 }
 )

@@ -1,0 +1,327 @@
+@model Project_65131134.Models.DatHang
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Shop/Views/Shared/_Layout.cshtml";
+
+    var trangThai = Model.TrangThaiDonHang ?? 0;
+    var statusText = "Khác";
+    var statusClass = "bg-soft-warning";
+
+    switch (trangThai)
+    {
+        case 0:
+            statusText = "Chờ xác nhận";
+            statusClass = "bg-soft-warning";
+            break;
+        case 1:
+            statusText = "Chuẩn bị hàng";
+            statusClass = "bg-soft-info";
+            break;
+        case 2:
+            statusText = "Chờ giao";
+            statusClass = "bg-soft-primary";
+            break;
+        case 3:
+            statusText = "Đang giao";
+            statusClass = "bg-soft-primary";
+            break;
+        case 4:
+            statusText = "Hoàn thành";
+            statusClass = "bg-soft-success";
+            break;
+        case 5:
+            statusText = "Đã hủy";
+            statusClass = "bg-soft-danger";
+            break;
+    }
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    body {
+        background-color: #f4f7f6;
+        color: #444;
+    }
+
+    .order-detail-container {
+        padding-top: 3rem;
+        padding-bottom: 5rem;
+    }
+
+    .card-surface {
+        background: #ffffff;
+        border: none;
+        border-radius: 14px;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-weight: 700;
+        color: #2d3748;
+        font-size: 1.1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .meta-label {
+        color: #718096;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .meta-value {
+        color: #2d3748;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        padding: 0.45em 1em;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .bg-soft-warning {
+        background-color: #fffaf0;
+        color: #b7791f;
+        border: 1px solid #fbd38d;
+    }
+
+    .bg-soft-info {
+        background-color: #ebf8ff;
+        color: #2b6cb0;
+        border: 1px solid #90cdf4;
+    }
+
+    .bg-soft-primary {
+        background-color: #eef2ff;
+        color: #4338ca;
+        border: 1px solid #c7d2fe;
+    }
+
+    .bg-soft-success {
+        background-color: #f0fff4;
+        color: #2f855a;
+        border: 1px solid #9ae6b4;
+    }
+
+    .bg-soft-danger {
+        background-color: #fff5f5;
+        color: #c53030;
+        border: 1px solid #feb2b2;
+    }
+
+    .table-order-detail thead {
+        background: #f8fafc;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.75rem;
+    }
+
+    .table-order-detail th,
+    .table-order-detail td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-color: #f1f5f9;
+    }
+
+    .product-name {
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .text-muted-sm {
+        font-size: 0.9rem;
+    }
+
+    .note-box {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 1rem;
+        color: #4a5568;
+    }
+
+    .summary-chip {
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+    }
+</style>
+
+<section class="order-detail-container">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })" class="text-decoration-none">Cửa hàng</a></li>
+                        <li class="breadcrumb-item"><a href="@Url.Action("DonHangCuaToi", "KhachHang_65131134", new { area = "Shop" })" class="text-decoration-none">Đơn hàng của tôi</a></li>
+                        <li class="breadcrumb-item active">Chi tiết</li>
+                    </ol>
+                </nav>
+                <h2 class="fw-bold m-0" style="color: #2d3748;">
+                    Đơn hàng #@Model.MaDonHang
+                </h2>
+                <div class="text-muted text-muted-sm mt-1">
+                    Đặt lúc @(Model.NgayDatHang.HasValue ? Model.NgayDatHang.Value.ToString("HH:mm") : "--:--") ngày @(Model.NgayDatHang.HasValue ? Model.NgayDatHang.Value.ToString("dd/MM/yyyy") : "---")
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="@Url.Action("DonHangCuaToi", "KhachHang_65131134", new { area = "Shop" })" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Quay lại
+                </a>
+                <a href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })" class="btn btn-primary shadow-sm">
+                    <i class="fas fa-shopping-bag me-2"></i> Tiếp tục mua sắm
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-3">
+            <div class="col-lg-8">
+                <div class="card-surface h-100">
+                    <div class="card-title d-flex align-items-center gap-2">
+                        <i class="fas fa-receipt"></i>
+                        Thông tin đơn hàng
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="meta-label">Mã đơn hàng</div>
+                            <div class="meta-value">#@Model.MaDonHang</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="meta-label">Trạng thái</div>
+                            <div class="meta-value">
+                                <span class="status-badge @statusClass">
+                                    <i class="fas fa-circle"></i> @statusText
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="meta-label">Ngày đặt hàng</div>
+                            <div class="meta-value">
+                                @(Model.NgayDatHang.HasValue ? Model.NgayDatHang.Value.ToString("dd/MM/yyyy HH:mm") : "---")
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="meta-label">Ngày giao hàng</div>
+                            <div class="meta-value">
+                                @(Model.NgayGiaoHang.HasValue ? Model.NgayGiaoHang.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa giao")
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="meta-label">Tổng tiền</div>
+                            <div class="meta-value text-danger fs-5">@Model.TongTien.ToString("N0") đ</div>
+                        </div>
+                        @if (!string.IsNullOrWhiteSpace(Model.GhiChu))
+                        {
+                            <div class="col-12">
+                                <div class="meta-label">Ghi chú</div>
+                                <div class="note-box">@Model.GhiChu</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card-surface mb-4">
+                    <div class="card-title d-flex align-items-center gap-2">
+                        <i class="fas fa-location-dot"></i>
+                        Thông tin giao hàng
+                    </div>
+                    <div class="mb-3">
+                        <div class="meta-label">Người nhận</div>
+                        <div class="meta-value">@((Model.KhachHang != null && !string.IsNullOrWhiteSpace(Model.KhachHang.HoTen)) ? Model.KhachHang.HoTen : "Khách hàng")</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="meta-label">Số điện thoại</div>
+                        <div class="meta-value">@((Model.KhachHang != null && !string.IsNullOrWhiteSpace(Model.KhachHang.SoDienThoai)) ? Model.KhachHang.SoDienThoai : "Chưa cập nhật")</div>
+                    </div>
+                    <div class="mb-0">
+                        <div class="meta-label">Địa chỉ giao</div>
+                        <div class="meta-value">@(!string.IsNullOrWhiteSpace(Model.DiaChiGiaoHang) ? Model.DiaChiGiaoHang : (Model.KhachHang != null ? Model.KhachHang.DiaChi : "Chưa cập nhật"))</div>
+                    </div>
+                </div>
+
+                @if (Model.NhanVien1 != null || Model.NhanVien != null)
+                {
+                    <div class="card-surface summary-chip">
+                        <div class="d-flex align-items-start gap-3">
+                            <i class="fas fa-truck text-primary pt-1"></i>
+                            <div>
+                                <div class="meta-label mb-1">Nhân viên phụ trách</div>
+                                @if (Model.NhanVien != null)
+                                {
+                                    <div class="meta-value">Duyệt: @Model.NhanVien.HoTen</div>
+                                }
+                                @if (Model.NhanVien1 != null)
+                                {
+                                    <div class="meta-value">Giao hàng: @Model.NhanVien1.HoTen</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card-surface">
+            <div class="card-title d-flex align-items-center gap-2">
+                <i class="fas fa-list"></i>
+                Sản phẩm trong đơn
+            </div>
+            @if (Model.ChiTietDatHang != null && Model.ChiTietDatHang.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-order-detail align-middle">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 80px;">#</th>
+                                <th>Sản phẩm</th>
+                                <th class="text-center" style="width: 120px;">Số lượng</th>
+                                <th class="text-end" style="width: 150px;">Đơn giá</th>
+                                <th class="text-end" style="width: 170px;">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var index = 1;
+                                foreach (var item in Model.ChiTietDatHang)
+                                {
+                                    <tr>
+                                        <td class="text-center fw-semibold">@index</td>
+                                        <td>
+                                            <div class="product-name">@(item.DongHo != null ? item.DongHo.TenDongHo : "Đồng hồ")</div>
+                                            <div class="text-muted text-muted-sm">Mã: @item.MaDongHo</div>
+                                        </td>
+                                        <td class="text-center">@item.SoLuong</td>
+                                        <td class="text-end">@item.DonGia.ToString("N0") đ</td>
+                                        <td class="text-end fw-semibold">@item.ThanhTien.ToString("N0") đ</td>
+                                    </tr>
+                                    index++;
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" class="text-end text-uppercase">Tổng cộng</th>
+                                <th class="text-end text-danger fs-5">@Model.TongTien.ToString("N0") đ</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center text-muted py-4">
+                    Chưa có chi tiết sản phẩm cho đơn hàng này.
+                </div>
+            }
+        </div>
+    </div>
+</section>
+

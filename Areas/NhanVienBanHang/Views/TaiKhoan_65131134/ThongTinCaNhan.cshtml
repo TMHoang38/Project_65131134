@@ -1,0 +1,212 @@
+@model Project_65131134.Models.NhanVien
+@{
+    ViewBag.Title = "Thông tin cá nhân";
+    Layout = "~/Areas/NhanVienBanHang/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    /* Tổng thể container */
+    .profile-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 15px;
+        background-color: #f8f9fc;
+    }
+
+    /* Thẻ card chính */
+    .profile-card-modern {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        width: 100%;
+        max-width: 850px;
+        padding: 40px;
+    }
+
+    /* Icon tiêu đề */
+    .header-icon-wrapper {
+        width: 70px;
+        height: 70px;
+        background: #eef2ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+    }
+
+        .header-icon-wrapper i {
+            font-size: 30px;
+            color: #4e73df;
+        }
+
+    /* Tiêu đề */
+    .profile-title {
+        font-weight: 700;
+        color: #3a3b45;
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+
+    .profile-subtitle {
+        color: #858796;
+        font-size: 14px;
+        margin-bottom: 35px;
+    }
+
+    /* Định dạng Label */
+    .form-label-custom {
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 800;
+        color: #4e4e4e;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* Định dạng Input Group giống ảnh */
+    .custom-input-group {
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border: 1px solid #e3e6f0;
+        border-radius: 12px;
+        padding: 5px 15px;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+    }
+
+        .custom-input-group:focus-within {
+            border-color: #4e73df;
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.1);
+        }
+
+        .custom-input-group i {
+            color: #4e73df;
+            width: 30px;
+            font-size: 18px;
+            border-right: 1px solid #e3e6f0;
+            margin-right: 15px;
+        }
+
+        .custom-input-group .form-control {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 10px 0;
+            background: transparent;
+            font-weight: 500;
+            color: #6e707e;
+        }
+
+    /* Định dạng Button */
+    .btn-group-custom {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .btn-pill {
+        border-radius: 50px;
+        padding: 12px 30px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+        .btn-pill:hover {
+            transform: translateY(-2px);
+        }
+
+    .btn-back {
+        background-color: #1cc88a;
+        color: white;
+        border: none;
+    }
+
+    .btn-password {
+        background-color: transparent;
+        color: #4e73df;
+        border: 1px solid #4e73df;
+    }
+
+    .btn-save {
+        background-color: #4e73df;
+        color: white;
+        border: none;
+        box-shadow: 0 4px 10px rgba(78, 115, 223, 0.3);
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-card-modern text-center">
+        <div class="header-icon-wrapper">
+            <i class="fas fa-user-tie"></i>
+        </div>
+        <h2 class="profile-title">Hồ sơ của tôi</h2>
+        <p class="profile-subtitle">Quản lý và cập nhật thông tin cá nhân của bạn</p>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        @using (Html.BeginForm("ThongTinCaNhan", "TaiKhoan_65131134", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.MaNhanVien)
+
+            <div class="row text-left">
+                <div class="col-md-6">
+                    <label class="form-label-custom">Họ và tên</label>
+                    <div class="custom-input-group">
+                        <i class="fas fa-address-card"></i>
+                        @Html.TextBoxFor(m => m.HoTen, new { @class = "form-control", placeholder = "Nhập họ tên" })
+                    </div>
+
+                    <label class="form-label-custom">Email</label>
+                    <div class="custom-input-group">
+                        <i class="fas fa-envelope"></i>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Nhập email" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label-custom">Địa chỉ liên hệ</label>
+                    <div class="custom-input-group">
+                        <i class="fas fa-map-marker-alt"></i>
+                        @Html.TextBoxFor(m => m.DiaChi, new { @class = "form-control", placeholder = "Quận 12, TP.HCM" })
+                    </div>
+
+                    <label class="form-label-custom">Số điện thoại</label>
+                    <div class="custom-input-group">
+                        <i class="fas fa-phone-alt"></i>
+                        @Html.TextBoxFor(m => m.SoDienThoai, new { @class = "form-control", placeholder = "Nhập số điện thoại" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group-custom">
+                <a href="@Url.Action("Index","KhachHang_65131134")" class="btn btn-pill btn-back">
+                    <i class="fas fa-arrow-left mr-2"></i> Quay lại
+                </a>
+
+                <a href="@Url.Action("DoiMatKhau", "TaiKhoan_65131134")" class="btn btn-pill btn-password">
+                    <i class="fas fa-key mr-2"></i> Đổi mật khẩu
+                </a>
+
+                <button type="submit" class="btn btn-pill btn-save">
+                    <i class="fas fa-save mr-2"></i> Lưu thay đổi
+                </button>
+            </div>
+        }
+    </div>
+</div>

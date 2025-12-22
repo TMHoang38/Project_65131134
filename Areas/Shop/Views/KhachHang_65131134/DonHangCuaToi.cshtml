@@ -1,0 +1,228 @@
+@model IEnumerable<Project_65131134.Models.DatHang>
+@{
+    ViewBag.Title = "Đơn hàng của tôi";
+    Layout = "~/Areas/Shop/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    body {
+        background-color: #f4f7f6; /* Nền xám nhạt thanh lịch */
+        color: #444;
+    }
+
+    .order-container {
+        padding-top: 3rem;
+        padding-bottom: 5rem;
+    }
+
+    .card-order {
+        background: #ffffff;
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Đổ bóng nhẹ */
+    }
+
+    .table-custom {
+        margin-bottom: 0;
+    }
+
+        .table-custom thead {
+            background: #f8f9fa;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #edf2f7;
+        }
+
+        .table-custom th {
+            color: #718096;
+            font-weight: 600;
+            padding: 1rem 1.2rem;
+        }
+
+        .table-custom td {
+            padding: 1.2rem;
+            vertical-align: middle;
+            border-color: #f1f1f1;
+            color: #4a5568;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #fcfcfc !important;
+            transition: all 0.2s ease;
+        }
+
+    .order-id {
+        color: #2d3748;
+        font-weight: 700;
+    }
+
+    .price-text {
+        color: #2c3e50;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    .status-badge {
+        padding: 0.4em 1em;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.75rem;
+    }
+
+    /* Tùy chỉnh màu sắc Badge cho nền sáng */
+    .bg-soft-warning {
+        background-color: #fffaf0;
+        color: #b7791f;
+        border: 1px solid #fbd38d;
+    }
+
+    .bg-soft-info {
+        background-color: #ebf8ff;
+        color: #2b6cb0;
+        border: 1px solid #90cdf4;
+    }
+
+    .bg-soft-primary {
+        background-color: #eef2ff;
+        color: #4338ca;
+        border: 1px solid #c7d2fe;
+    }
+
+    .bg-soft-success {
+        background-color: #f0fff4;
+        color: #2f855a;
+        border: 1px solid #9ae6b4;
+    }
+
+    .bg-soft-danger {
+        background-color: #fff5f5;
+        color: #c53030;
+        border: 1px solid #feb2b2;
+    }
+
+    .btn-detail {
+        border: 1px solid #e2e8f0;
+        color: #4a5568;
+        background: #fff;
+        transition: all 0.2s;
+    }
+
+        .btn-detail:hover {
+            background: #edf2f7;
+            color: #2d3748;
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 5rem 0;
+        background: white;
+    }
+
+        .empty-state i {
+            font-size: 5rem;
+            color: #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+</style>
+
+<section class="order-container">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home_65131134")" class="text-decoration-none">Cửa hàng</a></li>
+                        <li class="breadcrumb-item active">Đơn hàng của tôi</li>
+                    </ol>
+                </nav>
+                <h2 class="fw-bold m-0" style="color: #2d3748;">
+                    Đơn hàng của tôi
+                </h2>
+            </div>
+            <a href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })" class="btn btn-primary shadow-sm">
+                <i class="fas fa-shopping-bag me-2"></i> Tiếp tục mua sắm
+            </a>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="card-order empty-state">
+                <i class="fas fa-shopping-cart"></i>
+                <h4 class="text-dark">Chưa có đơn hàng nào</h4>
+                <p class="text-muted">Có vẻ như bạn chưa đặt món hàng nào trong thời gian qua.</p>
+                <a href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })" class="btn btn-outline-primary px-4 mt-2">Khám phá ngay</a>
+            </div>
+        }
+        else
+        {
+            <div class="card-order">
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn hàng</th>
+                                <th>Ngày đặt</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th class="text-center">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var don in Model)
+                            {
+                                var tongTien = don.ChiTietDatHang != null
+                                    ? don.ChiTietDatHang.Sum(ct => ct.SoLuong * ct.DonGia)
+                                    : 0;
+
+                                <tr>
+                                    <td>
+                                        <span class="order-id">#@don.MaDonHang</span>
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold text-dark">@(don.NgayDatHang.HasValue ? don.NgayDatHang.Value.ToString("dd/MM/yyyy") : "---")</div>
+                                        <small class="text-muted">@(don.NgayDatHang.HasValue ? don.NgayDatHang.Value.ToString("HH:mm") : "")</small>
+                                    </td>
+                                    <td>
+                                        <span class="price-text">@tongTien.ToString("N0") <small>₫</small></span>
+                                    </td>
+                                    <td>
+                                        @switch (don.TrangThaiDonHang)
+                                        {
+                                            case 0:
+                                                <span class="status-badge bg-soft-warning"><i class="fas fa-clock me-1"></i> Chờ xác nhận</span>
+                                                break;
+                                            case 1:
+                                                <span class="status-badge bg-soft-info"><i class="fas fa-box me-1"></i> Chuẩn bị hàng</span>
+                                                break;
+                                            case 3:
+                                                <span class="status-badge bg-soft-primary"><i class="fas fa-shipping-fast me-1"></i> Đang giao</span>
+                                                break;
+                                            case 4:
+                                                <span class="status-badge bg-soft-success"><i class="fas fa-check-circle me-1"></i> Hoàn thành</span>
+                                                break;
+                                            case 5:
+                                                <span class="status-badge bg-soft-danger"><i class="fas fa-times-circle me-1"></i> Đã hủy</span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-light text-dark">Khác</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("ChiTietDonHang", "KhachHang_65131134", new { area = "Shop", id = don.MaDonHang })" class="btn btn-sm btn-detail rounded-pill px-4">
+                                            Xem chi tiết
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</section>

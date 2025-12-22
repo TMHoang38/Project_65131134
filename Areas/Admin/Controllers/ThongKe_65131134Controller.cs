@@ -5,9 +5,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Project_65131134.Models;
+using Project_65131134.Helpers.Attributes;
 
 namespace Project_65131134.Areas.Admin.Controllers
 {
+    [AdminRole]
     public class ThongKe_65131134Controller : Controller
     {
         private CuaHangDongHo_65131134Entities db = new CuaHangDongHo_65131134Entities();

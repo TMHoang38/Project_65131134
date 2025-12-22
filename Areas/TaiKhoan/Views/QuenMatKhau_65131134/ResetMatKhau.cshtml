@@ -1,0 +1,151 @@
+@{
+    ViewBag.Title = "Đặt lại mật khẩu";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title - Luxury Timepiece</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(rgba(11, 17, 24, 0.85), rgba(11, 17, 24, 0.9)), url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=2080&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Roboto', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-custom {
+            background-color: #141b25;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 8px;
+        }
+
+        .icon-key {
+            font-size: 2.5rem;
+            color: #c5a059;
+            margin-bottom: 15px;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            color: #c5a059;
+            font-size: 1.6rem;
+        }
+
+        .form-control-user {
+            background-color: #0b1118 !important;
+            border: 1px solid #2c3e50;
+            color: #e0e0e0 !important;
+            border-radius: 4px !important;
+            padding: 22px 15px !important;
+        }
+
+            .form-control-user:focus {
+                border-color: #c5a059;
+                box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.25);
+            }
+
+        .btn-gold {
+            background: linear-gradient(45deg, #b88a44, #e6c87a);
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 12px;
+            font-family: 'Playfair Display', serif;
+            text-transform: uppercase;
+        }
+
+            .btn-gold:hover {
+                color: #000;
+                opacity: 0.9;
+            }
+
+        .link-footer {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+            .link-footer:hover {
+                color: #c5a059;
+            }
+    </style>
+</head>
+
+<body>
+
+    <div class="card card-custom animated fade-in">
+        <div class="card-body p-5 text-center">
+
+            <div class="mb-4">
+                <i class="fas fa-key icon-key"></i>
+                <h1 class="brand-title">ĐẶT LẠI MẬT KHẨU</h1>
+                <p class="text-muted small mb-0">Nhập mật khẩu mới cho tài khoản: <strong>@ViewBag.Email</strong></p>
+            </div>
+
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    @ViewBag.ErrorMessage
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+
+            @using (Html.BeginForm("ResetMatKhau", "QuenMatKhau_65131134", FormMethod.Post, new { @class = "user" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="token" value="@ViewBag.Token" />
+                
+                <div class="form-group">
+                    <input type="password" class="form-control form-control-user" name="MatKhau"
+                           placeholder="Mật khẩu mới" required>
+                    @Html.ValidationMessage("MatKhau", "", new { @class = "text-danger small" })
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control form-control-user" name="XacNhanMatKhau"
+                           placeholder="Xác nhận mật khẩu mới" required>
+                    @Html.ValidationMessage("XacNhanMatKhau", "", new { @class = "text-danger small" })
+                </div>
+                <button type="submit" class="btn btn-gold btn-user btn-block rounded-pill">
+                    Đặt lại mật khẩu
+                </button>
+            }
+
+            <hr style="border-color: rgba(255,255,255,0.1); margin-top: 30px;">
+
+            <div class="text-center">
+                <a class="small link-footer" href="@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })">
+                    <i class="fas fa-arrow-left mr-1"></i> Quay lại Đăng nhập
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Content/vendor/jquery/jquery.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="~/Content/js/sb-admin-2.min.js"></script>
+</body>
+</html>
+

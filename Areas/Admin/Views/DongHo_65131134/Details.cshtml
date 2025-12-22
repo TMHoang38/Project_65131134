@@ -3,6 +3,10 @@
 @{
     ViewBag.Title = "Chi tiết đồng hồ";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var webpPath = !string.IsNullOrEmpty(Model.HinhAnh)
+                   ? System.IO.Path.ChangeExtension(Model.HinhAnh, ".webp")
+                   : "";
+    var originalPath = Model.HinhAnh;
 
     // Format tiền tệ
     var formatTien = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
@@ -124,11 +128,28 @@
                         </div>
 
                         <div class="row mb-3 mt-4">
-                            <div class="col-sm-4 fw-bold text-muted">File hình ảnh:</div>
+                            <div class="col-sm-4 fw-bold text-muted">Hình ảnh sản phẩm:</div>
                             <div class="col-sm-8">
-                                <code class="bg-light p-1 rounded text-break">@Model.HinhAnh</code>
-                                @* Nếu muốn hiển thị ảnh thực tế thì bỏ comment dòng dưới *@
-                                @* <img src="~/Content/Images/@Model.HinhAnh" class="img-thumbnail mt-2 shadow-sm" style="max-height: 150px;" /> *@
+                                <div class="image-detail-container">
+                                    @if (!string.IsNullOrEmpty(originalPath))
+                                    {
+                                        <img src="~/Images/DongHo/@webpPath"
+                                             alt="@Model.TenDongHo"
+                                             class="img-watch-detail shadow-sm"
+                                             onerror="this.src='/Images/DongHo/@originalPath'; this.onerror=function(){this.src='/images/no-image.png';};" />
+                                    }
+                                    else
+                                    {
+                                        <div class="no-image-placeholder-detail">
+                                            <i class="fas fa-image fa-3x mb-2"></i>
+                                            <p>Không có hình ảnh</p>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted">Tên file: </small>
+                                    <code class="bg-light p-1 rounded text-break">@Model.HinhAnh</code>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -294,5 +315,37 @@
     .border-top {
         border-top-color: #dee2e6 !important;
     }
+    .image-detail-container {
+        width: 100%;
+        max-width: 300px; /* Độ rộng tối đa của ảnh */
+        min-height: 200px;
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
 
+    .img-watch-detail {
+        max-width: 100%;
+        max-height: 350px;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+        .img-watch-detail:hover {
+            transform: scale(1.05); /* Phóng lớn nhẹ khi xem chi tiết */
+        }
+
+    .no-image-placeholder-detail {
+        text-align: center;
+        color: #ccc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 </style>

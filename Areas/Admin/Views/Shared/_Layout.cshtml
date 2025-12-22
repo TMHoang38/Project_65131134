@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Project_65131134.Helpers
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -167,27 +168,32 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Nav Item - User Information -->
                     <ul class="navbar-nav ml-auto">
-                        <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    @(!string.IsNullOrWhiteSpace(AuthenticationHelper.GetFullName())
+                                        ? AuthenticationHelper.GetFullName()
+                                        : AuthenticationHelper.GetUserName() ?? "Tài khoản")
+                                </span>
                                 <img class="img-profile rounded-circle"
-                                     src="img/undraw_profile.svg">
+                                     src="~/Content/img/undraw_profile.svg">
                             </a>
-                            <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="@Url.Action("ThongTinCaNhan","TaiKhoan_65131134", new { area = "Admin" })">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
+                                    Chỉnh sửa thông tin
+                                </a>
+                                <a class="dropdown-item" href="@Url.Action("DoiMatKhau","TaiKhoan_65131134", new { area = "Admin" })">
+                                    <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Đổi mật khẩu
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="@Url.Action("DangXuat","TaiKhoan_65131134", new { area = "Admin" })">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    Đăng xuất
                                 </a>
                             </div>
                         </li>
@@ -233,7 +239,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="@Url.Action("DangXuat","TaiKhoan_65131134", new { area = "Admin" })">Logout</a>
                 </div>
             </div>
         </div>

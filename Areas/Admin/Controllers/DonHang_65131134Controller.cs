@@ -7,9 +7,12 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Project_65131134.Models;
+using Project_65131134.Helpers.Attributes;
+using Project_65131134.Helpers;
 
 namespace Project_65131134.Areas.Admin.Controllers
 {
+    [AdminRole]
     public class DonHang_65131134Controller : Controller
     {
         private CuaHangDongHo_65131134Entities db = new CuaHangDongHo_65131134Entities();
@@ -54,75 +57,25 @@ namespace Project_65131134.Areas.Admin.Controllers
         }
 
         // POST: Admin/DonHang_65131134/UpdateStatus
-        // Logic: 0 (Chưa xác nhận) -> 1 (Chuẩn bị) -> 3 (Đang giao) -> 4 (Thành công)
+        // Logic: 0 (Chờ duyệt) -> 1 (Chuẩn bị) -> 3 (Đang giao) -> 4 (Thành công)
         [HttpPost]
         public ActionResult UpdateStatus(string id)
         {
-            if (id == null)
+            return DonHangWorkflowHelper.UpdateStatus(this, db, id, (d) =>
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            DatHang datHang = db.DatHang.Find(id);
-            if (datHang == null)
-            {
-                return HttpNotFound();
-            }
-
-            int currentStatus = datHang.TrangThaiDonHang ?? 0;
-            int nextStatus = currentStatus;
-            string message = "";
-
-            if (currentStatus == 0)
-            {
-                nextStatus = 1; // Duyệt đơn -> Chuẩn bị hàng
-            }
-            else if (currentStatus == 1)
-            {
-                nextStatus = 3; // Chuẩn bị xong -> Đang giao hàng
-            }
-            else if (currentStatus == 3)
-            {
-                nextStatus = 4; // Đang giao -> Giao thành công
-                datHang.NgayGiaoHang = DateTime.Now; // Cập nhật ngày giao hàng thực tế
-            }
-            else
-            {
-                return Json(new { success = false, message = "Đơn hàng đã hoàn tất hoặc ở trạng thái không thể cập nhật tiếp." });
-            }
-
-            datHang.TrangThaiDonHang = nextStatus;
-
-            // Nếu bạn có trường MaNhanVienDuyet, có thể cập nhật người duyệt tại đây nếu cần
-            // datHang.MaNhanVienDuyet = ...
-
-            db.Entry(datHang).State = EntityState.Modified;
-            db.SaveChanges();
-
-            return Json(new { success = true });
+                var current = d.TrangThaiDonHang ?? 0;
+                if (current == 0) return 1;
+                if (current == 1) return 3;
+                if (current == 3) return 4;
+                return (int?)null;
+            });
         }
 
         // POST: Admin/DonHang_65131134/CancelOrder
         [HttpPost]
         public ActionResult CancelOrder(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            DatHang datHang = db.DatHang.Find(id);
-            if (datHang == null)
-            {
-                return HttpNotFound();
-            }
-
-            // Chuyển sang trạng thái hủy đơn hàng (5)
-            datHang.TrangThaiDonHang = 5;
-            db.Entry(datHang).State = EntityState.Modified;
-            db.SaveChanges();
-
-            return Json(new { success = true });
+            return DonHangWorkflowHelper.Cancel(this, db, id, d => (d.TrangThaiDonHang ?? 0) < 4);
         }
 
         protected override void Dispose(bool disposing)
