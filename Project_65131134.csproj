@@ -186,6 +186,9 @@
     <Compile Include="Models\DongHoThuocTinh.cs">
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GioHang.cs">
+      <DependentUpon>Model_65131134.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\KhachHang.cs">
       <DependentUpon>Model_65131134.tt</DependentUpon>
     </Compile>

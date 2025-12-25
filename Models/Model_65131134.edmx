@@ -77,6 +77,16 @@
           <Property Name="MaThuocTinh" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="NgayGan" Type="datetime" />
         </EntityType>
+        <EntityType Name="GioHang">
+          <Key>
+            <PropertyRef Name="MaKhachHang" />
+            <PropertyRef Name="MaDongHo" />
+          </Key>
+          <Property Name="MaKhachHang" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="MaDongHo" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="SoLuong" Type="int" Nullable="false" />
+          <Property Name="NgayThem" Type="datetime" />
+        </EntityType>
         <EntityType Name="KhachHang">
           <Key>
             <PropertyRef Name="MaKhachHang" />
@@ -284,6 +294,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_GioHang_DongHo">
+          <End Role="DongHo" Type="Self.DongHo" Multiplicity="1" />
+          <End Role="GioHang" Type="Self.GioHang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DongHo">
+              <PropertyRef Name="MaDongHo" />
+            </Principal>
+            <Dependent Role="GioHang">
+              <PropertyRef Name="MaDongHo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GioHang_KhachHang">
+          <End Role="KhachHang" Type="Self.KhachHang" Multiplicity="1" />
+          <End Role="GioHang" Type="Self.GioHang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KhachHang">
+              <PropertyRef Name="MaKhachHang" />
+            </Principal>
+            <Dependent Role="GioHang">
+              <PropertyRef Name="MaKhachHang" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="KhachHang_TimKiem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="HoTen" Type="nvarchar" Mode="In" />
         </Function>
@@ -305,6 +339,7 @@
           <EntitySet Name="DatHang" EntityType="Self.DatHang" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DongHo" EntityType="Self.DongHo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DongHoThuocTinh" EntityType="Self.DongHoThuocTinh" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GioHang" EntityType="Self.GioHang" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="KhachHang" EntityType="Self.KhachHang" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoaiDongHo" EntityType="Self.LoaiDongHo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="NoiSanXuat" EntityType="Self.NoiSanXuat" Schema="dbo" store:Type="Tables" />
@@ -358,6 +393,14 @@
           <AssociationSet Name="FK_DongHo_ChatLieuVo" Association="Self.FK_DongHo_ChatLieuVo">
             <End Role="ChatLieuVo" EntitySet="ChatLieuVo" />
             <End Role="DongHo" EntitySet="DongHo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GioHang_DongHo" Association="Self.FK_GioHang_DongHo">
+            <End Role="DongHo" EntitySet="DongHo" />
+            <End Role="GioHang" EntitySet="GioHang" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GioHang_KhachHang" Association="Self.FK_GioHang_KhachHang">
+            <End Role="KhachHang" EntitySet="KhachHang" />
+            <End Role="GioHang" EntitySet="GioHang" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -423,6 +466,7 @@
           <Property Name="MaChatLieuVo" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="ChatLieuDay" Relationship="CuaHangDongHo_65131134Model.FK_DongHo_ChatLieuDay" FromRole="DongHo" ToRole="ChatLieuDay" />
           <NavigationProperty Name="ChatLieuVo" Relationship="CuaHangDongHo_65131134Model.FK_DongHo_ChatLieuVo" FromRole="DongHo" ToRole="ChatLieuVo" />
+          <NavigationProperty Name="GioHangs" Relationship="CuaHangDongHo_65131134Model.FK_GioHang_DongHo" FromRole="DongHo" ToRole="GioHang" />
         </EntityType>
         <EntityType Name="DongHoThuocTinh">
           <Key>
@@ -449,6 +493,7 @@
           <Property Name="NgayTao" Type="DateTime" Precision="3" />
           <Property Name="TrangThai" Type="Boolean" />
           <NavigationProperty Name="DatHang" Relationship="Self.FK__DatHang__MaKhach__68487DD7" FromRole="KhachHang" ToRole="DatHang" />
+          <NavigationProperty Name="GioHangs" Relationship="CuaHangDongHo_65131134Model.FK_GioHang_KhachHang" FromRole="KhachHang" ToRole="GioHang" />
         </EntityType>
         <EntityType Name="LoaiDongHo">
           <Key>
@@ -700,6 +745,15 @@
           <FunctionImport Name="NhanVien_TimKiem" ReturnType="Collection(CuaHangDongHo_65131134Model.NhanVien_TimKiem_Result)">
           <Parameter Name="HoTen" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="GioHangs" EntityType="CuaHangDongHo_65131134Model.GioHang" />
+          <AssociationSet Name="FK_GioHang_DongHo" Association="CuaHangDongHo_65131134Model.FK_GioHang_DongHo">
+            <End Role="DongHo" EntitySet="DongHo" />
+            <End Role="GioHang" EntitySet="GioHangs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GioHang_KhachHang" Association="CuaHangDongHo_65131134Model.FK_GioHang_KhachHang">
+            <End Role="KhachHang" EntitySet="KhachHang" />
+            <End Role="GioHang" EntitySet="GioHangs" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="ChatLieuDay">
           <Key>
@@ -779,6 +833,42 @@
           <Property Type="DateTime" Name="NgayVaoLam" Nullable="true" />
           <Property Type="DateTime" Name="NgayTao" Nullable="true" Precision="23" />
         </ComplexType>
+        <EntityType Name="GioHang">
+          <Key>
+            <PropertyRef Name="MaKhachHang" />
+            <PropertyRef Name="MaDongHo" />
+          </Key>
+          <Property Name="MaKhachHang" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="MaDongHo" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SoLuong" Type="Int32" Nullable="false" />
+          <Property Name="NgayThem" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="DongHo" Relationship="CuaHangDongHo_65131134Model.FK_GioHang_DongHo" FromRole="GioHang" ToRole="DongHo" />
+          <NavigationProperty Name="KhachHang" Relationship="CuaHangDongHo_65131134Model.FK_GioHang_KhachHang" FromRole="GioHang" ToRole="KhachHang" />
+        </EntityType>
+        <Association Name="FK_GioHang_DongHo">
+          <End Type="CuaHangDongHo_65131134Model.DongHo" Role="DongHo" Multiplicity="1" />
+          <End Type="CuaHangDongHo_65131134Model.GioHang" Role="GioHang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DongHo">
+              <PropertyRef Name="MaDongHo" />
+            </Principal>
+            <Dependent Role="GioHang">
+              <PropertyRef Name="MaDongHo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GioHang_KhachHang">
+          <End Type="CuaHangDongHo_65131134Model.KhachHang" Role="KhachHang" Multiplicity="1" />
+          <End Type="CuaHangDongHo_65131134Model.GioHang" Role="GioHang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KhachHang">
+              <PropertyRef Name="MaKhachHang" />
+            </Principal>
+            <Dependent Role="GioHang">
+              <PropertyRef Name="MaKhachHang" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -983,6 +1073,16 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="GioHangs">
+            <EntityTypeMapping TypeName="CuaHangDongHo_65131134Model.GioHang">
+              <MappingFragment StoreEntitySet="GioHang">
+                <ScalarProperty Name="NgayThem" ColumnName="NgayThem" />
+                <ScalarProperty Name="SoLuong" ColumnName="SoLuong" />
+                <ScalarProperty Name="MaDongHo" ColumnName="MaDongHo" />
+                <ScalarProperty Name="MaKhachHang" ColumnName="MaKhachHang" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

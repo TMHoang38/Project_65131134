@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7ae80ac8a4e647889b553f6e7ce98e74" Name="Diagram1" ZoomLevel="127">
+      <Diagram DiagramId="7ae80ac8a4e647889b553f6e7ce98e74" Name="Diagram1" ZoomLevel="111">
         <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.ChiTietDatHang" Width="1.5" PointX="5.25" PointY="3.625" IsExpanded="true" />
         <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.DatHang" Width="1.5" PointX="3" PointY="13.125" IsExpanded="true" />
         <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.DongHo" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
@@ -29,6 +29,9 @@
         <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.ChatLieuVo" Width="1.5" PointX="7.375" PointY="0.875" />
         <AssociationConnector Association="CuaHangDongHo_65131134Model.FK_DongHo_ChatLieuDay" />
         <AssociationConnector Association="CuaHangDongHo_65131134Model.FK_DongHo_ChatLieuVo" />
+        <EntityTypeShape EntityType="CuaHangDongHo_65131134Model.GioHang" Width="1.5" PointX="5.25" PointY="7.5" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK_GioHang_DongHo" />
+        <AssociationConnector Association="CuaHangDongHo_65131134Model.FK_GioHang_KhachHang" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

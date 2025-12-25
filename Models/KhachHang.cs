@@ -18,6 +18,7 @@ namespace Project_65131134.Models
         public KhachHang()
         {
             this.DatHang = new HashSet<DatHang>();
+            this.GioHangs = new HashSet<GioHang>();
         }
     
         public string MaKhachHang { get; set; }
@@ -32,5 +33,7 @@ namespace Project_65131134.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DatHang> DatHang { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GioHang> GioHangs { get; set; }
     }
 }

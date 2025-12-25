@@ -373,12 +373,22 @@
                 });
             });
 
-            // Đặt mua ngay (giữ nguyên)
+            // Đặt mua ngay - Chuyển thẳng đến thanh toán
             $('.buy-now-btn').on('click', function (e) {
                 e.preventDefault();
+                var btn = $(this);
                 var maDongHo = $(this).data('ma-dong-ho');
-                var soLuong = $('#txtQuantity').val();
-                window.location.href = '@Url.Action("GioHang", "KhachHang_65131134", new { area = "Shop" })' + '?buyNow=' + maDongHo + '&quantity=' + soLuong;
+                var soLuong = parseInt($('#txtQuantity').val()) || 1;
+                
+                if (soLuong < 1) {
+                    Swal.fire({ icon: 'warning', title: 'Cảnh báo', text: 'Số lượng phải lớn hơn 0!' });
+                    return;
+                }
+
+                btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Đang xử lý...');
+
+                // Chuyển đến action BuyNow
+                window.location.href = '@Url.Action("BuyNow", "KhachHang_65131134", new { area = "Shop" })' + '?maDongHo=' + maDongHo + '&soLuong=' + soLuong;
             });
         });
     </script>

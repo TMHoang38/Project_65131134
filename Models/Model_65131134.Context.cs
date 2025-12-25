@@ -39,6 +39,7 @@ namespace Project_65131134.Models
         public virtual DbSet<ThuongHieu> ThuongHieu { get; set; }
         public virtual DbSet<ChatLieuDay> ChatLieuDay { get; set; }
         public virtual DbSet<ChatLieuVo> ChatLieuVo { get; set; }
+        public virtual DbSet<GioHang> GioHangs { get; set; }
     
         public virtual ObjectResult<Sp_ThongKeDoanhThuTheoNam_Result> Sp_ThongKeDoanhThuTheoNam(Nullable<int> year)
         {

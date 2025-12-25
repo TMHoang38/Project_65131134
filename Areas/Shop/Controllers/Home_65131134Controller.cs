@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Project_65131134.Models;
 using System.Data.Entity;
 using Project_65131134.Models.ViewModels;
+using Project_65131134.Helpers;
 
 namespace Project_65131134.Areas.Shop.Controllers
 {
@@ -57,9 +58,9 @@ namespace Project_65131134.Areas.Shop.Controllers
 
             // Đảm bảo trang hiện tại không vượt quá giới hạn
             if (page < 1) page = 1;
-            if (page > totalPages && totalPages > 0) page = totalPages;
+            if (totalPages > 0 && page > totalPages) page = totalPages;
 
-            // 4. Lấy dữ liệu theo trang (Sử dụng Skip và Take)
+            // 4. Lấy dữ liệu theo trang
             var pagedData = dongHoQuery
                 .OrderByDescending(d => d.MaDongHo)
                 .Skip((page - 1) * pageSize)
@@ -75,16 +76,17 @@ namespace Project_65131134.Areas.Shop.Controllers
                 TotalItems = totalItems
             };
 
+            // Lưu các giá trị lọc vào ViewBag để hiển thị lại trên Form
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.PriceRange = priceRange;
+            var thuongHieus = db.ThuongHieu.OrderBy(t => t.TenThuongHieu).ToList();
+            ViewBag.BrandList = new SelectList(thuongHieus, "MaThuongHieu", "TenThuongHieu", brandId);
+
             // Trả về Partial View nếu là AJAX request
             if (Request.IsAjaxRequest())
             {
                 return PartialView("_DongHoListPartial", viewModel);
             }
-
-            var thuongHieus = db.ThuongHieu.OrderBy(t => t.TenThuongHieu).ToList();
-            ViewBag.BrandList = new SelectList(thuongHieus, "MaThuongHieu", "TenThuongHieu", brandId);
-            ViewBag.SearchTerm = searchTerm;
-            ViewBag.PriceRange = priceRange;
 
             return View(viewModel);
         }
@@ -94,11 +96,9 @@ namespace Project_65131134.Areas.Shop.Controllers
         {
             try
             {
-                // Kiểm tra đăng nhập
-                if (Session["UserId"] == null)
+                if (Session["UserId"] == null || !AuthenticationHelper.IsKhachHang())
                     return Json(new { success = false, message = "Vui lòng đăng nhập!", requireLogin = true });
 
-                // Kiểm tra sản phẩm tồn tại và còn hàng
                 var dongHo = db.DongHo.Find(maDongHo);
                 if (dongHo == null)
                     return Json(new { success = false, message = "Sản phẩm không tồn tại!" });
@@ -106,40 +106,41 @@ namespace Project_65131134.Areas.Shop.Controllers
                 if (dongHo.SoLuongTon <= 0)
                     return Json(new { success = false, message = "Sản phẩm đã hết hàng!" });
 
-                // Đảm bảo số lượng thêm vào ít nhất là 1
                 if (soLuong < 1) soLuong = 1;
 
+                var maKhachHang = AuthenticationHelper.GetUserId();
                 var cart = Session["Cart"] as Dictionary<string, int> ?? new Dictionary<string, int>();
 
-                if (!cart.ContainsKey(maDongHo))
+                if (!cart.Any())
                 {
-                    // Nếu chưa có trong giỏ, kiểm tra xem số lượng yêu cầu có vượt kho không
-                    if (soLuong <= dongHo.SoLuongTon)
-                    {
-                        cart[maDongHo] = soLuong;
-                    }
-                    else
-                    {
-                        return Json(new { success = false, message = "Chỉ còn " + dongHo.SoLuongTon + " sản phẩm trong kho!" });
-                    }
+                    var gioHangDB = db.GioHangs.Where(g => g.MaKhachHang == maKhachHang).ToList();
+                    foreach (var item in gioHangDB) cart[item.MaDongHo] = item.SoLuong;
+                }
+
+                int currentQuantity = cart.ContainsKey(maDongHo) ? cart[maDongHo] : 0;
+                int newQuantity = currentQuantity + soLuong;
+
+                if (newQuantity > dongHo.SoLuongTon)
+                {
+                    return Json(new { success = false, message = "Tổng số lượng vượt quá tồn kho (Hiện có: " + dongHo.SoLuongTon + ")!" });
+                }
+
+                cart[maDongHo] = newQuantity;
+                Session["Cart"] = cart;
+
+                var gioHangItem = db.GioHangs.FirstOrDefault(g => g.MaKhachHang == maKhachHang && g.MaDongHo == maDongHo);
+                if (gioHangItem != null)
+                {
+                    gioHangItem.SoLuong = newQuantity;
+                    gioHangItem.NgayThem = DateTime.Now;
                 }
                 else
                 {
-                    // Nếu đã có trong giỏ, cộng dồn và kiểm tra tổng số lượng có vượt kho không
-                    int newQuantity = cart[maDongHo] + soLuong;
-                    if (newQuantity <= dongHo.SoLuongTon)
-                    {
-                        cart[maDongHo] = newQuantity;
-                    }
-                    else
-                    {
-                        return Json(new { success = false, message = "Tổng số lượng trong giỏ hàng vượt quá tồn kho (Hiện có: " + dongHo.SoLuongTon + ")!" });
-                    }
+                    db.GioHangs.Add(new GioHang { MaKhachHang = maKhachHang, MaDongHo = maDongHo, SoLuong = newQuantity, NgayThem = DateTime.Now });
                 }
 
-                Session["Cart"] = cart;
-                int totalQuantity = cart.Values.Sum();
-                return Json(new { success = true, message = "Đã thêm " + soLuong + " sản phẩm vào giỏ hàng!", cartCount = totalQuantity });
+                db.SaveChanges();
+                return Json(new { success = true, message = "Đã thêm vào giỏ hàng!", cartCount = cart.Values.Sum() });
             }
             catch (Exception ex)
             {
@@ -147,6 +148,14 @@ namespace Project_65131134.Areas.Shop.Controllers
             }
         }
 
+        [HttpGet]
+        public JsonResult GetCartCount()
+        {
+            var cart = Session["Cart"] as Dictionary<string, int> ?? new Dictionary<string, int>();
+            return Json(new { cartCount = cart.Values.Sum() }, JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: Shop/Home_65131134/ChiTiet/id
         public ActionResult ChiTiet(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -168,14 +177,6 @@ namespace Project_65131134.Areas.Shop.Controllers
             }
 
             return View(dongHo);
-        }
-
-        [HttpGet]
-        public JsonResult GetCartCount()
-        {
-            var cart = Session["Cart"] as Dictionary<string, int> ?? new Dictionary<string, int>();
-            int totalQuantity = cart.Values.Sum();
-            return Json(new { cartCount = totalQuantity }, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

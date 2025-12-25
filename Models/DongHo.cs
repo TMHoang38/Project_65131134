@@ -19,6 +19,7 @@ namespace Project_65131134.Models
         {
             this.ChiTietDatHang = new HashSet<ChiTietDatHang>();
             this.DongHoThuocTinh = new HashSet<DongHoThuocTinh>();
+            this.GioHangs = new HashSet<GioHang>();
         }
     
         public string MaDongHo { get; set; }
@@ -47,5 +48,7 @@ namespace Project_65131134.Models
         public virtual ICollection<DongHoThuocTinh> DongHoThuocTinh { get; set; }
         public virtual ChatLieuDay ChatLieuDay { get; set; }
         public virtual ChatLieuVo ChatLieuVo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GioHang> GioHangs { get; set; }
     }
 }

@@ -5,6 +5,7 @@
     Layout = "~/Areas/Shop/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
 <section class="py-0 bg-black position-relative" id="header">
     <div class="bg-holder hero-overlay" style="background-image:url(@Url.Content("~/assets/img/gallery/header-bg.png"));background-position:right center;background-size:contain;"></div>
     <div class="container">
@@ -26,40 +27,23 @@
 </section>
 
 <section class="bg-black py-8 pt-0" id="store">
-    <div class="bg-holder" style="background-image:url(@Url.Content("~/assets/img/gallery/store-bg.png")); background-position:left bottom; background-size:contain;">
-    </div>
-    <!--/.bg-holder-->
-
+    <div class="bg-holder" style="background-image:url(@Url.Content("~/assets/img/gallery/store-bg.png")); background-position:left bottom; background-size:contain;"></div>
     <div class="container-lg">
         <div class="row flex-center">
-            <div class="col-6 order-md-0 text-center text-md-start"></div>
             <div class="col-sm-10 col-md-6 col-lg-6 text-center text-md-start">
-                <div class="col-4 position-relative ms-auto py-5"><a class="carousel-control-prev carousel-icon z-index-2" href="#carouselExampleFade" role="button" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span></a><a class="carousel-control-next carousel-icon z-index-2" href="#carouselExampleFade" role="button" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span></a></div>
+                <div class="col-4 position-relative ms-auto py-5">
+                    <a class="carousel-control-prev carousel-icon z-index-2" href="#carouselExampleFade" role="button" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span></a>
+                    <a class="carousel-control-next carousel-icon z-index-2" href="#carouselExampleFade" role="button" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span></a>
+                </div>
                 <div class="carousel slide carousel-fade" id="carouselExampleFade" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <div class="row h-100">
-                                <div class="col-12">
-                                    <h5 class="fs-3 fs-lg-5 lh-sm text-uppercase">Our store</h5>
-                                    <p class="my-4 pe-xl-5">Memphis clinched a spot in the play-in tournament with the victory, but the fight for seeding continues. The race for the No. 8 spot in the West -- and the safety net of having to win just one of two games to make the playoffs -- could come down to the regular seasons final day, when Memphis and Golden State meet. The good thing for the Grizzlies is they dont have to leave home until that matchup as they have games against Dallas and two against Sacramento before the finale.</p>
-                                </div>
-                            </div>
+                            <h5 class="fs-3 fs-lg-5 lh-sm text-uppercase text-white">Chất lượng đỉnh cao</h5>
+                            <p class="text-light opacity-75 my-4 pe-xl-5">Mỗi chiếc đồng hồ là một kiệt tác nghệ thuật, được kiểm định khắt khe trước khi đến tay khách hàng.</p>
                         </div>
                         <div class="carousel-item">
-                            <div class="row h-100">
-                                <div class="col-12">
-                                    <h5 class="fs-3 fs-lg-5 lh-sm text-uppercase">Our store</h5>
-                                    <p class="my-4 pe-xl-5">Memphis clinched a spot in the play-in tournament with the victory, but the fight for seeding continues. The race for the No. 8 spot in the West -- and the safety net of having to win just one of two games to make the playoffs -- could come down to the regular seasons final day, when Memphis and Golden State meet. The good thing for the Grizzlies is they dont have to leave home until that matchup as they have games against Dallas and two against Sacramento before the finale.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="row h-100">
-                                <div class="col-12">
-                                    <h5 class="fs-3 fs-lg-5 lh-sm text-uppercase">Our store</h5>
-                                    <p class="my-4 pe-xl-5">Memphis clinched a spot in the play-in tournament with the victory, but the fight for seeding continues. The race for the No. 8 spot in the West -- and the safety net of having to win just one of two games to make the playoffs -- could come down to the regular seasons final day, when Memphis and Golden State meet. The good thing for the Grizzlies is they dont have to leave home until that matchup as they have games against Dallas and two against Sacramento before the finale.</p>
-                                </div>
-                            </div>
+                            <h5 class="fs-3 fs-lg-5 lh-sm text-uppercase text-white">Dịch vụ tận tâm</h5>
+                            <p class="text-light opacity-75 my-4 pe-xl-5">Bảo hành chính hãng toàn cầu lên đến 5 năm cùng dịch vụ thay pin miễn phí trọn đời.</p>
                         </div>
                     </div>
                 </div>
@@ -77,8 +61,9 @@
 
         <div class="filter-wrapper shadow-lg p-4 bg-white">
             <form id="filterForm" method="get" action="@Url.Action("Index", "Home_65131134")" class="row g-3">
+                <input type="hidden" name="page" id="currentPage" value="1" />
                 <div class="col-md-auto">
-                    <button type="button" id="btnReset" class="btn btn-dark w-100 h-100">Tất cả</button>
+                    <button type="button" id="btnReset" class="btn btn-dark w-100 h-100 px-4">Tất cả</button>
                 </div>
                 <div class="col-md-3">
                     <div class="input-group">
@@ -95,21 +80,21 @@
                         <option value="lt5" @(ViewBag.PriceRange == "lt5" ? "selected" : "")>Dưới 5 triệu</option>
                         <option value="5to10" @(ViewBag.PriceRange == "5to10" ? "selected" : "")>5 - 10 triệu</option>
                         <option value="10to50" @(ViewBag.PriceRange == "10to50" ? "selected" : "")>10 - 50 triệu</option>
-                        <option value="50to100" @(ViewBag.PriceRange == "50to100" ? "selected" : "")>50 - 100 triệu</option>
                         <option value="gt100" @(ViewBag.PriceRange == "gt100" ? "selected" : "")>Trên 100 triệu</option>
                     </select>
                 </div>
                 <div class="col-md-auto">
-                    <button class="btn btn-gold w-100 fw-bold p-2 h-100 w-200 px-4" type="submit">TÌM KIẾM</button>
+                    <button class="btn btn-gold w-100 fw-bold px-4 h-100" type="submit">TÌM KIẾM</button>
                 </div>
             </form>
         </div>
 
-        <div class="row" id="productsGrid">
+        <div class="row mt-5" id="productsGrid">
             @Html.Partial("_DongHoListPartial", Model)
         </div>
     </div>
 </section>
+
 <style>
     :root {
         --gold: #C5A059;
@@ -118,39 +103,19 @@
         --soft-white: #f8f9fa;
     }
 
-    /* General Refinements */
     .text-gold {
         color: var(--gold) !important;
-    }
-
-    .tracking-widest {
-        letter-spacing: 0.2em;
     }
 
     .bg-soft-white {
         background-color: var(--soft-white);
     }
 
-    .gold-divider {
-        width: 60px;
-        height: 3px;
-        background-color: var(--gold);
-        transition: width 0.3s ease;
-    }
-
-    /* Hero Section */
-    .hero-overlay {
-        filter: brightness(0.6);
-    }
-
-    /* Buttons */
     .btn-gold {
         background-color: var(--gold);
         color: white;
         border: none;
         transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 1px;
     }
 
         .btn-gold:hover {
@@ -163,7 +128,6 @@
         border: 1px solid var(--gold);
         color: var(--gold);
         background: transparent;
-        text-transform: uppercase;
     }
 
         .btn-gold-outline:hover {
@@ -171,56 +135,26 @@
             color: white;
         }
 
-    .btn-carousel {
-        background: transparent;
-        border: 1px solid var(--gold);
-        color: var(--gold);
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        transition: all 0.3s;
-    }
-
-        .btn-carousel:hover {
-            background: var(--gold);
-            color: white;
-        }
-
-    /* Form Styling */
     .filter-wrapper {
         border-radius: 15px;
         margin-top: -50px;
         position: relative;
         z-index: 10;
-        border: 1px solid rgba(0,0,0,0.05);
+        background: white;
     }
 
-    .custom-select, .form-control {
-        border: 1px solid #e0e0e0;
-        padding: 10px 15px;
-        font-size: 0.9rem;
-    }
-
-        .custom-select:focus, .form-control:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.15);
-        }
-
-    /* Product Cards (Assuming they are in the Partial) */
-    .product-card {
-        border: none !important;
-        background: #fff;
-        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .border-gold-left {
-        border-left: 5px solid var(--gold);
-        padding-left: 0;
-    }
-
-    /* Animation cho list sản phẩm khi load AJAX */
     #productsGrid {
         transition: opacity 0.4s ease;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--gold);
+        border-color: var(--gold);
+        color: white;
+    }
+
+    .pagination .page-link {
+        color: var(--black);
     }
 </style>
 
@@ -230,32 +164,42 @@
 
     <script>
         $(document).ready(function () {
-            // 1. Cấu hình thông báo Toast (hiện ở góc phải, tự ẩn sau 2.5s)
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 2500,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
+                timerProgressBar: true
             });
 
-            // 2. Hàm lọc sản phẩm AJAX (giữ nguyên của bạn)
-            function performFilter() {
-                var formData = $('#filterForm').serialize();
+            // Hàm lọc AJAX chính - Đã sửa lỗi tham số page
+            window.performFilter = function(pageNumber) {
+                // 1. Cập nhật giá trị vào input hidden
+                $('#currentPage').val(pageNumber);
+
+                // 2. Lấy dữ liệu từ form và thêm page vào
+                var formData = $('#filterForm').serializeArray();
+                // Xóa page cũ nếu có
+                formData = formData.filter(function(item) { return item.name !== 'page'; });
+                // Thêm page mới
+                formData.push({ name: 'page', value: pageNumber });
+                
                 var url = $('#filterForm').attr('action');
+
                 $('#productsGrid').css('opacity', '0.5');
 
                 $.ajax({
                     url: url,
                     type: 'GET',
-                    data: formData,
+                    data: $.param(formData), // Chuyển array thành query string
                     success: function (result) {
                         $('#productsGrid').html(result);
                         $('#productsGrid').css('opacity', '1');
+
+                        // Cuộn lên đầu danh sách
+                        $('html, body').animate({
+                            scrollTop: $("#collections").offset().top - 100
+                        }, 200);
                     },
                     error: function () {
                         Toast.fire({ icon: 'error', title: 'Không thể tải dữ liệu.' });
@@ -264,65 +208,50 @@
                 });
             }
 
+            // Sự kiện Submit Form (Tìm kiếm mới luôn về trang 1)
             $('#filterForm').on('submit', function (e) {
                 e.preventDefault();
-                performFilter();
+                performFilter(1);
             });
 
-            $('#btnReset').click(function() {
-                $('#searchTerm, #brandId, #priceRange').val('');
-                performFilter();
+            // Nút Reset
+            $('#btnReset').click(function () {
+                $('#searchTerm').val('');
+                $('#brandId').val('');
+                $('#priceRange').val('');
+                performFilter(1);
             });
 
-            // 3. XỬ LÝ THÊM GIỎ HÀNG (Dùng Delegation để không bị mất sự kiện khi chuyển trang)
-            $(document).off('click', '.add-to-cart-btn').on('click', '.add-to-cart-btn', function (e) {
+            // Thêm vào giỏ hàng
+            $(document).on('click', '.add-to-cart-btn', function (e) {
                 e.preventDefault();
                 var btn = $(this);
                 var maDongHo = btn.data('ma-dong-ho');
                 var tenDongHo = btn.data('ten-dong-ho') || "Sản phẩm";
 
-                btn.prop('disabled', true); // Chống spam click
-
+                btn.prop('disabled', true);
                 $.post('@Url.Action("AddToCart", "Home_65131134")', { maDongHo: maDongHo }, function (response) {
                     if (response.success) {
-                        // HIỆN THÔNG BÁO ĐẸP THAY CHO ALERT
                         Toast.fire({
                             icon: 'success',
                             title: 'Đã thêm vào giỏ hàng',
                             text: tenDongHo,
-                            iconColor: '#C5A059' // Màu vàng gold hợp với web của bạn
+                            iconColor: '#C5A059'
                         });
-
-                        // Cập nhật số lượng trên icon giỏ hàng (Badge)
-                        updateCartCount(response.cartCount);
+                        if (typeof updateCartCount === "function") updateCartCount(response.cartCount);
+                    } else if (response.requireLogin) {
+                        window.location.href = '@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })';
                     } else {
-                        if (response.requireLogin) {
-                            window.location.href = '@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })';
-                        } else {
-                            Swal.fire({ icon: 'warning', title: 'Thông báo', text: response.message });
-                        }
+                        Toast.fire({ icon: 'error', title: response.message });
                     }
-                }).always(function() {
-                    btn.prop('disabled', false);
-                });
+                }).always(() => btn.prop('disabled', false));
             });
-
-            // 4. Hàm cập nhật số lượng giỏ hàng trên Header
-            function updateCartCount(count) {
-                // Tìm đến cái badge số lượng của bạn (dựa theo ảnh là cái số đỏ trên icon giỏ hàng)
-                // Bạn hãy kiểm tra id hoặc class của thẻ chứa số 4 trong ảnh của bạn
-                var cartBadge = $('.cart-badge, #cartBadge, .badge-cart');
-                if(count > 0) {
-                    cartBadge.text(count).show();
-                } else {
-                    cartBadge.hide();
-                }
-            }
         });
 
-        // Hàm chuyển trang cho phân trang
-        function changePage(page) {
-             // ... giữ nguyên logic chuyển trang cũ của bạn nhưng đổi alert thành Toast.fire ...
+        function updateCartCount(count) {
+            var badge = $('.cart-badge, #cartBadge, .badge-cart');
+            if(count > 0) badge.text(count).show();
+            else badge.hide();
         }
     </script>
 }

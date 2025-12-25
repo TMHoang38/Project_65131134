@@ -121,10 +121,10 @@ grid.Column("Chức năng", style: "text-center", format: @<text>
     <div class="action-links">
         @{
             var currentStatus = item.TrangThaiDonHang ?? 0;
-            // Chỉ cho phép update nếu chưa thành công (4) và chưa hủy (5)
-            var canUpdate = currentStatus < 4 && currentStatus != 5 && currentStatus != 2;
-            // Cho phép hủy nếu chưa hủy (5) và chưa thành công (4)
-            var canCancel = currentStatus != 5 && currentStatus != 4;
+            // Nhân viên giao hàng: Chỉ có thể update từ 3->4 (Đang giao -> Hoàn thành)
+            var canUpdate = currentStatus == 3;
+            // Nhân viên giao hàng: Có thể hủy khi đang giao (3)
+            var canCancel = currentStatus == 3;
         }
 
         @if (canUpdate)
@@ -134,8 +134,8 @@ grid.Column("Chức năng", style: "text-center", format: @<text>
                data-current-status="@(item.TrangThaiDonHang ?? 0)"
                data-bs-toggle="modal"
                data-bs-target="#confirmUpdateModal"
-               title="Chuyển trạng thái">
-                <img src="@Url.Content("~/Images/check.png")" width="24" height="24" alt="Duyệt" />
+               title="Xác nhận hoàn thành">
+                <img src="@Url.Content("~/Images/check.png")" width="24" height="24" alt="Hoàn thành" />
             </a>
         }
 
@@ -219,9 +219,7 @@ grid.Column("Chức năng", style: "text-center", format: @<text>
             console.log("Đã chọn đơn: " + currentOrderId + " - Trạng thái cũ: " + currentStatusVal);
 
             var message = "Bạn có chắc chắn muốn cập nhật trạng thái?";
-            if (currentStatusVal === 0) message = "Xác nhận <b>DUYỆT ĐƠN</b> này?<br>(Chuyển sang: Chuẩn bị hàng)";
-            else if (currentStatusVal === 1) message = "Đã <b>CHUẨN BỊ XONG</b> đơn này?<br>(Chuyển sang: Đang giao)";
-            else if (currentStatusVal === 3) message = "Đã <b>GIAO THÀNH CÔNG</b>?<br>(Chuyển sang: Hoàn thành)";
+            if (currentStatusVal === 3) message = "Xác nhận <b>GIAO HÀNG THÀNH CÔNG</b>?<br>(Chuyển sang: Hoàn thành)";
 
             $('#modalUpdateMessage').html(message);
         });
@@ -248,11 +246,9 @@ grid.Column("Chức năng", style: "text-center", format: @<text>
                             if (bsModal) bsModal.hide();
                         }
 
-                        // Tính toán trạng thái tiếp theo để chuyển tab
+                        // Tính toán trạng thái tiếp theo để chuyển tab (NV Giao hàng: chỉ 3->4)
                         var nextStatus = -1;
-                        if (currentStatusVal === 0) nextStatus = 1;
-                        else if (currentStatusVal === 1) nextStatus = 3;
-                        else if (currentStatusVal === 3) nextStatus = 4;
+                        if (currentStatusVal === 3) nextStatus = 4;  // Đang giao -> Hoàn thành
 
                         if (nextStatus !== -1) {
                             var baseUrl = '@Url.Action("Index", "DonHang_65131134", new { Area = "NhanVienGiaoHang" })';

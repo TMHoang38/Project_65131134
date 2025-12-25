@@ -13,8 +13,93 @@ namespace Project_65131134.Areas.Shop.Controllers
     {
         private CuaHangDongHo_65131134Entities db = new CuaHangDongHo_65131134Entities();
 
+        // Load giỏ hàng từ database vào Session
+        private void LoadCartFromDatabase()
+        {
+            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
+                return;
+
+            var maKhachHang = AuthenticationHelper.GetUserId();
+            if (string.IsNullOrEmpty(maKhachHang))
+                return;
+
+            var gioHangDB = db.GioHangs
+                .Where(g => g.MaKhachHang == maKhachHang)
+                .ToList();
+
+            var cart = new Dictionary<string, int>();
+            foreach (var item in gioHangDB)
+            {
+                cart[item.MaDongHo] = item.SoLuong;
+            }
+
+            Session["Cart"] = cart;
+        }
+
+        // Lưu giỏ hàng từ Session vào database
+        private void SaveCartToDatabase()
+        {
+            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
+                return;
+
+            var maKhachHang = AuthenticationHelper.GetUserId();
+            if (string.IsNullOrEmpty(maKhachHang))
+                return;
+
+            var cart = Session["Cart"] as Dictionary<string, int> ?? new Dictionary<string, int>();
+
+            // Xóa tất cả giỏ hàng cũ của khách hàng
+            var oldCart = db.GioHangs.Where(g => g.MaKhachHang == maKhachHang).ToList();
+            db.GioHangs.RemoveRange(oldCart);
+
+            // Thêm giỏ hàng mới
+            foreach (var item in cart)
+            {
+                if (item.Value > 0)
+                {
+                    var gioHang = new GioHang
+                    {
+                        MaKhachHang = maKhachHang,
+                        MaDongHo = item.Key,
+                        SoLuong = item.Value,
+                        NgayThem = DateTime.Now
+                    };
+                    db.GioHangs.Add(gioHang);
+                }
+            }
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Ignore errors để không làm gián đoạn flow
+            }
+        }
+
+        // Đồng bộ giữa Session và Database
+        private void SyncCart()
+        {
+            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
+                return;
+
+            var cart = Session["Cart"] as Dictionary<string, int>;
+            if (cart == null)
+            {
+                LoadCartFromDatabase();
+            }
+            else
+            {
+                SaveCartToDatabase();
+            }
+        }
+
         private CartViewModel BuildCartViewModel()
         {
+            // Đồng bộ giỏ hàng trước khi build
+            SyncCart();
+
             var cart = Session["Cart"] as Dictionary<string, int> ?? new Dictionary<string, int>();
             var vm = new CartViewModel();
 
@@ -56,6 +141,12 @@ namespace Project_65131134.Areas.Shop.Controllers
         [HttpPost]
         public ActionResult CapNhatSoLuong(string id, int quantity)
         {
+            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
+            {
+                return Json(new { success = false, message = "Vui lòng đăng nhập!" });
+            }
+
+            SyncCart();
             var cart = Session["Cart"] as Dictionary<string, int> ?? new Dictionary<string, int>();
 
             if (cart.ContainsKey(id))
@@ -65,6 +156,7 @@ namespace Project_65131134.Areas.Shop.Controllers
             }
 
             Session["Cart"] = cart;
+            SaveCartToDatabase();
 
             var vm = BuildCartViewModel();
             var updatedItem = vm.Items.FirstOrDefault(x => x.SanPham.MaDongHo == id);
@@ -78,10 +170,15 @@ namespace Project_65131134.Areas.Shop.Controllers
             });
         }
 
-        // --- MỚI: XÓA SẢN PHẨM KHỎI GIỎ HÀNG ---
         [HttpPost]
         public ActionResult XoaKhoiGioHang(string id)
         {
+            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
+            {
+                return Json(new { success = false, message = "Vui lòng đăng nhập!" });
+            }
+
+            SyncCart();
             var cart = Session["Cart"] as Dictionary<string, int> ?? new Dictionary<string, int>();
 
             if (cart.ContainsKey(id))
@@ -90,6 +187,7 @@ namespace Project_65131134.Areas.Shop.Controllers
             }
 
             Session["Cart"] = cart;
+            SaveCartToDatabase();
 
             var vm = BuildCartViewModel();
             var fmt = new System.Globalization.CultureInfo("vi-VN");
@@ -99,6 +197,78 @@ namespace Project_65131134.Areas.Shop.Controllers
                 success = true,
                 grandTotal = vm.TongTien.ToString("N0", fmt) + " đ"
             });
+        }
+
+        // GET: Shop/KhachHang_65131134/BuyNow - Đặt mua ngay
+        public ActionResult BuyNow(string maDongHo, int soLuong = 1)
+        {
+            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
+            {
+                return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
+            }
+
+            if (string.IsNullOrEmpty(maDongHo))
+            {
+                TempData["ErrorMessage"] = "Mã sản phẩm không hợp lệ.";
+                return RedirectToAction("Index", "Home_65131134", new { area = "Shop" });
+            }
+
+            var dongHo = db.DongHo.Find(maDongHo);
+            if (dongHo == null)
+            {
+                TempData["ErrorMessage"] = "Sản phẩm không tồn tại.";
+                return RedirectToAction("Index", "Home_65131134", new { area = "Shop" });
+            }
+
+            if (dongHo.SoLuongTon <= 0)
+            {
+                TempData["ErrorMessage"] = "Sản phẩm đã hết hàng.";
+                return RedirectToAction("ChiTiet", "Home_65131134", new { area = "Shop", id = maDongHo });
+            }
+
+            if (soLuong < 1) soLuong = 1;
+            if (soLuong > dongHo.SoLuongTon)
+            {
+                TempData["ErrorMessage"] = "Số lượng vượt quá tồn kho (Hiện có: " + dongHo.SoLuongTon + ").";
+                return RedirectToAction("ChiTiet", "Home_65131134", new { area = "Shop", id = maDongHo });
+            }
+
+            var maKhachHang = AuthenticationHelper.GetUserId();
+            
+            // Tạo giỏ hàng tạm thời chỉ chứa sản phẩm này với số lượng đã chọn
+            var tempCart = new Dictionary<string, int>();
+            tempCart[maDongHo] = soLuong;
+            Session["Cart"] = tempCart;
+
+            // Lưu vào database để đảm bảo đồng bộ
+            var gioHangItem = db.GioHangs.FirstOrDefault(g => g.MaKhachHang == maKhachHang && g.MaDongHo == maDongHo);
+            if (gioHangItem != null)
+            {
+                gioHangItem.SoLuong = soLuong;
+                gioHangItem.NgayThem = DateTime.Now;
+            }
+            else
+            {
+                db.GioHangs.Add(new GioHang 
+                { 
+                    MaKhachHang = maKhachHang, 
+                    MaDongHo = maDongHo, 
+                    SoLuong = soLuong, 
+                    NgayThem = DateTime.Now 
+                });
+            }
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Ignore errors
+            }
+
+            // Chuyển đến trang thanh toán
+            return RedirectToAction("ThanhToan");
         }
 
         public ActionResult ThanhToan()
@@ -217,6 +387,13 @@ namespace Project_65131134.Areas.Shop.Controllers
                 }
 
                 db.SaveChanges();
+
+                // Xóa giỏ hàng sau khi đặt hàng thành công
+                // ĐÃ SỬA: Bỏ dòng khai báo maKhachHang dư thừa tại đây (Lỗi CS0136)
+                var gioHangItems = db.GioHangs.Where(g => g.MaKhachHang == maKhachHang).ToList();
+                db.GioHangs.RemoveRange(gioHangItems);
+                db.SaveChanges();
+
                 Session["Cart"] = new Dictionary<string, int>();
                 TempData["SuccessMessage"] = "Đặt hàng thành công!";
                 return RedirectToAction("DonHangCuaToi");

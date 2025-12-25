@@ -276,39 +276,46 @@
         });
     });
 
-    // 3. Hàm chuyển trang AJAX cũ
+    // 3. Hàm chuyển trang - Gọi hàm performFilter từ parent page
     function changePage(page) {
-        if (page < 1 || page > @Model.TotalPages) return;
-
-        var searchTerm = $('#searchTerm').val() || '';
-        var brandId = $('#brandId').val() || '';
-        var priceRange = $('#priceRange').val() || '';
-
-        $('#productsGrid').css('opacity', '0.5');
-
-        $.ajax({
-            url: '@Url.Action("Index", "Home_65131134")',
-            type: 'GET',
-            data: {
-                page: page,
-                searchTerm: searchTerm,
-                brandId: brandId,
-                priceRange: priceRange
-            },
-            success: function (result) {
-                $('#productsGrid').html(result);
-                $('#productsGrid').css('opacity', '1');
-                $('html, body').animate({
-                    scrollTop: $("#productsGrid").offset().top - 100
-                }, 400);
-            },
-            error: function () {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Không thể tải dữ liệu.'
-                });
-                $('#productsGrid').css('opacity', '1');
-            }
-        });
+        var totalPages = parseInt('@Model.TotalPages') || 1;
+        if (page < 1 || page > totalPages) return;
+        
+        // Gọi hàm performFilter từ Index.cshtml nếu có, nếu không thì tự xử lý
+        if (typeof window.performFilter === 'function') {
+            window.performFilter(page);
+        } else {
+            // Fallback: tự xử lý nếu hàm performFilter không tồn tại
+            var searchTerm = $('#searchTerm').val() || '';
+            var brandId = $('#brandId').val() || '';
+            var priceRange = $('#priceRange').val() || '';
+            
+            $('#productsGrid').css('opacity', '0.5');
+            
+            $.ajax({
+                url: '@Url.Action("Index", "Home_65131134", new { area = "Shop" })',
+                type: 'GET',
+                data: {
+                    page: page,
+                    searchTerm: searchTerm,
+                    brandId: brandId,
+                    priceRange: priceRange
+                },
+                success: function (result) {
+                    $('#productsGrid').html(result);
+                    $('#productsGrid').css('opacity', '1');
+                    $('html, body').animate({
+                        scrollTop: $("#collections").offset().top - 100
+                    }, 400);
+                },
+                error: function () {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Không thể tải dữ liệu.'
+                    });
+                    $('#productsGrid').css('opacity', '1');
+                }
+            });
+        }
     }
 </script>

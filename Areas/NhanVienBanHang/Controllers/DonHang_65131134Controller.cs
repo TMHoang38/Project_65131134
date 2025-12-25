@@ -56,18 +56,19 @@ namespace Project_65131134.Areas.NhanVienBanHang.Controllers
             return View(datHang);
         }
 
-        // POST: Admin/DonHang_65131134/UpdateStatus
-        // Logic: 0 (Chờ duyệt) -> 1 (Chuẩn bị) -> 3 (Đang giao) -> 4 (Thành công)
+        // POST: NhanVienBanHang/DonHang_65131134/UpdateStatus
+        // Logic: Nhân viên bán hàng chỉ có thể:
+        // - 0 (Chờ xác nhận) -> 1 (Chuẩn bị hàng)
+        // - 1 (Chuẩn bị hàng) -> 3 (Đang giao)
         [HttpPost]
         public ActionResult UpdateStatus(string id)
         {
             return DonHangWorkflowHelper.UpdateStatus(this, db, id, (d) =>
             {
                 var current = d.TrangThaiDonHang ?? 0;
-                if (current == 0) return 1;
-                if (current == 1) return 3;
-                if (current == 3) return 4;
-                return (int?)null;
+                if (current == 0) return 1; // Chờ xác nhận -> Chuẩn bị hàng
+                if (current == 1) return 3;  // Chuẩn bị hàng -> Đang giao
+                return (int?)null; // Không cho phép chuyển trạng thái khác
             });
         }
 

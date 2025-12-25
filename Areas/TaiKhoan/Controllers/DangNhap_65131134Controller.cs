@@ -61,6 +61,18 @@ namespace Project_65131134.Areas.TaiKhoan.Controllers
                 // Đăng nhập thành công cho khách hàng
                 AuthenticationHelper.LoginKhachHang(khachHang);
                 
+                // Load giỏ hàng từ database vào Session
+                var gioHangDB = db.GioHangs
+                    .Where(g => g.MaKhachHang == khachHang.MaKhachHang)
+                    .ToList();
+                
+                var cart = new Dictionary<string, int>();
+                foreach (var item in gioHangDB)
+                {
+                    cart[item.MaDongHo] = item.SoLuong;
+                }
+                Session["Cart"] = cart;
+                
                 // Chuyển đến trang shop cho khách hàng
                 return RedirectToAction("Index", "Home_65131134", new { area = "Shop" });
             }
