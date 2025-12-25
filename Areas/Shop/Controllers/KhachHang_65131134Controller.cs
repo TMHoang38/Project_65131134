@@ -13,9 +13,6 @@ namespace Project_65131134.Areas.Shop.Controllers
     {
         private CuaHangDongHo_65131134Entities db = new CuaHangDongHo_65131134Entities();
 
-        /// <summary>
-        /// Lấy giỏ hàng từ session và map sang view model
-        /// </summary>
         private CartViewModel BuildCartViewModel()
         {
             var cart = Session["Cart"] as Dictionary<string, int> ?? new Dictionary<string, int>();
@@ -45,9 +42,6 @@ namespace Project_65131134.Areas.Shop.Controllers
             return vm;
         }
 
-        /// <summary>
-        /// Trang giỏ hàng
-        /// </summary>
         public ActionResult GioHang()
         {
             if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
@@ -59,9 +53,54 @@ namespace Project_65131134.Areas.Shop.Controllers
             return View(vm);
         }
 
-        /// <summary>
-        /// Trang thanh toán
-        /// </summary>
+        [HttpPost]
+        public ActionResult CapNhatSoLuong(string id, int quantity)
+        {
+            var cart = Session["Cart"] as Dictionary<string, int> ?? new Dictionary<string, int>();
+
+            if (cart.ContainsKey(id))
+            {
+                if (quantity < 1) quantity = 1;
+                cart[id] = quantity;
+            }
+
+            Session["Cart"] = cart;
+
+            var vm = BuildCartViewModel();
+            var updatedItem = vm.Items.FirstOrDefault(x => x.SanPham.MaDongHo == id);
+            var fmt = new System.Globalization.CultureInfo("vi-VN");
+
+            return Json(new
+            {
+                success = true,
+                itemTotal = updatedItem?.ThanhTien.ToString("N0", fmt) + " đ",
+                grandTotal = vm.TongTien.ToString("N0", fmt) + " đ"
+            });
+        }
+
+        // --- MỚI: XÓA SẢN PHẨM KHỎI GIỎ HÀNG ---
+        [HttpPost]
+        public ActionResult XoaKhoiGioHang(string id)
+        {
+            var cart = Session["Cart"] as Dictionary<string, int> ?? new Dictionary<string, int>();
+
+            if (cart.ContainsKey(id))
+            {
+                cart.Remove(id);
+            }
+
+            Session["Cart"] = cart;
+
+            var vm = BuildCartViewModel();
+            var fmt = new System.Globalization.CultureInfo("vi-VN");
+
+            return Json(new
+            {
+                success = true,
+                grandTotal = vm.TongTien.ToString("N0", fmt) + " đ"
+            });
+        }
+
         public ActionResult ThanhToan()
         {
             if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
@@ -96,18 +135,7 @@ namespace Project_65131134.Areas.Shop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ThanhToan(CheckoutViewModel model)
         {
-            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
-            {
-                return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
-            }
-
             var cartVm = BuildCartViewModel();
-            if (!cartVm.Items.Any())
-            {
-                TempData["ErrorMessage"] = "Giỏ hàng đang trống.";
-                return RedirectToAction("GioHang");
-            }
-
             if (!ModelState.IsValid)
             {
                 model.Items = cartVm.Items;
@@ -115,58 +143,127 @@ namespace Project_65131134.Areas.Shop.Controllers
                 return View(model);
             }
 
+            if (!cartVm.Items.Any())
+            {
+                TempData["ErrorMessage"] = "Giỏ hàng đang trống.";
+                return RedirectToAction("GioHang");
+            }
+
             var maKhachHang = AuthenticationHelper.GetUserId();
             var khachHang = db.KhachHang.Find(maKhachHang);
 
-            // Tạo mã đơn hàng đơn giản: DH + timestamp
-            var maDonHang = "DH" + DateTime.Now.ToString("yyyyMMddHHmmss");
-
-            var donHang = new DatHang
+            if (khachHang == null)
             {
-                MaDonHang = maDonHang,
-                MaKhachHang = maKhachHang,
-                NgayDatHang = DateTime.Now,
-                DiaChiGiaoHang = string.IsNullOrWhiteSpace(model.DiaChi) ? khachHang?.DiaChi : model.DiaChi,
-                TongTien = cartVm.TongTien,
-                TrangThaiDonHang = 0, // Chờ xác nhận
-                GhiChu = model.GhiChu
-            };
-
-            db.DatHang.Add(donHang);
-
-            foreach (var item in cartVm.Items)
-            {
-                var ct = new ChiTietDatHang
-                {
-                    MaChiTiet = Guid.NewGuid().ToString("N").Substring(0, 10),
-                    MaDonHang = maDonHang,
-                    MaDongHo = item.SanPham.MaDongHo,
-                    SoLuong = item.SoLuong,
-                    DonGia = item.SanPham.GiaBan,
-                    ThanhTien = item.ThanhTien
-                };
-                db.ChiTietDatHang.Add(ct);
-
-                // Trừ kho
-                var sp = db.DongHo.Find(item.SanPham.MaDongHo);
-                if (sp != null && sp.SoLuongTon.HasValue)
-                {
-                    sp.SoLuongTon -= item.SoLuong;
-                }
+                TempData["ErrorMessage"] = "Không tìm thấy thông tin khách hàng.";
+                return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
             }
 
-            db.SaveChanges();
+            string maDonHang;
+            int attempt = 0;
+            do
+            {
+                var randomSuffix = new Random().Next(1000, 9999).ToString();
+                var timePart = DateTime.Now.ToString("MMddHH");
+                maDonHang = "DH" + timePart.Substring(0, Math.Min(6, timePart.Length)) + randomSuffix.Substring(0, 2);
 
-            // Xóa giỏ hàng
-            Session["Cart"] = new Dictionary<string, int>();
+                if (maDonHang.Length > 10) maDonHang = maDonHang.Substring(0, 10);
 
-            TempData["SuccessMessage"] = "Đặt hàng thành công!";
-            return RedirectToAction("DonHangCuaToi");
+                attempt++;
+                if (attempt > 10)
+                {
+                    maDonHang = "DH" + DateTime.Now.Ticks.ToString().Substring(DateTime.Now.Ticks.ToString().Length - 8);
+                    break;
+                }
+            } while (db.DatHang.Any(d => d.MaDonHang == maDonHang));
+
+            var diaChiGiaoHang = string.IsNullOrWhiteSpace(model.DiaChi)
+                ? (string.IsNullOrWhiteSpace(khachHang.DiaChi) ? "Chưa cập nhật" : khachHang.DiaChi)
+                : model.DiaChi;
+
+            if (diaChiGiaoHang.Length > 200) diaChiGiaoHang = diaChiGiaoHang.Substring(0, 200);
+
+            var ghiChu = string.IsNullOrWhiteSpace(model.GhiChu)
+                ? null
+                : (model.GhiChu.Length > 500 ? model.GhiChu.Substring(0, 500) : model.GhiChu);
+
+            try
+            {
+                var donHang = new DatHang
+                {
+                    MaDonHang = maDonHang,
+                    MaKhachHang = maKhachHang,
+                    NgayDatHang = DateTime.Now,
+                    DiaChiGiaoHang = diaChiGiaoHang,
+                    TongTien = cartVm.TongTien,
+                    TrangThaiDonHang = 0,
+                    GhiChu = ghiChu
+                };
+
+                db.DatHang.Add(donHang);
+
+                foreach (var item in cartVm.Items)
+                {
+                    var maChiTiet = Guid.NewGuid().ToString("N").Substring(0, 10);
+                    var ct = new ChiTietDatHang
+                    {
+                        MaChiTiet = maChiTiet,
+                        MaDonHang = maDonHang,
+                        MaDongHo = item.SanPham.MaDongHo,
+                        SoLuong = item.SoLuong,
+                        DonGia = item.SanPham.GiaBan,
+                        ThanhTien = item.ThanhTien
+                    };
+                    db.ChiTietDatHang.Add(ct);
+                }
+
+                db.SaveChanges();
+                Session["Cart"] = new Dictionary<string, int>();
+                TempData["SuccessMessage"] = "Đặt hàng thành công!";
+                return RedirectToAction("DonHangCuaToi");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Có lỗi xảy ra: " + ex.Message;
+                model.Items = cartVm.Items;
+                model.TongTien = cartVm.TongTien;
+                return View(model);
+            }
         }
 
-        /// <summary>
-        /// Thông tin cá nhân khách hàng đang đăng nhập
-        /// </summary>
+        public ActionResult DonHangCuaToi()
+        {
+            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
+            {
+                return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
+            }
+
+            var maKhachHang = AuthenticationHelper.GetUserId();
+            var donHangs = db.DatHang
+                .Where(d => d.MaKhachHang == maKhachHang)
+                .OrderByDescending(d => d.NgayDatHang)
+                .ToList();
+            return View(donHangs);
+        }
+
+        public ActionResult ChiTietDonHang(string id)
+        {
+            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
+            {
+                return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
+            }
+
+            var maKhachHang = AuthenticationHelper.GetUserId();
+            var donHang = db.DatHang
+                .Include(d => d.KhachHang)
+                .Include("ChiTietDatHang")
+                .Include("ChiTietDatHang.DongHo")
+                .FirstOrDefault(d => d.MaDonHang == id && d.MaKhachHang == maKhachHang);
+
+            if (donHang == null) return RedirectToAction("DonHangCuaToi");
+
+            return View(donHang);
+        }
+
         public ActionResult ChinhSuaHoSo()
         {
             if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
@@ -176,175 +273,64 @@ namespace Project_65131134.Areas.Shop.Controllers
 
             var maKhachHang = AuthenticationHelper.GetUserId();
             var khachHang = db.KhachHang.Find(maKhachHang);
-            if (khachHang == null)
-            {
-                return RedirectToAction("Index", "Home_65131134");
-            }
-
             return View(khachHang);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChinhSuaHoSo([Bind(Include = "MaKhachHang,TenDangNhap,HoTen,Email,SoDienThoai,DiaChi")] KhachHang model)
+        public ActionResult ChinhSuaHoSo(KhachHang input)
         {
-            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
-            {
-                return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var khachHang = db.KhachHang.Find(model.MaKhachHang);
-            if (khachHang == null)
-            {
-                return RedirectToAction("Index", "Home_65131134");
-            }
-
-            khachHang.HoTen = model.HoTen;
-            khachHang.Email = model.Email;
-            khachHang.SoDienThoai = model.SoDienThoai;
-            khachHang.DiaChi = model.DiaChi;
-
-            db.Entry(khachHang).State = EntityState.Modified;
-            db.SaveChanges();
-
-            TempData["SuccessMessage"] = "Cập nhật thông tin cá nhân thành công!";
-            return RedirectToAction("ChinhSuaHoSo");
-        }
-
-        /// <summary>
-        /// Danh sách đơn hàng của khách hàng hiện tại
-        /// </summary>
-        public ActionResult DonHangCuaToi()
-        {
-            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
-            {
-                return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
-            }
-
             var maKhachHang = AuthenticationHelper.GetUserId();
+            var khachHang = db.KhachHang.Find(maKhachHang);
 
-            var donHangs = db.DatHang
-                .Include(d => d.ChiTietDatHang.Select(ct => ct.DongHo))
-                .Where(d => d.MaKhachHang == maKhachHang)
-                .OrderByDescending(d => d.NgayDatHang)
-                .ToList();
-
-            return View(donHangs);
-        }
-
-        /// <summary>
-        /// Chi tiết đơn hàng của khách hàng hiện tại
-        /// </summary>
-        public ActionResult ChiTietDonHang(string id)
-        {
-            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
+                khachHang.HoTen = input.HoTen;
+                khachHang.Email = input.Email;
+                khachHang.SoDienThoai = input.SoDienThoai;
+                khachHang.DiaChi = input.DiaChi;
+                db.SaveChanges();
+                TempData["SuccessMessage"] = "Cập nhật thành công.";
             }
-
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                TempData["ErrorMessage"] = "Không tìm thấy đơn hàng.";
-                return RedirectToAction("DonHangCuaToi");
-            }
-
-            var maKhachHang = AuthenticationHelper.GetUserId();
-
-            var donHang = db.DatHang
-                .Include(d => d.ChiTietDatHang.Select(ct => ct.DongHo))
-                .Include(d => d.KhachHang)
-                .Include(d => d.NhanVien)
-                .Include(d => d.NhanVien1)
-                .FirstOrDefault(d => d.MaDonHang == id && d.MaKhachHang == maKhachHang);
-
-            if (donHang == null)
-            {
-                TempData["ErrorMessage"] = "Không tìm thấy đơn hàng.";
-                return RedirectToAction("DonHangCuaToi");
-            }
-
-            return View(donHang);
+            return View(input);
         }
 
         public ActionResult DoiMatKhau()
         {
-            // 1. Kiểm tra đăng nhập
             if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
             {
                 return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
             }
-
-            return View();
+            return View(new DoiMatKhauViewModel());
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DoiMatKhau(DoiMatKhauViewModel model)
         {
-            // 1. Kiểm tra đăng nhập
-            if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
-            {
-                return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
-            }
-
-            // 2. Kiểm tra tính hợp lệ của dữ liệu nhập vào (Required, Compare, Length...)
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            // 3. Lấy thông tin khách hàng từ Database
             var maKhachHang = AuthenticationHelper.GetUserId();
             var khachHang = db.KhachHang.Find(maKhachHang);
 
-            if (khachHang == null)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "Home_65131134");
+                if (khachHang.MatKhau == model.MatKhauCu)
+                {
+                    khachHang.MatKhau = model.MatKhauMoi;
+                    db.SaveChanges();
+                    TempData["SuccessMessage"] = "Đổi mật khẩu thành công.";
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Mật khẩu cũ không đúng.");
+                }
             }
-
-            // 4. Kiểm tra mật khẩu cũ có đúng không
-            // Lưu ý: Nếu bạn có dùng mã hóa (MD5/SHA) thì phải mã hóa model.MatKhauCu trước khi so sánh
-            if (khachHang.MatKhau != model.MatKhauCu)
-            {
-                ModelState.AddModelError("MatKhauCu", "Mật khẩu hiện tại không đúng.");
-                return View(model);
-            }
-
-            // 5. Kiểm tra mật khẩu mới có trùng mật khẩu cũ không (Tùy chọn)
-            if (khachHang.MatKhau == model.MatKhauMoi)
-            {
-                ModelState.AddModelError("MatKhauMoi", "Mật khẩu mới không được trùng với mật khẩu cũ.");
-                return View(model);
-            }
-
-            // 6. Cập nhật mật khẩu mới và lưu vào Database
-            // Lưu ý: Nếu hệ thống dùng mã hóa, hãy mã hóa model.MatKhauMoi trước khi gán
-            khachHang.MatKhau = model.MatKhauMoi;
-
-            // Đánh dấu trường mật khẩu đã thay đổi
-            db.Entry(khachHang).Property(x => x.MatKhau).IsModified = true;
-            db.SaveChanges();
-
-            // 7. Thông báo thành công
-            TempData["SuccessMessage"] = "Đổi mật khẩu thành công!";
-            return RedirectToAction("ChinhSuaHoSo"); // Hoặc quay lại trang chủ
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            if (disposing) db.Dispose();
             base.Dispose(disposing);
         }
     }
 }
-
-

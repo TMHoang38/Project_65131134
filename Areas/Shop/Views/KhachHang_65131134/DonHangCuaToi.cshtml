@@ -174,10 +174,6 @@
                         <tbody>
                             @foreach (var don in Model)
                             {
-                                var tongTien = don.ChiTietDatHang != null
-                                    ? don.ChiTietDatHang.Sum(ct => ct.SoLuong * ct.DonGia)
-                                    : 0;
-
                                 <tr>
                                     <td>
                                         <span class="order-id">#@don.MaDonHang</span>
@@ -187,7 +183,7 @@
                                         <small class="text-muted">@(don.NgayDatHang.HasValue ? don.NgayDatHang.Value.ToString("HH:mm") : "")</small>
                                     </td>
                                     <td>
-                                        <span class="price-text">@tongTien.ToString("N0") <small>₫</small></span>
+                                        <span class="price-text">@don.TongTien.ToString("N0") <small>₫</small></span>
                                     </td>
                                     <td>
                                         @switch (don.TrangThaiDonHang)

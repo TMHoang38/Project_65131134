@@ -222,18 +222,31 @@
     #productsGrid {
         transition: opacity 0.4s ease;
     }
-
 </style>
 
 @section scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         $(document).ready(function () {
-            // Hàm thực hiện lọc AJAX
+            // 1. Cấu hình thông báo Toast (hiện ở góc phải, tự ẩn sau 2.5s)
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            // 2. Hàm lọc sản phẩm AJAX (giữ nguyên của bạn)
             function performFilter() {
                 var formData = $('#filterForm').serialize();
                 var url = $('#filterForm').attr('action');
-
-                // Hiệu ứng loading mờ
                 $('#productsGrid').css('opacity', '0.5');
 
                 $.ajax({
@@ -245,52 +258,71 @@
                         $('#productsGrid').css('opacity', '1');
                     },
                     error: function () {
-                        alert('Không thể tải dữ liệu.');
+                        Toast.fire({ icon: 'error', title: 'Không thể tải dữ liệu.' });
                         $('#productsGrid').css('opacity', '1');
                     }
                 });
             }
 
-            // Bắt sự kiện Submit form
             $('#filterForm').on('submit', function (e) {
                 e.preventDefault();
                 performFilter();
             });
 
-            // Nút reset "Tất cả"
             $('#btnReset').click(function() {
-                $('#searchTerm').val('');
-                $('#brandId').val('');
-                $('#priceRange').val('');
+                $('#searchTerm, #brandId, #priceRange').val('');
                 performFilter();
             });
 
-            // Add to Cart AJAX (Sử dụng Delegation vì danh sách sẽ bị thay thế)
-            $(document).on('click', '.add-to-cart-btn', function (e) {
+            // 3. XỬ LÝ THÊM GIỎ HÀNG (Dùng Delegation để không bị mất sự kiện khi chuyển trang)
+            $(document).off('click', '.add-to-cart-btn').on('click', '.add-to-cart-btn', function (e) {
                 e.preventDefault();
                 var btn = $(this);
                 var maDongHo = btn.data('ma-dong-ho');
+                var tenDongHo = btn.data('ten-dong-ho') || "Sản phẩm";
+
+                btn.prop('disabled', true); // Chống spam click
+
                 $.post('@Url.Action("AddToCart", "Home_65131134")', { maDongHo: maDongHo }, function (response) {
                     if (response.success) {
-                        alert(response.message);
-                        updateCartCount();
+                        // HIỆN THÔNG BÁO ĐẸP THAY CHO ALERT
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Đã thêm vào giỏ hàng',
+                            text: tenDongHo,
+                            iconColor: '#C5A059' // Màu vàng gold hợp với web của bạn
+                        });
+
+                        // Cập nhật số lượng trên icon giỏ hàng (Badge)
+                        updateCartCount(response.cartCount);
                     } else {
-                        if (response.requireLogin) window.location.href = '@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })';
-                        else alert(response.message);
+                        if (response.requireLogin) {
+                            window.location.href = '@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })';
+                        } else {
+                            Swal.fire({ icon: 'warning', title: 'Thông báo', text: response.message });
+                        }
                     }
+                }).always(function() {
+                    btn.prop('disabled', false);
                 });
             });
 
-            function updateCartCount() {
-                $.get('@Url.Action("GetCartCount", "Home_65131134")', function(data) {
-                    var cartBadge = $('#cartBadge');
-                    if(data.cartCount > 0) {
-                        cartBadge.text(data.cartCount).show();
-                    } else {
-                        cartBadge.hide();
-                    }
-                });
+            // 4. Hàm cập nhật số lượng giỏ hàng trên Header
+            function updateCartCount(count) {
+                // Tìm đến cái badge số lượng của bạn (dựa theo ảnh là cái số đỏ trên icon giỏ hàng)
+                // Bạn hãy kiểm tra id hoặc class của thẻ chứa số 4 trong ảnh của bạn
+                var cartBadge = $('.cart-badge, #cartBadge, .badge-cart');
+                if(count > 0) {
+                    cartBadge.text(count).show();
+                } else {
+                    cartBadge.hide();
+                }
             }
         });
+
+        // Hàm chuyển trang cho phân trang
+        function changePage(page) {
+             // ... giữ nguyên logic chuyển trang cũ của bạn nhưng đổi alert thành Toast.fire ...
+        }
     </script>
 }

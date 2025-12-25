@@ -10,6 +10,22 @@
     <div class="container">
         <h3 class="fw-bold mb-4 text-uppercase">Thanh toán</h3>
 
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         @if (Model == null || !Model.Items.Any())
         {
             <div class="alert alert-info">Giỏ hàng trống. Vui lòng quay lại giỏ hàng.</div>
@@ -23,29 +39,34 @@
                 <div class="col-lg-7">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="fw-bold mb-3">Địa chỉ thanh toán</h5>
+                            <h5 class="fw-bold mb-3 text-black">Địa chỉ thanh toán</h5>
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Họ và tên</label>
+                                    <label class="form-label fw-bold  text-black">Họ và tên</label>
                                     @Html.TextBoxFor(m => m.HoTen, new { @class = "form-control", placeholder = "Họ tên người nhận" })
+                                    @Html.ValidationMessageFor(m => m.HoTen, "", new { @class = "text-danger small" })
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Số điện thoại</label>
+                                    <label class="form-label fw-bold  text-black">Số điện thoại</label>
                                     @Html.TextBoxFor(m => m.SoDienThoai, new { @class = "form-control", placeholder = "Số điện thoại" })
+                                    @Html.ValidationMessageFor(m => m.SoDienThoai, "", new { @class = "text-danger small" })
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Email</label>
+                                    <label class="form-label fw-bold  text-black">Email</label>
                                     @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
+                                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Địa chỉ giao hàng</label>
-                                    @Html.TextBoxFor(m => m.DiaChi, new { @class = "form-control", placeholder = "Địa chỉ giao hàng" })
+                                    <label class="form-label fw-bold text-black">Địa chỉ giao hàng <span class="text-danger">*</span></label>
+                                    @Html.TextBoxFor(m => m.DiaChi, new { @class = "form-control", placeholder = "Địa chỉ giao hàng", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.DiaChi, "", new { @class = "text-danger small" })
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Ghi chú</label>
+                                <label class="form-label fw-bold text-black">Ghi chú</label>
                                 @Html.TextAreaFor(m => m.GhiChu, new { @class = "form-control", rows = 3, placeholder = "Ghi chú cho đơn hàng (không bắt buộc)" })
                             </div>
                         </div>
@@ -55,7 +76,7 @@
                 <div class="col-lg-5">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="fw-bold mb-3">Tổng đơn hàng</h5>
+                            <h5 class="fw-bold mb-3 text-black">Tổng đơn hàng</h5>
                             <ul class="list-unstyled mb-3">
                                 @foreach (var item in Model.Items)
                                 {
@@ -66,8 +87,8 @@
                                 }
                             </ul>
                             <div class="d-flex justify-content-between align-items-center border-top pt-3 mb-3">
-                                <span class="fw-bold">Tổng thanh toán:</span>
-                                <span class="fw-bold text-danger fs-5">@Model.TongTien.ToString("N0", fmt) đ</span>
+                                <span class="fw-bold text-black">Tổng thanh toán:</span>
+                                <span class="fw-bold text-danger fs-3">@Model.TongTien.ToString("N0", fmt) đ</span>
                             </div>
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-warning fw-bold">Đặt hàng</button>

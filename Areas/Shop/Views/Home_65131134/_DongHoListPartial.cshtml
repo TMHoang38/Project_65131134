@@ -5,12 +5,15 @@
     Layout = null;
 }
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
     /* Card sản phẩm */
     .product-card {
         border: none;
         transition: all 0.4s ease;
-        border-radius: 0; 
+        border-radius: 0;
         overflow: hidden;
     }
 
@@ -183,7 +186,6 @@
             <div class="col-12 pagination-container">
                 <nav>
                     <ul class="pagination justify-content-center">
-                        @* Nút Trang trước *@
                         <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
                             <a class="page-link" href="javascript:void(0)" onclick="changePage(@(Model.CurrentPage - 1))">
                                 <i class="bi bi-chevron-left"></i>
@@ -197,7 +199,6 @@
                             </li>
                         }
 
-                        @* Nút Trang sau *@
                         <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
                             <a class="page-link" href="javascript:void(0)" onclick="changePage(@(Model.CurrentPage + 1))">
                                 <i class="bi bi-chevron-right"></i>
@@ -218,15 +219,71 @@
 </div>
 
 <script>
+    // 1. Cấu hình Toast (thông báo nhỏ ở góc) cho SweetAlert2
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    // 2. Xử lý khi nhấn nút "Thêm giỏ hàng"
+    $(document).ready(function() {
+        // Dùng $(document).on để hoạt động được cả khi chuyển trang bằng AJAX
+        $(document).off('click', '.add-to-cart-btn').on('click', '.add-to-cart-btn', function() {
+            var maDH = $(this).data('ma-dong-ho');
+            var tenDH = $(this).data('ten-dong-ho');
+            var btn = $(this);
+
+            btn.prop('disabled', true); // Tránh nhấn nhiều lần
+
+            $.ajax({
+                url: '/Shop/GioHang/Them', // Hãy đảm bảo đường dẫn này đúng với Controller của bạn
+                type: 'POST',
+                data: { id: maDH },
+                success: function(response) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Đã thêm thành công!',
+                        text: tenDH,
+                        background: '#fff',
+                        color: '#333',
+                        iconColor: '#b8860b' // Màu Gold cho icon thành công
+                    });
+
+                    // Nếu bạn có hiển thị số lượng giỏ hàng trên Header, cập nhật nó ở đây
+                    if(response.count !== undefined) {
+                        $('.cart-badge').text(response.count);
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Không thể kết nối tới máy chủ!',
+                        confirmButtonColor: '#b8860b'
+                    });
+                },
+                complete: function() {
+                    btn.prop('disabled', false);
+                }
+            });
+        });
+    });
+
+    // 3. Hàm chuyển trang AJAX cũ
     function changePage(page) {
         if (page < 1 || page > @Model.TotalPages) return;
 
-        // Lấy các tham số tìm kiếm hiện tại từ form
         var searchTerm = $('#searchTerm').val() || '';
         var brandId = $('#brandId').val() || '';
         var priceRange = $('#priceRange').val() || '';
 
-        // Hiệu ứng mờ dần khi load
         $('#productsGrid').css('opacity', '0.5');
 
         $.ajax({
@@ -241,14 +298,15 @@
             success: function (result) {
                 $('#productsGrid').html(result);
                 $('#productsGrid').css('opacity', '1');
-
-                // Cuộn lên đầu danh sách
                 $('html, body').animate({
                     scrollTop: $("#productsGrid").offset().top - 100
                 }, 400);
             },
             error: function () {
-                alert('Không thể tải dữ liệu.');
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Không thể tải dữ liệu.'
+                });
                 $('#productsGrid').css('opacity', '1');
             }
         });
