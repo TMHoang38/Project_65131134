@@ -8,8 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Watch Store | Premium Collection</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Condensed:wght@300;700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/assets/css/theme.css" />
 
@@ -18,124 +18,140 @@
             --watch-gold: #c5a059;
             --watch-dark: #1a1a1a;
             --nav-white: #ffffff;
+            --nav-height: 85px;
         }
 
         body {
             font-family: 'Roboto Condensed', sans-serif;
-            background-color: #f8f9fa; /* Nền hơi xám nhẹ để nổi bật các khối nội dung trắng */
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
         }
 
-        /* Navbar Màu Trắng Sang Trọng */
+        /* --- NAVBAR CORE --- */
         .navbar-watch-white {
             background-color: var(--nav-white) !important;
-            border-bottom: 1px solid #eee; /* Đường kẻ mảnh tinh tế */
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Đổ bóng rất nhẹ */
-            padding: 0.8rem 0;
-        }
-
-
-        .bi-cart3 {
-            -webkit-text-stroke: 0.8px;
-            font-size: 1.1rem;
-        }
-
-        #cartIconLink {
-            position: relative;
-            display: inline-block;
-        }
-
-        #cartBadge {
-            font-size: 0.65rem;
-            padding: 3px 7px;
-            min-width: 18px;
-            text-align: center;
-        }
-
-   
-        .user-dropdown-toggle {
+            border-bottom: 1px solid #ececec;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            min-height: var(--nav-height);
             display: flex;
             align-items: center;
-            gap: 8px; 
+            padding: 0;
         }
 
-
-        .nav-link.fw-bold {
-            font-weight: 700 !important;
+        .navbar-brand img {
+            height: 55px; /* Chiều cao logo cố định để không lệch hàng */
+            width: auto;
+            transition: transform 0.3s ease;
         }
 
-        .navbar-brand span {
-            color: var(--watch-dark) !important; /* Logo chữ đen */
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .navbar-brand b {
-            color: var(--watch-gold); /* Chữ nhấn màu Gold */
-        }
-
-        .nav-link {
+        /* --- NAVIGATION LINKS --- */
+        .navbar-nav .nav-link {
             color: var(--watch-dark) !important;
+            font-weight: 700 !important;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 10px 20px !important;
             transition: all 0.3s ease;
+            position: relative;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: var(--watch-gold) !important;
+            }
+
+        /* --- BUTTONS (Luxury Style) --- */
+        .btn-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 20px;
+        }
+
+        .btn-luxury {
+            padding: 10px 28px;
             font-size: 0.85rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--watch-gold) !important;
-            transform: translateY(-1px);
-        }
-
-        /* Button Custom */
-        .btn-outline-gold {
-            border: 1px solid var(--watch-gold) !important;
-            color: var(--watch-gold) !important;
-            border-radius: 0;
-            text-transform: uppercase;
             font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 0; /* Vuông vức theo mẫu Hải Triều */
+            letter-spacing: 1px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 46px;
+            text-decoration: none;
+        }
+
+        .btn-login {
+            border: 1px solid var(--watch-gold);
+            color: var(--watch-gold) !important;
             background: transparent;
+        }
+
+            .btn-login:hover {
+                background: #fcf9f2;
+                color: var(--watch-gold) !important;
+            }
+
+        .btn-register {
+            background-color: var(--watch-gold);
+            color: white !important;
+            border: 1px solid var(--watch-gold);
+        }
+
+            .btn-register:hover {
+                filter: brightness(1.1);
+                box-shadow: 0 4px 12px rgba(197, 160, 89, 0.2);
+            }
+
+        /* --- ICONS & USER --- */
+        .cart-icon-wrapper {
+            position: relative;
+            margin-right: 15px;
+            color: var(--watch-dark);
             transition: 0.3s;
         }
 
-        .btn-outline-gold:hover {
-            background-color: var(--watch-gold) !important;
-            color: #fff !important;
+            .cart-icon-wrapper:hover {
+                color: var(--watch-gold);
+            }
+
+        #cartBadge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background-color: #d9534f;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 5px;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn-gold {
-            background-color: var(--watch-gold) !important;
-            color: #fff !important;
-            border-radius: 0;
-            border: none;
-            text-transform: uppercase;
-            font-weight: 700;
+        .user-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
         }
 
-        /* Dropdown Custom */
-        .dropdown-menu {
-            border: none;
-            border-top: 3px solid var(--watch-gold);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-radius: 0;
-        }
-
-        .dropdown-item {
-            padding: 10px 20px;
-            font-size: 0.9rem;
-            color: var(--watch-dark);
-        }
-
-        .dropdown-item:hover {
-            background-color: #fcf9f2;
-            color: var(--watch-gold);
-        }
-
-        /* Footer giữ màu tối để tạo chiều sâu cho website */
+        /* --- FOOTER --- */
         footer {
             background-color: var(--watch-dark);
             color: #fff;
             padding: 60px 0 30px;
+            margin-top: 50px;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 2px;
         }
     </style>
 </head>
@@ -144,8 +160,8 @@
     <main class="main" id="top">
         <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-watch-white">
             <div class="container">
-                <a class="navbar-brand d-inline-flex" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })">
-                    <span class="fs-2 fw-bold ms-2">WATCH<b>.</b></span>
+                <a class="navbar-brand" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })">
+                    <img src="~/Images/logo.png" alt="Watch Store Logo" />
                 </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
@@ -153,64 +169,61 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item px-2">
-                            <a class="nav-link fw-bold" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })#store">Cửa hàng</a>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })#store">Cửa hàng</a>
                         </li>
-                        <li class="nav-item px-2">
-                            <a class="nav-link fw-bold" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })#collections">Bộ sưu tập</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })#collections">Bộ sưu tập</a>
                         </li>
-
-                        <li class="nav-item px-2">
-                            <a class="nav-link fw-bold" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })#contact">Liên hệ</a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })#contact">Liên hệ</a>
                         </li>
                     </ul>
 
-                    <div class="d-flex align-items-center">
+                    <div class="btn-nav-group border-start ps-lg-4">
                         @if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
                         {
-                            <a class="btn btn-sm btn-outline-gold me-3" href="@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })">Đăng nhập</a>
-                            <a class="btn btn-sm btn-gold" href="@Url.Action("Index", "DangKy_65131134", new { area = "TaiKhoan" })">Đăng ký</a>
+                            <a class="btn-luxury btn-login" href="@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })">Đăng nhập</a>
+                            <a class="btn-luxury btn-register" href="@Url.Action("Index", "DangKy_65131134", new { area = "TaiKhoan" })">Đăng ký</a>
                         }
                         else
                         {
-                           <div class="d-flex align-items-center">
-        <a href="@Url.Action("GioHang", "KhachHang_65131134", new { area = "Shop" })" class="text-dark me-3 position-relative" id="cartIconLink">
-            <i class="bi bi-cart3" style="font-size: 1.3rem;"></i>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge" style="display: none; font-size: 0.7rem; padding: 2px 6px;">
-                0
-            </span>
-        </a>
+                            <div class="d-flex align-items-center">
+                                <a href="@Url.Action("GioHang", "KhachHang_65131134", new { area = "Shop" })" class="cart-icon-wrapper" id="cartIconLink">
+                                    <i class="bi bi-cart3" style="font-size: 1.4rem;"></i>
+                                    <span id="cartBadge" style="display: none;">0</span>
+                                </a>
 
-        <div class="dropdown">
-            <a class="nav-link dropdown-toggle fw-bold text-dark user-dropdown-toggle" href="#" id="userDrop" data-bs-toggle="dropdown">
-                <i data-feather="user" stroke-width="3" style="width: 20px; height: 20px;"></i>
-                <span class="text-uppercase" style="letter-spacing: 0.5px;">@AuthenticationHelper.GetFullName()</span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDrop">
-                <li><a class="dropdown-item" href="@Url.Action("ChinhSuaHoSo", "KhachHang_65131134", new { area = "Shop" })">Thông tin cá nhân</a></li>
-                <li><a class="dropdown-item" href="@Url.Action("DonHangCuaToi", "KhachHang_65131134", new { area = "Shop" })">Đơn hàng của tôi</a></li>
-                <li><a class="dropdown-item" href="@Url.Action("DoiMatKhau", "KhachHang_65131134", new { area = "Shop" })">Đổi mật khẩu</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" href="@Url.Action("DangXuat", "DangNhap_65131134", new { area = "TaiKhoan" })">Đăng xuất</a></li>
-            </ul>
-        </div>
-    </div>
+                                <div class="dropdown">
+                                    <a class="nav-link dropdown-toggle user-dropdown-toggle" href="#" id="userDrop" data-bs-toggle="dropdown">
+                                        <i data-feather="user" style="width: 20px; color: var(--watch-gold);"></i>
+                                        <span class="text-uppercase small fw-bold">@AuthenticationHelper.GetFullName()</span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3" style="border-top: 3px solid var(--watch-gold) !important; border-radius: 0;">
+                                        <li><a class="dropdown-item py-2" href="@Url.Action("ChinhSuaHoSo", "KhachHang_65131134", new { area = "Shop" })">Thông tin cá nhân</a></li>
+                                        <li><a class="dropdown-item py-2" href="@Url.Action("DonHangCuaToi", "KhachHang_65131134", new { area = "Shop" })">Đơn hàng của tôi</a></li>
+                                        <li><a class="dropdown-item py-2" href="@Url.Action("DoiMatKhau", "KhachHang_65131134", new { area = "Shop" })">Đổi mật khẩu</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item py-2 text-danger" href="@Url.Action("DangXuat", "DangNhap_65131134", new { area = "TaiKhoan" })">Đăng xuất</a></li>
+                                    </ul>
+                                </div>
+                            </div>
                         }
                     </div>
                 </div>
             </div>
         </nav>
 
-        <div class="container-fluid p-0" style="margin-top: 75px;">
+        <div class="container-fluid p-0" style="margin-top: var(--nav-height);">
             @RenderBody()
         </div>
 
-        <footer>
+        <footer id="contact">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 mb-4">
-                        <h4 class="text-white fw-bold mb-4">WATCH<span style="color:var(--watch-gold)">.</span></h4>
+                        <h4 class="footer-logo text-white fw-bold mb-4">WATCH<span style="color:var(--watch-gold)">.</span></h4>
                         <p class="text-muted small">Chuyên cung cấp các dòng đồng hồ chính hãng từ Thụy Sĩ, Nhật Bản. Đẳng cấp và sự tinh tế trên cổ tay bạn.</p>
                     </div>
                     <div class="col-md-2 mb-4">
@@ -224,65 +237,63 @@
                         <h6 class="text-white fw-bold text-uppercase mb-4">Đăng ký ưu đãi</h6>
                         <div class="input-group">
                             <input type="text" class="form-control bg-dark border-secondary text-white" placeholder="Email của bạn" style="border-radius:0">
-                            <button class="btn btn-gold" type="button">Đăng ký</button>
+                            <button class="btn btn-luxury btn-register" type="button" style="height: auto;">Đăng ký</button>
                         </div>
                     </div>
                 </div>
                 <hr class="border-secondary my-4">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start">
-                        <p class="text-muted small mb-0">&copy; 2025 Luxury Watch Store. Bản quyền thuộc về Team 65131134.</p>
+                        <p class="text-muted small mb-0">&copy; 2025 Luxury Watch Store. Team 65131134.</p>
                     </div>
                     <div class="col-md-6 text-center text-md-end">
-                        <div class="social-icons">
-                            <a href="#" class="text-white mx-2"><i data-feather="facebook"></i></a>
-                            <a href="#" class="text-white mx-2"><i data-feather="instagram"></i></a>
-                        </div>
+                        <a href="#" class="text-white mx-2"><i data-feather="facebook"></i></a>
+                        <a href="#" class="text-white mx-2"><i data-feather="instagram"></i></a>
                     </div>
                 </div>
             </div>
         </footer>
     </main>
 
-    <script src="~/Content/vendor/popperjs/popper.min.js"></script>
-    <script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="~/Content/vendor/feather-icons/feather.min.js"></script>
-    <script>feather.replace();</script>
-    <script src="~/assets/js/theme.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Hàm cập nhật số lượng giỏ hàng
-        function updateCartCount() {
-            @if (AuthenticationHelper.IsLoggedIn() && AuthenticationHelper.IsKhachHang())
-            {
-                <text>
-                $.ajax({
-                    url: '@Url.Action("GetCartCount", "Home_65131134", new { area = "Shop" })',
-                    type: 'GET',
-                    success: function (data) {
-                        var cartBadge = $('#cartBadge');
-                        if (data.cartCount > 0) {
-                            cartBadge.text(data.cartCount).show();
-                        } else {
-                            cartBadge.hide();
-                        }
-                    },
-                    error: function () {
-                        console.log('Error loading cart count');
-                    }
-                });
-                </text>
-            }
-        }
+    <script src="~/Content/vendor/feather-icons/feather.min.js"></script>
 
-        // Load số lượng giỏ hàng khi trang được tải
+    <script>
         $(document).ready(function () {
+            // Khởi tạo Feather Icons
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+
+            // Hàm cập nhật số lượng giỏ hàng
+            function updateCartCount() {
+                @if (AuthenticationHelper.IsLoggedIn() && AuthenticationHelper.IsKhachHang())
+                {
+                    <text>
+                    $.ajax({
+                        url: '@Url.Action("GetCartCount", "Home_65131134", new { area = "Shop" })',
+                        type: 'GET',
+                        success: function (data) {
+                            var cartBadge = $('#cartBadge');
+                            if (data.cartCount > 0) {
+                                cartBadge.text(data.cartCount).fadeIn();
+                            } else {
+                                cartBadge.hide();
+                            }
+                        },
+                        error: function () {
+                            console.log('Error loading cart count');
+                        }
+                    });
+                    </text>
+                }
+            }
+
             updateCartCount();
         });
     </script>
-    
+
     @RenderSection("scripts", required: false)
 </body>
 </html>
