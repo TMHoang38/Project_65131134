@@ -1968,7 +1968,9 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\baohanh.png" />
     <Content Include="Images\check.png" />
+    <Content Include="Images\chungnhan.png" />
     <Content Include="Images\delete.png" />
     <Content Include="Images\DongHo\casio_a158.jpg" />
     <Content Include="Images\DongHo\casio_edifice.jpg" />
@@ -2002,6 +2004,8 @@
     <Content Include="Images\DongHo\tissot_viso.jpg" />
     <Content Include="Images\edit.png" />
     <Content Include="Images\file.png" />
+    <Content Include="Images\hethong.png" />
+    <Content Include="Images\hinh-anh-bo-cong-thuong.png" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\view.png" />
     <Content Include="Images\visibility.png" />
