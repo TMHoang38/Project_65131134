@@ -64,7 +64,7 @@ namespace Project_65131134.Helpers
                 }
 
                 MailMessage mail = new MailMessage();
-                mail.From = new MailAddress(smtpEmail, "Timepiece Store");
+                mail.From = new MailAddress(smtpEmail, "ĐỒNG HỒ HẢI TRIỀU");
                 mail.To.Add(toEmail);
                 mail.Subject = subject;
                 mail.Body = body;
@@ -93,7 +93,7 @@ namespace Project_65131134.Helpers
                              HttpContext.Current.Request.Url.Authority + 
                              "/TaiKhoan/QuenMatKhau_65131134/ResetMatKhau?token=" + resetToken;
 
-            string subject = "Khôi phục mật khẩu - Timepiece Store";
+            string subject = "Khôi phục mật khẩu - ĐỒNG HỒ HẢI TRIỀU";
             string body = $@"
                 <html>
                 <head>

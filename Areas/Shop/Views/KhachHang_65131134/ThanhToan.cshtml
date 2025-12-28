@@ -44,30 +44,30 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold  text-black">Họ và tên</label>
-                                    @Html.TextBoxFor(m => m.HoTen, new { @class = "form-control", placeholder = "Họ tên người nhận" })
+                                    @Html.TextBoxFor(m => m.HoTen, new { @class = "form-control text-black", placeholder = "Họ tên người nhận" })
                                     @Html.ValidationMessageFor(m => m.HoTen, "", new { @class = "text-danger small" })
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold  text-black">Số điện thoại</label>
-                                    @Html.TextBoxFor(m => m.SoDienThoai, new { @class = "form-control", placeholder = "Số điện thoại" })
+                                    @Html.TextBoxFor(m => m.SoDienThoai, new { @class = "form-control text-black", placeholder = "Số điện thoại" })
                                     @Html.ValidationMessageFor(m => m.SoDienThoai, "", new { @class = "text-danger small" })
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold  text-black">Email</label>
-                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control text-black", placeholder = "Email" })
                                     @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold text-black">Địa chỉ giao hàng <span class="text-danger">*</span></label>
-                                    @Html.TextBoxFor(m => m.DiaChi, new { @class = "form-control", placeholder = "Địa chỉ giao hàng", required = "required" })
+                                    @Html.TextBoxFor(m => m.DiaChi, new { @class = "form-control text-black", placeholder = "Địa chỉ giao hàng", required = "required" })
                                     @Html.ValidationMessageFor(m => m.DiaChi, "", new { @class = "text-danger small" })
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold text-black">Ghi chú</label>
-                                @Html.TextAreaFor(m => m.GhiChu, new { @class = "form-control", rows = 3, placeholder = "Ghi chú cho đơn hàng (không bắt buộc)" })
+                                @Html.TextAreaFor(m => m.GhiChu, new { @class = "form-control text-black", rows = 3, placeholder = "Ghi chú cho đơn hàng (không bắt buộc)" })
                             </div>
                         </div>
                     </div>

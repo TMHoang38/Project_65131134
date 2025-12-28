@@ -13,7 +13,7 @@
             <div class="col-md-8 col-lg-6 text-md-start text-center z-index-2">
                 @if (AuthenticationHelper.IsLoggedIn() && AuthenticationHelper.IsKhachHang())
                 {
-                    <p class="text-uppercase text-gold fw-bold mb-2 tracking-widest">Chào mừng trở lại</p>
+                    <p class="text-uppercase text-gold fw-bold mb-2 tracking-widest fs-5">Chào mừng trở lại</p>
                 }
                 <h1 class="display-2 lh-sm text-uppercase text-light fw-bold">Nâng Tầm <span class="text-gold">Đẳng Cấp</span> <br /> Thời Gian</h1>
                 <p class="text-light opacity-75 fs-1 mb-4">Khám phá bộ sưu tập đồng hồ chế tác thủ công tinh xảo dành riêng cho bạn.</p>
@@ -38,11 +38,11 @@
                 <div class="carousel slide carousel-fade me-auto" id="carouselExampleFade" data-bs-ride="carousel">
                     <div class="carousel-inner ">
                         <div class="carousel-item active">
-                            <h5 class="fs-3 fs-lg-5 lh-sm text-uppercase text-white">Chất lượng đỉnh cao</h5>
+                            <h5 class="fs-3 fs-lg-5 lh-sm text-uppercase text-gold">Chất lượng đỉnh cao</h5>
                             <p class="text-light opacity-75 my-4 pe-xl-5">Mỗi chiếc đồng hồ là một kiệt tác nghệ thuật, được kiểm định khắt khe trước khi đến tay khách hàng.</p>
                         </div>
                         <div class="carousel-item">
-                            <h5 class="fs-3 fs-lg-5 lh-sm text-uppercase text-white">Dịch vụ tận tâm</h5>
+                            <h5 class="fs-3 fs-lg-5 lh-sm text-uppercase text-gold">Dịch vụ tận tâm</h5>
                             <p class="text-light opacity-75 my-4 pe-xl-5">Bảo hành chính hãng toàn cầu lên đến 5 năm cùng dịch vụ thay pin miễn phí trọn đời.</p>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                 timerProgressBar: true
             });
 
-            // Hàm lọc AJAX chính - Đã sửa lỗi tham số page
+           
             window.performFilter = function(pageNumber) {
                 // 1. Cập nhật giá trị vào input hidden
                 $('#currentPage').val(pageNumber);
@@ -183,7 +183,7 @@
                 formData = formData.filter(function(item) { return item.name !== 'page'; });
                 // Thêm page mới
                 formData.push({ name: 'page', value: pageNumber });
-                
+
                 var url = $('#filterForm').attr('action');
 
                 $('#productsGrid').css('opacity', '0.5');

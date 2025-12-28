@@ -54,32 +54,32 @@
         string areaName = "NhanVienBanHang";
     }
 
-    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = (int?)null })"
+    <a href="@Url.Action("Index", controllerName, new { Area = areaName })"
        class="btn btn-secondary btn-filter mb-2 @(trangThaiHienTai == null ? "active" : "")">
         Tất cả
     </a>
 
-    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = 0 })"
+    <a href="@Url.Action("ChoXacNhan", controllerName, new { Area = areaName })"
        class="btn btn-warning btn-filter mb-2 @(trangThaiHienTai == 0 ? "active" : "")">
         Chờ xác nhận
     </a>
 
-    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = 1 })"
+    <a href="@Url.Action("ChuanBiHang", controllerName, new { Area = areaName })"
        class="btn btn-info btn-filter mb-2 @(trangThaiHienTai == 1 ? "active" : "")" style="color:white">
         Chuẩn bị hàng
     </a>
 
-    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = 3 })"
+    <a href="@Url.Action("DangGiao", controllerName, new { Area = areaName })"
        class="btn btn-primary btn-filter mb-2 @(trangThaiHienTai == 3 ? "active" : "")">
         Đang giao
     </a>
 
-    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = 4 })"
+    <a href="@Url.Action("HoanThanh", controllerName, new { Area = areaName })"
        class="btn btn-success btn-filter mb-2 @(trangThaiHienTai == 4 ? "active" : "")">
         Hoàn thành
     </a>
 
-    <a href="@Url.Action("Index", controllerName, new { Area = areaName, trangThai = 5 })"
+    <a href="@Url.Action("DaHuy", controllerName, new { Area = areaName })"
        class="btn btn-danger btn-filter mb-2 @(trangThaiHienTai == 5 ? "active" : "")">
         Đã hủy
     </a>
@@ -253,8 +253,18 @@ grid.Column("Chức năng", style: "text-center", format: @<text>
                         else if (currentStatusVal === 1) nextStatus = 3;  // Chuẩn bị hàng -> Đang giao
 
                         if (nextStatus !== -1) {
-                            var baseUrl = '@Url.Action("Index", "DonHang_65131134", new { Area = "NhanVienBanHang" })';
-                            window.location.href = baseUrl + '?trangThai=' + nextStatus;
+                            var redirectUrl = '';
+                            if (nextStatus === 0) redirectUrl = '@Url.Action("ChoXacNhan", "DonHang_65131134", new { Area = "NhanVienBanHang" })';
+                            else if (nextStatus === 1) redirectUrl = '@Url.Action("ChuanBiHang", "DonHang_65131134", new { Area = "NhanVienBanHang" })';
+                            else if (nextStatus === 3) redirectUrl = '@Url.Action("DangGiao", "DonHang_65131134", new { Area = "NhanVienBanHang" })';
+                            else if (nextStatus === 4) redirectUrl = '@Url.Action("HoanThanh", "DonHang_65131134", new { Area = "NhanVienBanHang" })';
+                            else if (nextStatus === 5) redirectUrl = '@Url.Action("DaHuy", "DonHang_65131134", new { Area = "NhanVienBanHang" })';
+                            
+                            if (redirectUrl) {
+                                window.location.href = redirectUrl;
+                            } else {
+                                location.reload();
+                            }
                         } else {
                             location.reload();
                         }
@@ -292,13 +302,8 @@ grid.Column("Chức năng", style: "text-center", format: @<text>
                         // --- SỬA ĐỔI QUAN TRỌNG TẠI ĐÂY ---
                         // Không cần code đóng modal phức tạp vì chúng ta sẽ chuyển trang ngay lập tức.
 
-                        // 1. Tạo đường dẫn đến Action Index
-                        var baseUrl = '@Url.Action("Index", "DonHang_65131134", new { Area = "NhanVienBanHang" })';
-
-                        // 2. Thêm tham số trangThai=5 để mở tab "Đã hủy"
-                        var redirectUrl = baseUrl + '?trangThai=5';
-
-                        // 3. Thực hiện chuyển trang (Reload toàn bộ)
+                        // Chuyển đến trang "Đã hủy"
+                        var redirectUrl = '@Url.Action("DaHuy", "DonHang_65131134", new { Area = "NhanVienBanHang" })';
                         window.location.href = redirectUrl;
 
                     } else {

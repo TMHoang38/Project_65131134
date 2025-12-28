@@ -17,7 +17,7 @@ namespace Project_65131134.Areas.Shop
             context.MapRoute(
                 "Shop_default",
                 "Shop/{controller}/{action}/{id}",
-                new { action = "Index", id = UrlParameter.Optional }
+                new { controller = "Home_65131134", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

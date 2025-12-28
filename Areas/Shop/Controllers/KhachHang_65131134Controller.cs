@@ -36,6 +36,69 @@ namespace Project_65131134.Areas.Shop.Controllers
             Session["Cart"] = cart;
         }
 
+        /// <summary>
+        /// Tạo mã đơn hàng tự động tăng dần theo thứ tự
+        /// Format: DDH001, DDH002, DDH003, ...
+        /// </summary>
+        private string TaoMaDonHang()
+        {
+            const string prefix = "DDH";
+            
+            // Tìm tất cả đơn hàng có mã bắt đầu bằng "DDH" và lấy số lớn nhất
+            var ordersWithPrefix = db.DatHang
+                .Where(d => d.MaDonHang.StartsWith(prefix))
+                .Select(d => d.MaDonHang)
+                .ToList();
+
+            int maxNumber = 0;
+
+            foreach (var code in ordersWithPrefix)
+            {
+                if (code.Length > prefix.Length)
+                {
+                    string numberPart = code.Substring(prefix.Length);
+                    // Loại bỏ các số 0 đứng đầu để parse số
+                    numberPart = numberPart.TrimStart('0');
+                    if (string.IsNullOrEmpty(numberPart))
+                    {
+                        numberPart = "0";
+                    }
+                    
+                    if (int.TryParse(numberPart, out int number))
+                    {
+                        if (number > maxNumber)
+                        {
+                            maxNumber = number;
+                        }
+                    }
+                }
+            }
+
+            int nextNumber = maxNumber + 1;
+
+            // Format mã đơn hàng mới: DDH + số
+            // Bắt đầu với 3 chữ số (DDH001, DDH002, ...), tự động tăng số chữ số khi cần
+            int digits = 3; // Bắt đầu với 3 chữ số
+            if (nextNumber > 999)
+            {
+                // Nếu vượt quá 999, tính số chữ số cần thiết
+                digits = nextNumber.ToString().Length;
+                // Tối đa 7 chữ số để đảm bảo không vượt quá 10 ký tự (DDH = 3 ký tự)
+                if (digits > 7) digits = 7;
+            }
+            
+            string format = "D" + digits.ToString();
+            string newCode = prefix + nextNumber.ToString(format);
+
+            // Đảm bảo không vượt quá 10 ký tự
+            if (newCode.Length > 10)
+            {
+                newCode = newCode.Substring(0, 10);
+            }
+
+            return newCode;
+        }
+
         // Lưu giỏ hàng từ Session vào database
         private void SaveCartToDatabase()
         {
@@ -328,23 +391,42 @@ namespace Project_65131134.Areas.Shop.Controllers
                 return RedirectToAction("Index", "DangNhap_65131134", new { area = "TaiKhoan" });
             }
 
-            string maDonHang;
+            // Tạo mã đơn hàng tự động tăng dần
+            string maDonHang = TaoMaDonHang();
+            
+            // Kiểm tra xem mã đã tồn tại chưa (phòng trường hợp có xung đột)
             int attempt = 0;
-            do
+            while (db.DatHang.Any(d => d.MaDonHang == maDonHang) && attempt < 10)
             {
-                var randomSuffix = new Random().Next(1000, 9999).ToString();
-                var timePart = DateTime.Now.ToString("MMddHH");
-                maDonHang = "DH" + timePart.Substring(0, Math.Min(6, timePart.Length)) + randomSuffix.Substring(0, 2);
-
-                if (maDonHang.Length > 10) maDonHang = maDonHang.Substring(0, 10);
-
-                attempt++;
-                if (attempt > 10)
+                // Nếu mã đã tồn tại, tăng số lên 1 và thử lại
+                string numberPart = maDonHang.Substring(3); // Bỏ qua "DDH"
+                numberPart = numberPart.TrimStart('0'); // Loại bỏ số 0 đứng đầu
+                if (string.IsNullOrEmpty(numberPart))
                 {
-                    maDonHang = "DH" + DateTime.Now.Ticks.ToString().Substring(DateTime.Now.Ticks.ToString().Length - 8);
-                    break;
+                    numberPart = "0";
                 }
-            } while (db.DatHang.Any(d => d.MaDonHang == maDonHang));
+                
+                if (int.TryParse(numberPart, out int currentNumber))
+                {
+                    int nextNum = currentNumber + 1;
+                    // Tính số chữ số cần thiết
+                    int digits = 3;
+                    if (nextNum > 999)
+                    {
+                        digits = nextNum.ToString().Length;
+                        if (digits > 7) digits = 7;
+                    }
+                    string format = "D" + digits.ToString();
+                    maDonHang = "DDH" + nextNum.ToString(format);
+                    if (maDonHang.Length > 10) maDonHang = maDonHang.Substring(0, 10);
+                }
+                else
+                {
+                    // Nếu không parse được, tạo mã mới từ đầu
+                    maDonHang = TaoMaDonHang();
+                }
+                attempt++;
+            }
 
             var diaChiGiaoHang = string.IsNullOrWhiteSpace(model.DiaChi)
                 ? (string.IsNullOrWhiteSpace(khachHang.DiaChi) ? "Chưa cập nhật" : khachHang.DiaChi)

@@ -23,6 +23,26 @@
     <!-- Custom styles for this template-->
     <link href="~/Content/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="~/Content/Site.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/jpeg" href="~/Images/logo-tab.png" />
+    <link rel="icon" type="image/jpeg" href="~/Images/logo-tab.png" />
+
+    <link rel="apple-touch-icon" href="~/Images/logo-tab.png">
+    <style>
+        .sidebar {
+            background-color: #1e1e2d !important; /* Màu nền chính */
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+
+            .sidebar .nav-link {
+                color: #a2a3b7 !important; /* Màu chữ nhạt */
+            }
+
+                .sidebar .nav-link:hover, .sidebar .nav-link.active {
+                    background-color: #2b2b40 !important; /* Màu khi di chuột vào hoặc đang chọn */
+                    color: #ffffff !important;
+                }
+    </style>
 </head>
 
 <body id="page-top">
@@ -31,11 +51,14 @@
     <div id="wrapper">
 
         <!-- Sidebar - Thanh điều hướng chính bên trái -->
-        <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav  sidebar accordion" id="accordionSidebar">
             <!-- Sidebar - Logo/Thương hiệu -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                <div class="sidebar-brand-text mx-3">Xin chào </div>
-            </a>
+            <div class="sidebar-brand-icon my-4 mx-3">
+                <a href="@Url.Action("Index","DonHang_65131134", new { area = "NhanVienBanHang" })">
+                    <img src="~/Images/logo.png" alt="Logo" style="max-height: 50px; width: auto;" class="img-fluid" />
+                </a>
+
+            </div>
 
             <!-- Đường phân cách -->
             <hr class="sidebar-divider my-0">
@@ -113,8 +136,7 @@
                                         ? AuthenticationHelper.GetFullName()
                                         : AuthenticationHelper.GetUserName() ?? "Tài khoản")
                                 </span>
-                                <img class="img-profile rounded-circle"
-                                     src="~/Content/img/undraw_profile.svg">
+                                <i class="bi bi-person-circle"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                  aria-labelledby="userDropdown">

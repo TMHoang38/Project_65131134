@@ -17,7 +17,7 @@ namespace Project_65131134.Areas.Admin
             context.MapRoute(
                 "Admin_default",
                 "Admin/{controller}/{action}/{id}",
-                new { controller = "ThongKe_65131134", action = "DoanhThuHomNay", id = UrlParameter.Optional }
+                new { controller = "DonHang_65131134", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

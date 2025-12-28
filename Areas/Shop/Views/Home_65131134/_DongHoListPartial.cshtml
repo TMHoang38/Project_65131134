@@ -243,7 +243,7 @@
             btn.prop('disabled', true); // Tránh nhấn nhiều lần
 
             $.ajax({
-                url: '/Shop/GioHang/Them', // Hãy đảm bảo đường dẫn này đúng với Controller của bạn
+                url: '/Shop/GioHang/Them', 
                 type: 'POST',
                 data: { id: maDH },
                 success: function(response) {
@@ -256,7 +256,6 @@
                         iconColor: '#b8860b' // Màu Gold cho icon thành công
                     });
 
-                    // Nếu bạn có hiển thị số lượng giỏ hàng trên Header, cập nhật nó ở đây
                     if(response.count !== undefined) {
                         $('.cart-badge').text(response.count);
                     }

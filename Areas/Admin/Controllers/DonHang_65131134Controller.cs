@@ -33,6 +33,61 @@ namespace Project_65131134.Areas.Admin.Controllers
             return View(datHang.OrderByDescending(x => x.NgayDatHang).ToList());
         }
 
+        // GET: Admin/DonHang_65131134/ChoXacNhan
+        public ActionResult ChoXacNhan()
+        {
+            var result = Index(0);
+            if (result is ViewResult viewResult)
+            {
+                viewResult.ViewName = "Index";
+            }
+            return result;
+        }
+
+        // GET: Admin/DonHang_65131134/ChuanBiHang
+        public ActionResult ChuanBiHang()
+        {
+            var result = Index(1);
+            if (result is ViewResult viewResult)
+            {
+                viewResult.ViewName = "Index";
+            }
+            return result;
+        }
+
+        // GET: Admin/DonHang_65131134/DangGiao
+        public ActionResult DangGiao()
+        {
+            var result = Index(3);
+            if (result is ViewResult viewResult)
+            {
+                viewResult.ViewName = "Index";
+            }
+            return result;
+        }
+
+        // GET: Admin/DonHang_65131134/HoanThanh
+        public ActionResult HoanThanh()
+        {
+            var result = Index(4);
+            if (result is ViewResult viewResult)
+            {
+                viewResult.ViewName = "Index";
+            }
+            return result;
+        }
+
+        // GET: Admin/DonHang_65131134/DaHuy
+        public ActionResult DaHuy()
+        {
+            var result = Index(5);
+            if (result is ViewResult viewResult)
+            {
+                viewResult.ViewName = "Index";
+            }
+            return result;
+        }
+
         // GET: Admin/DonHang_65131134/Details/5
         public ActionResult Details(string id)
         {

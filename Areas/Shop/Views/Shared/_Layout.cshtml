@@ -12,29 +12,234 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/assets/css/theme.css" />
+    <link rel="shortcut icon" type="image/jpeg" href="~/Images/logo-tab.png" />
+    <link rel="icon" type="image/jpeg" href="~/Images/logo-tab.png" />
 
-    
+    <link rel="apple-touch-icon" href="~/Images/logo-tab.png">
+    <style>
+        :root {
+            --watch-gold: #c5a059;
+            --watch-dark: #1a1a1a;
+            --nav-white: #ffffff;
+            --nav-height: 85px;
+        }
+
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- NAVBAR CORE --- */
+        .navbar-watch-white {
+            background-color: var(--nav-white) !important;
+            border-bottom: 1px solid #ececec;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            min-height: var(--nav-height);
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+
+        .navbar-brand img {
+            height: 55px; /* Chiều cao logo cố định để không lệch hàng */
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+        /* --- NAVIGATION LINKS --- */
+        .navbar-nav .nav-link {
+            color: var(--watch-dark) !important;
+            font-weight: 700 !important;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 10px 20px !important;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: var(--watch-gold) !important;
+            }
+
+        /* --- BUTTONS (Luxury Style) --- */
+        .btn-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 20px;
+        }
+
+        .btn-luxury {
+            padding: 10px 28px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 0; /* Vuông vức theo mẫu Hải Triều */
+            letter-spacing: 1px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 46px;
+            text-decoration: none;
+        }
+
+        .btn-login {
+            border: 1px solid var(--watch-gold);
+            color: var(--watch-gold) !important;
+            background: transparent;
+        }
+
+            .btn-login:hover {
+                background: #fcf9f2;
+                color: var(--watch-gold) !important;
+            }
+
+        .btn-register {
+            background-color: var(--watch-gold);
+            color: white !important;
+            border: 1px solid var(--watch-gold);
+        }
+
+            .btn-register:hover {
+                filter: brightness(1.1);
+                box-shadow: 0 4px 12px rgba(197, 160, 89, 0.2);
+            }
+
+        .footer-cert-list li {
+            margin-bottom: 15px; /* Khoảng cách giữa các ảnh */
+        }
+
+        .footer-cert-list img {
+            max-width: 220px; /* Giới hạn chiều rộng tối đa */
+            height: auto; /* Tự động tính chiều cao để không bị méo ảnh */
+            display: block;
+            transition: 0.3s ease;
+            filter: brightness(0.9); /* Làm ảnh hơi tối lại cho tiệp màu nền */
+        }
+
+            .footer-cert-list img:hover {
+                filter: brightness(1); /* Sáng lên khi di chuột vào */
+            }
+
+            /* Riêng logo Bộ Công Thương thường cần nhỏ hơn nữa */
+            .footer-cert-list img[src*="bo-cong-thuong"] {
+                max-width: 120px;
+            }
+
+        /* --- ICONS & USER --- */
+        .cart-icon-wrapper {
+            position: relative;
+            margin-right: 15px;
+            color: var(--watch-dark);
+            transition: 0.3s;
+        }
+
+            .cart-icon-wrapper:hover {
+                color: var(--watch-gold);
+            }
+
+        #cartBadge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background-color: #d9534f;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 5px;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--watch-dark);
+            color: #fff;
+            padding: 60px 0 30px;
+            margin-top: 50px;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 2px;
+        }
+        @@media (max-width: 991.98px) {
+    /* 1. Căn giữa toàn bộ nội dung trong container của navbar */
+    .navbar-watch-white .container {
+        flex-direction: column; /* Xếp theo chiều dọc */
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 2. Căn giữa Logo */
+    .navbar-brand {
+        margin-right: 0 !important;
+        padding: 10px 0;
+    }
+
+    /* 3. Chỉnh nút Toggler (hamburger) nằm giữa nếu muốn,
+       hoặc giữ nguyên nếu bạn muốn nó nằm góc */
+    .navbar-toggler {
+        margin-bottom: 15px;
+    }
+
+    /* 4. Quan trọng: Căn giữa cụm nút Đăng nhập/Đăng ký */
+    .btn-nav-group {
+        margin-left: 0 !important;   /* Bỏ margin trái */
+        border-left: none !important; /* Bỏ đường kẻ dọc */
+        padding-left: 0 !important;
+        justify-content: center;      /* Căn giữa các nút trong group */
+        width: 100%;                 /* Chiếm hết chiều ngang để justify-content có tác dụng */
+        margin-top: 10px;
+        padding-bottom: 15px;
+    }
+
+ 
+
+    /* Tùy chỉnh chiều cao navbar ở mobile để không bị quá chật */
+    .navbar-watch-white {
+        height: auto !important;
+        padding: 10px 0;
+    }
+    </style>
+
 </head>
 
 <body>
     <main class="main" id="top">
         <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-watch-white">
             <div class="container">
-                <a class="navbar-brand" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })">
-                    <img src="~/Images/logo.png" alt="Watch Store Logo" />
-                </a>
+                <div class="d-md-flex justify-content-md-center align-items-md-center gap-md-10 gap-sm-10 d-flex justify-content-between align-items-center">
+                    <a class="navbar-brand m-0" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })">
+                        <img src="~/Images/logo.png" alt="Watch Store Logo" style="max-height: 50px;">
+                    </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                        <i class="bi bi-list-ul text-black" style="font-size: 1.5rem;"></i>
+                    </button>
+                </div>
 
-                <div class="collapse navbar-collapse" id="navContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
+                <div class="collapse navbar-collapse " id="navContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center text-md-black">
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })#store">Cửa hàng</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })#collections">Bộ sưu tập</a>
+                            <a class="nav-link" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })#collections">Đồng hồ</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })#contact">Liên hệ</a>
@@ -44,8 +249,8 @@
                     <div class="btn-nav-group border-start ps-lg-4">
                         @if (!AuthenticationHelper.IsLoggedIn() || !AuthenticationHelper.IsKhachHang())
                         {
-                            <a class="btn-luxury btn-login" href="@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })">Đăng nhập</a>
-                            <a class="btn-luxury btn-register" href="@Url.Action("Index", "DangKy_65131134", new { area = "TaiKhoan" })">Đăng ký</a>
+                            <a class="btn-luxury btn-login  text-md-center" href="@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })">Đăng nhập</a>
+                            <a class="btn-luxury btn-register  text-md-center" href="@Url.Action("Index", "DangKy_65131134", new { area = "TaiKhoan" })">Đăng ký</a>
                         }
                         else
                         {
@@ -83,7 +288,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-3">
-                        <h4 class="footer-logo text-white fw-bold mb-4">ĐỒNG HỒ HẢI TRIỀU</h4>
+                        <h4 class="text-white fw-bold mb-4">ĐỒNG HỒ HẢI TRIỀU</h4>
                         <p class="text-muted ">Đồng Hồ Hải Triều cung cấp sản phẩm đồng hồ chính hãng chất lượng loại 1 và trải nghiệm mua sắm khác biệt.</p>
                     </div>
                     <div class="col-md-3 mb-4">
@@ -125,7 +330,7 @@
                 <hr class="border-secondary my-2">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start">
-                        <p class="text-muted small mb-0">&copy; 2025 Luxury Watch Store. Team 65131134.</p>
+                        <p class="text-muted small mb-0">&copy; Trần Minh Hoàng - 65131134.</p>
                     </div>
                     <div class="col-md-6 text-center text-md-end">
                         <a href="#" class="text-white mx-2"><i data-feather="facebook"></i></a>
@@ -148,15 +353,28 @@
             }
 
             // Hàm cập nhật số lượng giỏ hàng
-            function updateCartCount() {
+            // Có thể nhận tham số cartCount để cập nhật ngay lập tức, hoặc không có tham số thì tự gọi AJAX
+            window.updateCartCount = function(cartCount) {
                 @if (AuthenticationHelper.IsLoggedIn() && AuthenticationHelper.IsKhachHang())
                 {
                     <text>
+                    var cartBadge = $('#cartBadge');
+                    
+                    // Nếu có tham số cartCount, cập nhật ngay lập tức
+                    if (cartCount !== undefined && cartCount !== null) {
+                        if (cartCount > 0) {
+                            cartBadge.text(cartCount).fadeIn();
+                        } else {
+                            cartBadge.hide();
+                        }
+                        return;
+                    }
+                    
+                    // Nếu không có tham số, gọi AJAX để lấy số lượng
                     $.ajax({
                         url: '@Url.Action("GetCartCount", "Home_65131134", new { area = "Shop" })',
                         type: 'GET',
                         success: function (data) {
-                            var cartBadge = $('#cartBadge');
                             if (data.cartCount > 0) {
                                 cartBadge.text(data.cartCount).fadeIn();
                             } else {
@@ -177,166 +395,5 @@
 
     @RenderSection("scripts", required: false)
 </body>
-<style>
-    :root {
-        --watch-gold: #c5a059;
-        --watch-dark: #1a1a1a;
-        --nav-white: #ffffff;
-        --nav-height: 85px;
-    }
 
-    body {
-        font-family: 'Roboto Condensed', sans-serif;
-        background-color: #f8f9fa;
-        margin: 0;
-        padding: 0;
-    }
-
-    /* --- NAVBAR CORE --- */
-    .navbar-watch-white {
-        background-color: var(--nav-white) !important;
-        border-bottom: 1px solid #ececec;
-        box-shadow: 0 2px 15px rgba(0,0,0,0.04);
-        min-height: var(--nav-height);
-        display: flex;
-        align-items: center;
-        padding: 0;
-    }
-
-    .navbar-brand img {
-        height: 55px; /* Chiều cao logo cố định để không lệch hàng */
-        width: auto;
-        transition: transform 0.3s ease;
-    }
-
-    /* --- NAVIGATION LINKS --- */
-    .navbar-nav .nav-link {
-        color: var(--watch-dark) !important;
-        font-weight: 700 !important;
-        font-size: 0.9rem;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        padding: 10px 20px !important;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-
-        .navbar-nav .nav-link:hover {
-            color: var(--watch-gold) !important;
-        }
-
-    /* --- BUTTONS (Luxury Style) --- */
-    .btn-nav-group {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-left: 20px;
-    }
-
-    .btn-luxury {
-        padding: 10px 28px;
-        font-size: 0.85rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        border-radius: 0; /* Vuông vức theo mẫu Hải Triều */
-        letter-spacing: 1px;
-        transition: 0.3s;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        height: 46px;
-        text-decoration: none;
-    }
-
-    .btn-login {
-        border: 1px solid var(--watch-gold);
-        color: var(--watch-gold) !important;
-        background: transparent;
-    }
-
-        .btn-login:hover {
-            background: #fcf9f2;
-            color: var(--watch-gold) !important;
-        }
-
-    .btn-register {
-        background-color: var(--watch-gold);
-        color: white !important;
-        border: 1px solid var(--watch-gold);
-    }
-
-        .btn-register:hover {
-            filter: brightness(1.1);
-            box-shadow: 0 4px 12px rgba(197, 160, 89, 0.2);
-        }
-
-    .footer-cert-list li {
-        margin-bottom: 15px; /* Khoảng cách giữa các ảnh */
-    }
-
-    .footer-cert-list img {
-        max-width: 220px; /* Giới hạn chiều rộng tối đa */
-        height: auto; /* Tự động tính chiều cao để không bị méo ảnh */
-        display: block;
-        transition: 0.3s ease;
-        filter: brightness(0.9); /* Làm ảnh hơi tối lại cho tiệp màu nền */
-    }
-
-        .footer-cert-list img:hover {
-            filter: brightness(1); /* Sáng lên khi di chuột vào */
-        }
-
-        /* Riêng logo Bộ Công Thương thường cần nhỏ hơn nữa */
-        .footer-cert-list img[src*="bo-cong-thuong"] {
-            max-width: 120px;
-        }
-
-    /* --- ICONS & USER --- */
-    .cart-icon-wrapper {
-        position: relative;
-        margin-right: 15px;
-        color: var(--watch-dark);
-        transition: 0.3s;
-    }
-
-        .cart-icon-wrapper:hover {
-            color: var(--watch-gold);
-        }
-
-    #cartBadge {
-        position: absolute;
-        top: -5px;
-        right: -8px;
-        background-color: #d9534f;
-        color: white;
-        font-size: 0.65rem;
-        padding: 2px 5px;
-        border-radius: 50%;
-        min-width: 18px;
-        height: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .user-dropdown-toggle {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-    }
-
-    /* --- FOOTER --- */
-    footer {
-        background-color: var(--watch-dark);
-        color: #fff;
-        padding: 60px 0 30px;
-        margin-top: 50px;
-    }
-
-    .footer-logo {
-        font-family: 'Playfair Display', serif;
-        letter-spacing: 2px;
-    }
-</style>
 </html>

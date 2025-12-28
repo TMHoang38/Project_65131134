@@ -1,7 +1,6 @@
 @model Project_65131134.Models.NhanVien
 @{
     ViewBag.Title = "Hồ sơ của tôi";
-    // Tạo link ảnh đại diện theo tên (Placeholder) nếu chưa có ảnh thật
     var avatarUrl = "https://ui-avatars.com/api/?name=" + Uri.EscapeDataString(Model.HoTen ?? "User") + "&background=4e73df&color=fff&size=150";
 }
 
