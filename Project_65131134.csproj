@@ -2295,6 +2295,8 @@
     <Content Include="Areas\Shop\Views\KhachHang_65131134\ThanhToan.cshtml" />
     <Content Include="Areas\Shop\Views\KhachHang_65131134\GioHang.cshtml" />
     <Content Include="Areas\Shop\Views\KhachHang_65131134\ChiTietDonHang.cshtml" />
+    <None Include="Properties\PublishProfiles\hoangtm65cntt-001-site1 - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\hoangtm65cntt-001-site1 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.7.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />

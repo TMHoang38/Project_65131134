@@ -20,23 +20,29 @@
 
     <link rel="apple-touch-icon" href="~/Images/logo-tab.png">
     <style>
+        :root {
+            --primary-gold: #c5a059;
+            --dark-bg: #0b1118;
+            --card-bg: #141b25;
+        }
 
         body {
-            /* Hình nền bộ máy đồng hồ phía sau */
             background: linear-gradient(rgba(11, 17, 24, 0.85), rgba(11, 17, 24, 0.9)), url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=2080&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             font-family: 'Roboto', sans-serif;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0;
+            padding: 20px 0;
         }
 
         .card-custom {
-            background-color: #141b25; /* Màu nền thẻ tối */
-            border: 1px solid rgba(197, 160, 89, 0.3); /* Viền vàng mờ */
+            background-color: var(--card-bg);
+            border: 1px solid rgba(197, 160, 89, 0.3);
             box-shadow: 0 0 25px rgba(0,0,0,0.6);
             width: 100%;
             max-width: 550px;
@@ -45,7 +51,7 @@
 
         .brand-title {
             font-family: 'Playfair Display', serif;
-            color: #c5a059; /* Màu vàng kim */
+            color: var(--primary-gold);
             font-size: 1.8rem;
             margin-bottom: 5px;
         }
@@ -56,11 +62,32 @@
             color: #e0e0e0 !important;
             border-radius: 4px !important;
             padding: 22px 15px !important;
+            transition: all 0.3s;
         }
 
             .form-control-user:focus {
-                border-color: #c5a059;
+                border-color: var(--primary-gold);
                 box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.25);
+            }
+
+        /* CSS cho icon mắt */
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            z-index: 10;
+            transition: color 0.3s;
+        }
+
+            .toggle-password:hover {
+                color: var(--primary-gold);
             }
 
         .btn-gold {
@@ -71,12 +98,13 @@
             padding: 12px;
             font-family: 'Playfair Display', serif;
             text-transform: uppercase;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
             .btn-gold:hover {
                 color: #000;
-                transform: scale(1.02);
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(197, 160, 89, 0.4);
                 background: linear-gradient(45deg, #e6c87a, #b88a44);
             }
 
@@ -84,18 +112,24 @@
             color: #888;
             text-decoration: none;
             font-size: 0.9rem;
+            transition: color 0.3s;
         }
 
             .link-footer:hover {
-                color: #c5a059;
+                color: var(--primary-gold);
                 text-decoration: none;
             }
+
+        .text-danger.small {
+            margin-top: 5px;
+            display: block;
+        }
     </style>
 </head>
 
 <body>
 
-    <div class="card card-custom animated fade-in">
+    <div class="card card-custom animated fade-in my-5">
         <div class="card-body p-5">
             <div class="text-center mb-4">
                 <h1 class="brand-title">ĐĂNG KÝ TÀI KHOẢN</h1>
@@ -127,44 +161,57 @@
             @using (Html.BeginForm("DangKy", "DangKy_65131134", FormMethod.Post, new { @class = "user" }))
             {
                 @Html.AntiForgeryToken()
+
                 <div class="form-group">
-                    <input type="text" class="form-control form-control-user" name="TenDangNhap" 
+                    <input type="text" class="form-control form-control-user" name="TenDangNhap"
                            placeholder="Tên đăng nhập" required>
                     @Html.ValidationMessage("TenDangNhap", "", new { @class = "text-danger small" })
                 </div>
+
                 <div class="form-group row">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                        <input type="password" class="form-control form-control-user" name="MatKhau" 
-                               placeholder="Mật khẩu" required>
+                    <div class="col-sm-6 mb-3 mb-sm-0 password-container">
+                        <input type="password" class="form-control form-control-user" id="MatKhau" name="MatKhau"
+                               placeholder="Mật khẩu" required style="padding-right: 40px !important;">
+                        <span class="toggle-password " onclick="togglePass('MatKhau', this)">
+                            <i class="fas fa-eye m-2"></i>
+                        </span>
                         @Html.ValidationMessage("MatKhau", "", new { @class = "text-danger small" })
                     </div>
-                    <div class="col-sm-6">
-                        <input type="password" class="form-control form-control-user" name="XacNhanMatKhau" 
-                               placeholder="Xác nhận mật khẩu" required>
+                    <div class="col-sm-6 password-container">
+                        <input type="password" class="form-control form-control-user" id="XacNhanMatKhau" name="XacNhanMatKhau"
+                               placeholder="Xác nhận mật khẩu" required style="padding-right: 40px !important;">
+                        <span class="toggle-password" onclick="togglePass('XacNhanMatKhau', this)">
+                            <i class="fas fa-eye  m-2"></i>
+                        </span>
                         @Html.ValidationMessage("XacNhanMatKhau", "", new { @class = "text-danger small" })
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <input type="text" class="form-control form-control-user" name="HoTen" 
+                    <input type="text" class="form-control form-control-user" name="HoTen"
                            placeholder="Họ tên" required>
                     @Html.ValidationMessage("HoTen", "", new { @class = "text-danger small" })
                 </div>
+
                 <div class="form-group">
-                    <input type="email" class="form-control form-control-user" name="Email" 
+                    <input type="email" class="form-control form-control-user" name="Email"
                            placeholder="Địa chỉ Email" required>
                     @Html.ValidationMessage("Email", "", new { @class = "text-danger small" })
                 </div>
+
                 <div class="form-group">
-                    <input type="text" class="form-control form-control-user" name="SoDienThoai" 
+                    <input type="text" class="form-control form-control-user" name="SoDienThoai"
                            placeholder="Số điện thoại" maxlength="10" required>
                     @Html.ValidationMessage("SoDienThoai", "", new { @class = "text-danger small" })
                 </div>
+
                 <div class="form-group">
-                    <input type="text" class="form-control form-control-user" name="DiaChi" 
+                    <input type="text" class="form-control form-control-user" name="DiaChi"
                            placeholder="Địa chỉ" required>
                     @Html.ValidationMessage("DiaChi", "", new { @class = "text-danger small" })
                 </div>
-                <button type="submit" class="btn btn-gold btn-user btn-block rounded-pill">
+
+                <button type="submit" class="btn btn-gold btn-user btn-block rounded-pill mt-4">
                     Đăng ký tài khoản
                 </button>
             }
@@ -178,7 +225,7 @@
             </div>
             <div class="text-center mt-2">
                 <span class="text-muted small">Đã là thành viên?</span>
-                <a class="small link-footer font-weight-bold" href="@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })" style="color: #c5a059;">
+                <a class="small link-footer font-weight-bold" href="@Url.Action("Index", "DangNhap_65131134", new { area = "TaiKhoan" })" style="color: var(--primary-gold);">
                     Đăng nhập ngay
                 </a>
             </div>
@@ -189,5 +236,22 @@
     <script src="~/Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="~/Content/js/sb-admin-2.min.js"></script>
+
+    <script>
+        // Hàm xử lý ẩn/hiện mật khẩu
+        function togglePass(id, element) {
+            var x = document.getElementById(id);
+            var icon = element.querySelector('i');
+            if (x.type === "password") {
+                x.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                x.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+    </script>
 </body>
 </html>

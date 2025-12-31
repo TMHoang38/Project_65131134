@@ -10,21 +10,20 @@ namespace Project_65131134.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            // Redirect đến Shop area
+            return RedirectToAction("Index", "Home_65131134", new { area = "Shop" });
         }
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            // Redirect đến Shop area
+            return RedirectToAction("Index", "Home_65131134", new { area = "Shop" });
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            // Redirect đến Shop area
+            return RedirectToAction("Index", "Home_65131134", new { area = "Shop" });
         }
     }
 }

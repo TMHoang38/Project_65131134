@@ -28,8 +28,9 @@
     <div class="card card-login animated fade-in">
         <div class="card-body p-5">
             <div class="card-header-custom">
-                <i class="fas fa-clock icon-gold"></i>
-                <h1 class="brand-title">ĐỒNG HỒ HẢI TRIỀU</h1>
+                <a href="@Url.Action("Index", "Home_65131134", new { area = "Shop" })">
+                    <img src="~/Images/logo.png" class="w-75 h-75" />
+                </a>
             </div>
 
             @if (ViewBag.ErrorMessage != null)
@@ -51,11 +52,17 @@
                            id="exampleInputEmail" name="TaiKhoan"
                            placeholder="Tên đăng nhập" required>
                 </div>
-                <div class="form-group mb-4">
+
+                @* Phần mật khẩu đã được thêm icon *@
+                <div class="form-group mb-4 position-relative">
                     <input type="password" class="form-control form-control-user"
                            id="exampleInputPassword" name="MatKhau"
                            placeholder="Mật khẩu" required>
+                    <span id="togglePassword" class="toggle-password-icon">
+                        <i class="fas fa-eye"></i>
+                    </span>
                 </div>
+
                 <div class="form-group mb-4">
                     <div class="custom-control custom-checkbox small">
                         <input type="checkbox" class="custom-control-input" id="customCheck">
@@ -90,20 +97,36 @@
     <script src="~/Content/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="~/Content/js/sb-admin-2.min.js"></script>
 
+    @* Script xử lý ẩn hiện mật khẩu *@
+    <script>
+        $(document).ready(function () {
+            $('#togglePassword').click(function () {
+                const passwordField = $('#exampleInputPassword');
+                const icon = $(this).find('i');
+
+                // Thay đổi type của input
+                const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+                passwordField.attr('type', type);
+
+                // Thay đổi icon con mắt
+                icon.toggleClass('fa-eye fa-eye-slash');
+            });
+        });
+    </script>
+
 </body>
 </html>
 
 <style>
     /* --- WATCH STORE THEME --- */
     :root {
-        --primary-gold: #c5a059; /* Màu vàng kim sang trọng */
-        --dark-bg: #0b1118; /* Màu nền đen xanh đậm */
-        --card-bg: #141b25; /* Màu nền thẻ */
+        --primary-gold: #c5a059;
+        --dark-bg: #0b1118;
+        --card-bg: #141b25;
         --text-light: #e0e0e0;
     }
 
     body {
-        /* Hình nền đồng hồ cơ khí sang trọng */
         background: linear-gradient(rgba(11, 17, 24, 0.85), rgba(11, 17, 24, 0.9)), url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=2080&auto=format&fit=crop');
         background-size: cover;
         background-position: center;
@@ -113,11 +136,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        margin: 0;
     }
 
     .card-login {
         background-color: var(--card-bg);
-        border: 1px solid rgba(197, 160, 89, 0.3); /* Viền vàng mờ */
+        border: 1px solid rgba(197, 160, 89, 0.3);
         border-radius: 8px;
         box-shadow: 0 0 20px rgba(0,0,0,0.5);
         max-width: 450px;
@@ -131,21 +155,13 @@
         margin-bottom: 30px;
     }
 
-    .brand-title {
-        font-family: 'Playfair Display', serif;
-        color: var(--primary-gold);
-        font-size: 2rem;
-        font-weight: 700;
-        letter-spacing: 1px;
-        margin-top: 10px;
-    }
-
     .form-control-user {
         background-color: #0b1118 !important;
         border: 1px solid #2c3e50;
         color: #fff !important;
-        border-radius: 4px !important; /* Vuông vức hơn cho nam tính */
+        border-radius: 4px !important;
         padding: 25px 15px !important;
+        padding-right: 45px !important; /* Chừa khoảng trống bên phải cho icon */
         font-size: 1rem;
         transition: all 0.3s;
     }
@@ -156,7 +172,22 @@
             box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.25);
         }
 
-    /* Chỉnh màu placeholder */
+    /* CSS cho icon con mắt */
+    .toggle-password-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6c757d;
+        z-index: 10;
+        transition: color 0.3s;
+    }
+
+        .toggle-password-icon:hover {
+            color: var(--primary-gold);
+        }
+
     ::placeholder {
         color: #6c757d !important;
         opacity: 1;
@@ -202,10 +233,4 @@
             color: var(--primary-gold);
             text-decoration: none;
         }
-
-    .icon-gold {
-        color: var(--primary-gold);
-        font-size: 2rem;
-        margin-bottom: 10px;
-    }
 </style>

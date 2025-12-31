@@ -13,10 +13,14 @@ namespace Project_65131134
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // Route mặc định cho các URL khác
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new
+                {
+                    controller = "Home", action = "Index", id = UrlParameter.Optional
+                }
             );
         }
     }
